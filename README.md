@@ -1,6 +1,6 @@
 ## MM32-FDS 概述
 
-MM32 固件开发平台 (以下简称 MM32-FDS)框架由 MM32 外设驱动库 (包含硬件描述层 HDL，硬件抽象层 HAL)，设备驱动层 (DRV)，板级支持包 (BSP) 和应用程序实例构成。
+MM32 固件开发平台 (以下简称 MM32-FDS) 框架由 MM32 外设驱动库 (包含硬件描述层 HDL，硬件抽象层 HAL)，设备驱动层 (DRV)，板级支持包 (BSP) 和应用程序实例构成。
 
 MM32 固件开发平台支持 MM32F, MM32L 及 MM32SPIN 全系列 MCU 的软件开发，包含 MM32F103/MM32L3xx, MM32F031C8_CB/MM32L0xx 版本，MM32SPIN2x, MM32F031C4_C6/MM32F003 版本等多款 MCU。
 
@@ -33,86 +33,86 @@ MM32固件开发平台提供以下方式进行软件开发：
 MM32-FDS 应用程序例程存放在 app 路径下，头文件存放在 inc 路径下。MM32-FDS App 所有的程序实例，均按以下规则编写：
 
 1. 头文件
-	- 增加防重入嵌套语句 `#ifndef / #define   ...  #endif`
-	- 定义宏，枚举，结构
-	- 全局变量，静态变量防重入条件编译语句，参见下方
-	- 函数原型定义
+    - 增加防重入嵌套语句 `#ifndef / #define   ...  #endif`
+    - 定义宏，枚举，结构
+    - 全局变量，静态变量防重入条件编译语句，参见下方
+    - 函数原型定义
 
 ```
-		#ifdef _UART_C_						// 在 C 程序代码的第一个有效行中定义
-		#define GLOBAL						// 定义 GLOBAL 为空
-		
-		GLOBAL bool txSuccess = false;		// 定义变量，并初始化
-		GLOBAL bool rxSuccess = false;
-		
-		static bool toggle = false;			// 当前模块静态变量，其它模块不可使用
-		
-		#else
-		#define GLOBAL extern				// 定义 GLOBAL 为 extern
-		
-		GLOBAL bool txSuccess;				// 非当前模块之外的定义为外部变量
-		GLOBAL bool rxSuccess;
-		
-		#endif
-		
-		GLOBAL u32 g_Count;					// 定义全局变量
-		
-		#undef GLOBAL						// 释放GLOBAL定义
+    #ifdef _UART_C_                     // 在 C 程序代码的第一个有效行中定义
+    #define GLOBAL                      // 定义 GLOBAL 为空
+    
+    GLOBAL bool txSuccess = false;      // 定义变量，并初始化
+    GLOBAL bool rxSuccess = false;
+    
+    static bool toggle = false;         // 当前模块静态变量，其它模块不可使用
+    
+    #else
+    #define GLOBAL extern               // 定义 GLOBAL 为 extern
+
+    GLOBAL bool txSuccess;              // 非当前模块之外的定义为外部变量
+    GLOBAL bool rxSuccess;
+
+    #endif
+
+    GLOBAL u32 g_Count;                 // 定义全局变量
+    
+    #undef GLOBAL                       // 释放GLOBAL定义
 ```
-		
+        
 2. 应用程序
-	- 定义与文件名类似的宏，提供当前模块头文件预编译使用：`#define _UART_C_`，供头文件预编译使用。
-	- 应用程序 Systick 函数 `void AppTaskTick()`，用于应用程序的系统调度。
-	- 应用程序回调函数 `void TxCallback(void* fPtr)`，在同步方式下中断的快速处理。
-	- 主程序 `int main(void)`
-		- step 1: 设置系统时钟 `MCUID = SetSystemClock(emSYSTICK_On, (u32*)&AppTaskTick); `
-			- 形参 1： `emSYSTICK_On / emSYSTICK_Off ` 表示系统是否使用 SysTick (在 32 位 Cortex-Mx 下编程，建议打开)。
-			- 形参 2： 应用程序是否使用系统 SysTick 的回调 (在 32 位 Cortex-Mx 下编程，建议打开)，不使用时选择 NULL。
-			- 返回值：为当前MCU类别。
-		- step 2: 定义句柄变量、创建文件，`HANDLE hUART = CreateFile(emIP_UART) `
-			- 形参为使用平台资源的枚举，在 drv.h 中定义，返回值如果不为空表示创建成功。
-			- 当需要删除句柄时，可以使用 `DeleteFile(emIP_UART)` 命令删除句柄。
-		- step 3: 定义设备控制块 `tAPP_UART_DCB dcb`，并为其初始化。
-		- step 4: 打开文件 `OpenFile(hUART, (void*)&dcb)`，用于对外设的初始化，打开文件对于子句柄 (hSub) 来说不分先后顺序。
-			- 形参1: 创建的文件句柄，
-			- 形参2: 设备控制块结构的地址，注意 hSub 为子句柄，通常是一个枚举，如 UART1 为 0， UART2 为 1。
-			- 打开文件后可以通过 `CloseFile(hUART)` 命令关闭当前设备。
-		- step 5: 写文件 `WriteFile(hUART, emFILE_UART1, newTxBuffer, sizeof(newTxBuffer)) == sizeof(newTxBuffer))`
-		   - 形参 1：设备句柄，类型为 HANDLE，由创建文件产生。 
-		   - 形参 2：为设备的子句柄，类型为 s8， 从 "0" 开始， "-1" 表示无效。对应指定的外设，如 UART1。
-		   - 形参 3：写文件数据指针，类型为 u8*。 
-		   - 形参 4：写文件数据数据长度，类型为 u16。
-		   - 返回值：为int类型，与驱动程序相关。通常小于"0"为错误代码，大于"0"为写入长度。
-		- step 6: 读文件 `ReadFile(hUART, emFILE_UART1, newTxBuffer, sizeof(newTxBuffer)) == sizeof(newTxBuffer))`
-		   - 形参 1：设备句柄，类型为 HANDLE，由创建文件产生。 
-		   - 形参 2：为设备的子句柄，类型为 s8，从 "0" 开始，"-1" 表示无效。对应指定的外设，如 UART1。
-		   - 形参 3：读文件数据指针，类型为 u8*。 
-		   - 形参 4：读文件数据数据长度，类型为 u16。
-		   - 返回值：为 int 类型，与驱动程序相关。通常小于 "0" 为错误代码，大于 "0" 为写入长度。
+    - 定义与文件名类似的宏，提供当前模块头文件预编译使用：`#define _UART_C_`，供头文件预编译使用。
+    - 应用程序 Systick 函数 `void AppTaskTick()`，用于应用程序的系统调度。
+    - 应用程序回调函数 `void TxCallback(void* fPtr)`，在同步方式下中断的快速处理。
+    - 主程序 `int main(void)`
+        - step 1: 设置系统时钟 `MCUID = SetSystemClock(emSYSTICK_On, (u32*)&AppTaskTick); `
+            - 形参 1： `emSYSTICK_On / emSYSTICK_Off ` 表示系统是否使用 SysTick (在 32 位 Cortex-Mx 下编程，建议打开)。
+            - 形参 2： 应用程序是否使用系统 SysTick 的回调 (在 32 位 Cortex-Mx 下编程，建议打开)，不使用时选择 NULL。
+            - 返回值：为当前MCU类别。
+        - step 2: 定义句柄变量、创建文件，`HANDLE hUART = CreateFile(emIP_UART) `
+            - 形参为使用平台资源的枚举，在 drv.h 中定义，返回值如果不为空表示创建成功。
+            - 当需要删除句柄时，可以使用 `DeleteFile(emIP_UART)` 命令删除句柄。
+        - step 3: 定义设备控制块 `tAPP_UART_DCB dcb`，并为其初始化。
+        - step 4: 打开文件 `OpenFile(hUART, (void*)&dcb)`，用于对外设的初始化，打开文件对于子句柄 (hSub) 来说不分先后顺序。
+            - 形参1: 创建的文件句柄，
+            - 形参2: 设备控制块结构的地址，注意 hSub 为子句柄，通常是一个枚举，如 UART1 为 0， UART2 为 1。
+            - 打开文件后可以通过 `CloseFile(hUART)` 命令关闭当前设备。
+        - step 5: 写文件 `WriteFile(hUART, emFILE_UART1, newTxBuffer, sizeof(newTxBuffer)) == sizeof(newTxBuffer))`
+           - 形参 1：设备句柄，类型为 HANDLE，由创建文件产生。 
+           - 形参 2：为设备的子句柄，类型为 s8， 从 "0" 开始， "-1" 表示无效。对应指定的外设，如 UART1。
+           - 形参 3：写文件数据指针，类型为 u8*。 
+           - 形参 4：写文件数据数据长度，类型为 u16。
+           - 返回值：为int类型，与驱动程序相关。通常小于"0"为错误代码，大于"0"为写入长度。
+        - step 6: 读文件 `ReadFile(hUART, emFILE_UART1, newTxBuffer, sizeof(newTxBuffer)) == sizeof(newTxBuffer))`
+           - 形参 1：设备句柄，类型为 HANDLE，由创建文件产生。 
+           - 形参 2：为设备的子句柄，类型为 s8，从 "0" 开始，"-1" 表示无效。对应指定的外设，如 UART1。
+           - 形参 3：读文件数据指针，类型为 u8*。 
+           - 形参 4：读文件数据数据长度，类型为 u16。
+           - 返回值：为 int 类型，与驱动程序相关。通常小于 "0" 为错误代码，大于 "0" 为写入长度。
 
 3. 设备控制块
 以下是一个设备控制块的实例：
 ```
-	tAPP_UART_DCB dcb = {
-		.hSub 		= emFILE_UART1,			// 使用 UART1
-		.type		= emTYPE_DMA,			// UART1 使用 DMA 方式，可选中断或查询方式
+    tAPP_UART_DCB dcb = {
+        .hSub       = emFILE_UART1,         // 使用 UART1
+        .type       = emTYPE_DMA,           // UART1 使用 DMA 方式，可选中断或查询方式
 
-		.cbTx		= (u32)&TxCallback,		// 发送完成回调函数地址
-		.cbRx		= (u32)&RxCallback,		// 接收完成回调函数地址
+        .cbTx       = (u32)&TxCallback,     // 发送完成回调函数地址
+        .cbRx       = (u32)&RxCallback,     // 接收完成回调函数地址
 
-		.block		= emTYPE_Non_Block,   	// 读文件/写文件是否采用阻塞方式，建议使用非阻塞方式
-		.sync		= emTYPE_Sync,      	// 使用同步方式处理发送或接收事件
-		.remapEn	= false,				// 允许/关闭端口重映象功能
-		.remapIdx	= 0,					// 重映象端口选择
-		.timeOut	= 0,					// 允许超时，0 表示不允许超时，单位毫秒
+        .block      = emTYPE_Non_Block,     // 读文件/写文件是否采用阻塞方式，建议使用非阻塞方式
+        .sync       = emTYPE_Sync,          // 使用同步方式处理发送或接收事件
+        .remapEn    = false,                // 允许/关闭端口重映象功能
+        .remapIdx   = 0,                    // 重映象端口选择
+        .timeOut    = 0,                    // 允许超时，0 表示不允许超时，单位毫秒
 
-		.baudRate	= 115200,				// 波特率
-		.width		= 8,					// 传输字长，8位
-		.stop		= 0,					// 停止位长度 0 表示一位，可选 1，2，3 分别表示 2 位， 0.5 位， 1.5 位
-		.parity		= emUART_PARITY_None,	// 校验方式
-		.flow		= 0,					// 0 表示不使用流控制
-		.mode		= emTXRX_TxRx			// 允许发送和接受
-	};
+        .baudRate   = 115200,               // 波特率
+        .width      = 8,                    // 传输字长，8位
+        .stop       = 0,                    // 停止位长度 0 表示一位，可选 1，2，3 分别表示 2 位， 0.5 位， 1.5 位
+        .parity     = emUART_PARITY_None,   // 校验方式
+        .flow       = 0,                    // 0 表示不使用流控制
+        .mode       = emTXRX_TxRx           // 允许发送和接受
+    };
 ```
 
 对于不同的外设，dcb是不同的。具体说明详见外设驱动模块说明 (待增加)。
