@@ -38,7 +38,7 @@ MM32-FDS 应用程序例程存放在 app 路径下，头文件存放在 inc 路�
     - 全局变量，静态变量防重入条件编译语句，参见下方
     - 函数原型定义
 
-```
+```c
     #ifdef _UART_C_                     // 在 C 程序代码的第一个有效行中定义
     #define GLOBAL                      // 定义 GLOBAL 为空
     
@@ -92,7 +92,7 @@ MM32-FDS 应用程序例程存放在 app 路径下，头文件存放在 inc 路�
 
 3. 设备控制块
 以下是一个设备控制块的实例：
-```
+```c
     tAPP_UART_DCB dcb = {
         .hSub       = emFILE_UART1,         // 使用 UART1
         .type       = emTYPE_DMA,           // UART1 使用 DMA 方式，可选中断或查询方式
