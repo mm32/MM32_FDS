@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ProjectOpt xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_optx.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<Extensions>
+		<cExt>*.c</cExt>
+		<aExt>*.s*; *.src; *.a*</aExt>
+		<oExt>*.obj</oExt>
+		<lExt>*.lib</lExt>
+		<tExt>*.txt; *.h; *.inc</tExt>
+		<pExt>*.plm</pExt>
+		<CppX>*.cpp</CppX>
+		<nMigrate>0</nMigrate>
+	</Extensions>
+	<Target>
+		<TargetName>MM32L073</TargetName>
+		<ToolsetNumber>0x4</ToolsetNumber>
+		<ToolsetName>ARM-ADS</ToolsetName>
+		<TargetOption>
+			<DebugOpt>
+				<uSim>0</uSim>
+				<uTrg>1</uTrg>
+				<sLdApp>1</sLdApp>
+				<sGomain>1</sGomain>
+				<sRbreak>1</sRbreak>
+				<sRwatch>1</sRwatch>
+				<sRmem>1</sRmem>
+				<sRfunc>1</sRfunc>
+				<sRbox>1</sRbox>
+				<tLdApp>1</tLdApp>
+				<tGomain>1</tGomain>
+				<tRbreak>1</tRbreak>
+				<tRwatch>1</tRwatch>
+				<tRmem>1</tRmem>
+				<tRfunc>0</tRfunc>
+				<tRbox>1</tRbox>
+				<tRtrace>1</tRtrace>
+				<sRSysVw>1</sRSysVw>
+				<tRSysVw>1</tRSysVw>
+				<sRunDeb>0</sRunDeb>
+				<sLrtime>0</sLrtime>
+				<nTsel>16</nTsel>
+				<sDll></sDll>
+				<sDllPa></sDllPa>
+				<sDlgDll></sDlgDll>
+				<sDlgPa></sDlgPa>
+				<sIfile></sIfile>
+				<tDll></tDll>
+				<tDllPa></tDllPa>
+				<tDlgDll></tDlgDll>
+				<tDlgPa></tDlgPa>
+				<tIfile></tIfile>
+				<pMon>BIN\MM32LINKCM3.dll</pMon>
+			</DebugOpt>
+		</TargetOption>
+	</Target>
+</ProjectOpt>

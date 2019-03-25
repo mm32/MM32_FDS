@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>adc</WorkspaceName>
+	<project>
+		<PathAndName>.\project\adc\adc_continue_dma_async.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_continue_dma_sync.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_imm_dma.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_imm_it.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_imm_polling.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_scan_dma.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_window_comp.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_testTemp.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\m_imm_it_exti.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\m_scan_dma_time.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

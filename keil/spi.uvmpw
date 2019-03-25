@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>spi</WorkspaceName>
+	<project>
+		<PathAndName>.\project\spi\spi_dma_master_rx.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_dma_master_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_dma_slave_rx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_dma_slave_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_it_master_rx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_it_master_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_it_slave_rx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_it_slave_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_polling_master_rx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_polling_master_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_polling_slave_rx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_polling_slave_tx.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

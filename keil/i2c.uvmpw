@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>i2c</WorkspaceName>
+	<project>
+		<PathAndName>.\project\i2c\i2c_dma.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\i2c\i2c_it.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\i2c\i2c_polling.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\i2c\i2c_search.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\i2c\i2c_slave_it.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\i2c\i2c_slave_polling.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

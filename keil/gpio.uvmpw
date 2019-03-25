@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>gpio</WorkspaceName>
+	<project>
+		<PathAndName>.\project\gpio\gpio.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\gpio\key_led.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\gpio\key_led_async.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\gpio\key_led_sync.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

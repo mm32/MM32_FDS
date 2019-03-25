@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>tim</WorkspaceName>
+	<project>
+		<PathAndName>.\project\tim\tim_6step.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_onepulse.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_encoder.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_pwm_it.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_pwm_dma.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_capture_pulse.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\tim\tim_capture_pwm.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

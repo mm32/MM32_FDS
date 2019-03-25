@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<workspace>
+	<project>
+		<path>$WS_DIR$\project\comp\comp_port.ewp</path>
+	</project>
+	<project>
+		<path>$WS_DIR$\project\comp\comp_vref.ewp</path>
+	</project>
+	<batchBuild>
+		<batchDefinition>
+			<name>MM32L073</name>
+			<member>
+				<project>comp_port</project>
+				<configuration>MM32L073</configuration>
+			</member>
+			<member>
+				<project>comp_vref</project>
+				<configuration>MM32L073</configuration>
+			</member>
+		</batchDefinition>
+		<batchDefinition>
+			<name>MM32SPIN27</name>
+			<member>
+				<project>comp_port</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
+				<project>comp_vref</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+		</batchDefinition>
+	</batchBuild>
+</workspace>

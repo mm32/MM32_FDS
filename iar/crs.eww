@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<workspace>
+	<project>
+		<path>$WS_DIR$\project\crs\crs.ewp</path>
+	</project>
+	<batchBuild>
+		<batchDefinition>
+			<name>MM32L073</name>
+			<member>
+				<project>crs</project>
+				<configuration>MM32L073</configuration>
+			</member>
+		</batchDefinition>
+	</batchBuild>
+</workspace>

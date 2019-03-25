@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<workspace>
+	<project>
+		<path>$WS_DIR$\project\dma\DMA_M2M.ewp</path>
+	</project>
+	<batchBuild>
+		<batchDefinition>
+			<name>MM32L373</name>
+			<member>
+				<project>DMA_M2M</project>
+				<configuration>MM32L373</configuration>
+			</member>
+		</batchDefinition>
+		<batchDefinition>
+			<name>MM32L073</name>
+			<member>
+				<project>DMA_M2M</project>
+				<configuration>MM32L073</configuration>
+			</member>
+		</batchDefinition>
+		<batchDefinition>
+			<name>MM32SPIN27</name>
+			<member>
+				<project>DMA_M2M</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+		</batchDefinition>
+	</batchBuild>
+</workspace>

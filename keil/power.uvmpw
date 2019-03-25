@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+	<SchemaVersion>1.0</SchemaVersion>
+	<Header>### uVision Project, (C) Keil Software</Header>
+	<WorkspaceName>power</WorkspaceName>
+	<project>
+		<PathAndName>.\project\power\pwr_pvd_async.uvprojx</PathAndName>
+		<NodeIsActive>1</NodeIsActive>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_pvd_sync.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_sleep.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_standby.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_stop.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_iwdg_standby.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\power\pwr_rtc_standby.uvprojx</PathAndName>
+	</project>
+</ProjectWorkspace>

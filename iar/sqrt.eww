@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<workspace>
+	<project>
+		<path>$WS_DIR$\project\sqrt\sqrt.ewp</path>
+	</project>
+	<batchBuild>
+		<batchDefinition>
+			<name>MM32SPIN27</name>
+			<member>
+				<project>sqrt</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+		</batchDefinition>
+	</batchBuild>
+</workspace>
