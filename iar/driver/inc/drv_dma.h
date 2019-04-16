@@ -53,7 +53,7 @@
 typedef enum {
     emDMA_m2p = DMA_CCR_DIR,                                        ///< transfer from memory to peripheral
     emDMA_p2m = 0,                                                  ///< transfer from peripheral to memory
-    emDMA_m2m = DMA_CCR_MEM2MEM                                     ///< transfer from memory to memory
+    emDMA_m2m = DMA_CCR_M2M                                         ///< transfer from memory to memory
 } EM_DMA;
 
 ////////////////////////////////////////////////////////////////////////////////

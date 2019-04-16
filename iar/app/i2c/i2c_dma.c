@@ -132,10 +132,10 @@ int main(void)
 // I2C parameter
         .fast       = false,                // fast or standard speed mode
         .master     = true,                 // master or slave mode
-        .ownaddr    = 0x20,                 // I2C Own Address
-        .slave      = 0xa0,                 // slave address
+        .slave      = 0xA0,                 // slave address
         .subAddr    = 0x00,                 // SubAddress
-        .subSize    = 1                     // SubAddress size
+        .subSize    = 1,                    // SubAddress size
+        .ownaddr    = 0x20                  // I2C Own Address
     };
 
 // Step 4:  Open File Device     ---------------------->>>>>

@@ -95,27 +95,28 @@ EM_MCUID DBGMCU_GetDEVID()
     if ((SCB->CPUID & COREID_MASK) == 0) {
         switch (((DBGMCU_TypeDef*)0x40013400)->IDCODE ) {
             case MCUID_MM0N1:
-                return emMCUID_MM0N1;
-            case MCUID_MM0O1:
-                return emMCUID_MM0O1;
+                return emMCUID_MM32L073;        // emMCUID_MM0N1;
+            case MCUID_MM0P1:
+            case MCUID_MM0P2:
+                return emMCUID_MM32SPIN27;      // emMCUID_MM0P1;
             case MCUID_MM0Q1:
-                return emMCUID_MM0Q1;
+                return emMCUID_MM32F031;        // emMCUID_MM0Q1;
             case MCUID_MM0M1:
-                return emMCUID_MM0M1;
+                return emMCUID_MM32F031_OLD;    // emMCUID_MM0M1;
             default: break;
         }
     }
     else if ((SCB->CPUID & COREID_MASK) == 0x0030) {
         RCC->APB1ENR = 0;
         RCC->APB1ENR |= RCC_APB1ENR_PWR;
-        if (((DBGMCU_TypeDef*)0x40007080)->IDCODE == MCUID_MM3P1)
-            return emMCUID_MM3P1;
+        if (((DBGMCU_TypeDef*)0x40007080)->IDCODE == MCUID_MM3O1)
+            return emMCUID_MM32L395;            // emMCUID_MM3O1;
         else {
             RCC->APB1ENR |= RCC_APB1ENR_PWR;
             if (((DBGMCU_TypeDef*)0x40007080)->IDCODE == MCUID_MM3N1)
-                return emMCUID_MM3N1;
+                return emMCUID_MM32L373;        // emMCUID_MM3N1;
             else if (((DBGMCU_TypeDef*)0xE0042000)->IDCODE == MCUID_MM3M1)
-                return emMCUID_MM3M1;
+                return emMCUID_MM32F103_OLD;    // emMCUID_MM3M1;
         }
     }
     return Unknown;
@@ -192,7 +193,8 @@ EM_MCUID SetSystemClock(EM_SYSTICK enable , u32* callbackPtr)
     return SystemInit(SYSCLK_HSI_72MHz, enable, callbackPtr);
 #else
     #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1)
-        return SystemInit(SYSCLK_HSI_96MHz, enable, callbackPtr);
+//      return SystemInit(SYSCLK_HSI_96MHz, enable, callbackPtr);
+        return SystemInit(SYSCLK_HSI_72MHz, enable, callbackPtr);
     #endif
 
     #if defined(__MM0Q1)

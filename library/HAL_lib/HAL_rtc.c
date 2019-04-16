@@ -138,7 +138,7 @@ void RTC_SetAlarm(u32 alarm)
 ////////////////////////////////////////////////////////////////////////////////
 u32 RTC_GetDivider(void)
 {
-    u32 dat = ((u32)(RTC->DIVH & RTC_DIVH_RTC_DIV) << 16);
+    u32 dat = ((u32)(RTC->DIVH & RTC_DIVH_DIV) << 16);
     return (RTC->DIVL | dat);
 }
 

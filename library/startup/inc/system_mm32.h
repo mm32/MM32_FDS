@@ -45,13 +45,13 @@
 #define IDCODE_DEVID_MASK       (0x00000FFFU)
 #define COREID_MASK             (0x00000070U)
 #define MCUID_MM0N1             (0xCC568091U)
-#define MCUID_MM0O1             (0xCC56A091U)
+#define MCUID_MM0P1             (0xCC56A091U)   // Rev.C
+#define MCUID_MM0P2             (0xCC56A097U)   // Rev.E
 #define MCUID_MM0Q1             (0xCC4460B1U)
 #define MCUID_MM0M1             (0xCC567071U)
-#define MCUID_MM3P1             (0xCC9AA0A1U)
+#define MCUID_MM3O1             (0xCC9AA0A1U)
 #define MCUID_MM3M1             (0xCC888045U)
 #define MCUID_MM3N1             (0xCC888047U)
-
 
 /// @}
 
@@ -65,13 +65,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {
     Unknown,
-    emMCUID_MM0N1,
-    emMCUID_MM0O1,
-    emMCUID_MM0Q1,
-    emMCUID_MM0M1,
-    emMCUID_MM3P1,
-    emMCUID_MM3M1,
-    emMCUID_MM3N1
+    emMCUID_MM32L073,
+    emMCUID_MM32SPIN27,
+    emMCUID_MM32F031,
+    emMCUID_MM32F031_OLD,
+    emMCUID_MM32L395,
+    emMCUID_MM32F103_OLD,
+    emMCUID_MM32L373
 }EM_MCUID;
 
 ////////////////////////////////////////////////////////////////////////////////

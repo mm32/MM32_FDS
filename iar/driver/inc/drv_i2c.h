@@ -68,7 +68,7 @@ typedef struct {
     EM_TYPE             type;                               ///< transform type: polling, interrupt, dma
     EM_TYPE             sync;                               ///< Sync of ASync
     EM_TYPE             block;                              ///< Blocking of NonBlocking
-    s8                  flag;                               ///< return flag
+    int                 flag;                               ///< return flag
 
     u8                  slave;                              ///< Slave Device Address
     u16                 subAddr;                            ///< SubAddress

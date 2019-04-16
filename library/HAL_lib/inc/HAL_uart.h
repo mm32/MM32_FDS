@@ -82,10 +82,10 @@ typedef enum {
 typedef enum {
     UART_HWFlowControl_None    = 0U,
 /*1*<
-    UART_HWFlowControl_RTS     = UART_GCR_AUTOFLOWEN,
-    UART_HWFlowControl_CTS     = UART_GCR_AUTOFLOWEN,
+    UART_HWFlowControl_RTS     = UART_GCR_AUTOFLOW,
+    UART_HWFlowControl_CTS     = UART_GCR_AUTOFLOW,
 >*1*/
-    UART_HWFlowControl_RTS_CTS = UART_GCR_AUTOFLOWEN
+    UART_HWFlowControl_RTS_CTS = UART_GCR_AUTOFLOW
 } UART_HW_FLOWCONTROL_TypeDef;
 
 #if defined(__MM0P1) || defined(__MM0Q1)

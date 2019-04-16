@@ -36,7 +36,7 @@
 /// @addtogroup COMP_Exported_Functions
 /// @{
 
-#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
+#if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  Deinitializes COMP peripheral registers to their default reset
 ///         values.
@@ -88,7 +88,7 @@ void COMP_Init(u32 selection, COMP_InitTypeDef* pInitStruct)
 ////////////////////////////////////////////////////////////////////////////////
 void COMP_StructInit(COMP_InitTypeDef* COMP_InitStruct)
 {
-#if defined(__MM3N1) || defined(__MM0N1)
+#if defined(__MM0N1)
     COMP_InitStruct->Invert         = emCOMP_InvertingInput_1_4VREFINT;
 #endif
     COMP_InitStruct->NonInvert      = emCOMP_NonInvertingInput_IO1;
@@ -186,7 +186,7 @@ void COMP_LockConfig(u32 selection)
 ////////////////////////////////////////////////////////////////////////////////
 void exCOMP_CrvCmd(FunctionalState state)
 {
-    (state) ? (COMP->COMP_CRV |= COMP_CRV_EN) : (COMP->COMP_CRV |= COMP_CRV_EN_ENABLE);
+    (state) ? (COMP->CRV |= COMP_CRV_EN_ENABLE) : (COMP->CRV &= ~COMP_CRV_EN_ENABLE);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +196,7 @@ void exCOMP_CrvCmd(FunctionalState state)
 ////////////////////////////////////////////////////////////////////////////////
 void exCOMP_SwitchCrv(u32 crv)
 {
-    COMP->COMP_CRV |= crv;
+    COMP->CRV |= crv;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ void exCOMP_SwitchCrv(u32 crv)
 ////////////////////////////////////////////////////////////////////////////////
 void exCOMP_CrvSrc(u32 src)
 {
-    COMP->COMP_CRV |= src;
+    COMP->CRV |= src;
 }
 #endif
 

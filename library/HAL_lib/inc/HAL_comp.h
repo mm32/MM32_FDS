@@ -42,28 +42,31 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_InvertingInput
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
-#if defined(__MM3N1) || (__MM0N1)
-    emCOMP_InvertingInput_1_4VREFINT    = COMP_CSR_INM_VREFINT_1_4, ///< Vrefint 1/4 as COMP inverting input
-    emCOMP_InvertingInput_1_2VREFINT    = COMP_CSR_INM_VREFINT_1_2, ///< Vrefint 1/2 as COMP inverting input
-    emCOMP_InvertingInput_3_4VREFINT    = COMP_CSR_INM_VREFINT_3_4, ///< Vrefint 3/4 as COMP inverting input
-    emCOMP_InvertingInput_VREFINT       = COMP_CSR_INM_VREFINT,     ///< Vrefint 1 as COMP inverting input
-    emCOMP_InvertingInput_DAC1          = COMP_CSR_INM_INM4,        ///< INM4 as COMP inverting input
-    emCOMP_InvertingInput_DAC2          = COMP_CSR_INM_INM5,        ///< INM5 as COMP inverting input
-    emCOMP_InvertingInput_IO1           = COMP_CSR_INM_INM6,        ///< INM6 as COMP inverting input
-    emCOMP_InvertingInput_IO2           = COMP_CSR_INM_INM7         ///< INM7 as COMP inverting input
+#if defined(__MM0N1)
+    emCOMP_InvertingInput_1_4VREFINT    = COMP_CSR_INM_VREFINT_1_4,     ///< Vrefint 1/4 as COMP inverting input
+    emCOMP_InvertingInput_1_2VREFINT    = COMP_CSR_INM_VREFINT_1_2,     ///< Vrefint 1/2 as COMP inverting input
+    emCOMP_InvertingInput_3_4VREFINT    = COMP_CSR_INM_VREFINT_3_4,     ///< Vrefint 3/4 as COMP inverting input
+    emCOMP_InvertingInput_VREFINT       = COMP_CSR_INM_VREFINT,         ///< Vrefint 1 as COMP inverting input
+    emCOMP_InvertingInput_DAC1          = COMP_CSR_INM_INM4,            ///< INM4 as COMP inverting input
+    emCOMP_InvertingInput_DAC2          = COMP_CSR_INM_INM5,            ///< INM5 as COMP inverting input
+    emCOMP_InvertingInput_IO1           = COMP_CSR_INM_INM6,            ///< INM6 as COMP inverting input
+    emCOMP_InvertingInput_IO2           = COMP_CSR_INM_INM7             ///< INM7 as COMP inverting input
 #endif
-#if defined(__MM0P1) || (__MM0Q1)
-    emCOMP_InvertingInput_IO0           = COMP_CSR_INM_0,           ///< INM0 as COMP inverting input
-    emCOMP_InvertingInput_IO1           = COMP_CSR_INM_1,           ///< INM1 as COMP inverting input
-    emCOMP_InvertingInput_IO2           = COMP_CSR_INM_2,           ///< INM2 as COMP inverting input
-    emCOMP_InvertingInput_CRV           = COMP_CSR_INM_3,           ///< INM3 as COMP inverting input
+#if defined(__MM0P1) || defined(__MM0Q1)
+    emCOMP_InvertingInput_IO0           = COMP_CSR_INM_0,               ///< INM0 as COMP inverting input
+    emCOMP_InvertingInput_IO1           = COMP_CSR_INM_1,               ///< INM1 as COMP inverting input
+    emCOMP_InvertingInput_IO2           = COMP_CSR_INM_2,               ///< INM2 as COMP inverting input
+    emCOMP_InvertingInput_CRV           = COMP_CSR_INM_3,               ///< INM3 as COMP inverting input
 #endif
 } EM_COMP_InvertingInput;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_NonInvertingInput
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
     emCOMP_NonInvertingInput_IO1        = COMP_CSR_INP_INP0,            ///< INP0 as COMP non-inverting input
     emCOMP_NonInvertingInput_IO2        = COMP_CSR_INP_INP1,            ///< INP1 as COMP non-inverting input
@@ -76,10 +79,12 @@ typedef enum {
     emCOMP_NonInvertingInput_IO8        = COMP_CSR_INP_INP7             ///< INP7 as COMP non-inverting input
 #endif
 } EM_COMP_NonInvertingInput;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_Output
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
     emCOMP_Output_None = 0x00000000, ///< No output
     emCOMP_Output_TIM1BKIN      = COMP_CSR_OUT_TIM1_BRAKE, ///< Timer1 brake input
@@ -90,6 +95,7 @@ typedef enum {
     emCOMP_Output_TIM3IC1       = COMP_CSR_OUT_TIM3_CAPTURE1, ///< Timer3 input capture 1
     emCOMP_Output_TIM3OCREFCLR  = COMP_CSR_OUT_TIM3_OCREFCLR ///< Timer3 ocrefclear input
 } EM_COMP_Output;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_OutputPoloarity
@@ -102,6 +108,7 @@ typedef enum {
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_Hysteresis
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
     emCOMP_Hysteresis_No = COMP_CSR_HYST_0,                                         ///< Hysteresis Voltage: 0mV
 #if defined(__MM3N1) || (__MM0N1)
@@ -115,28 +122,34 @@ typedef enum {
     emCOMP_Hysteresis_High   = COMP_CSR_HYST_90                                 ///< Hysteresis Voltage: 90mV
 #endif
 } EM_COMP_Hysteresis;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_Mode
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
     emCOMP_Mode_HighSpeed = COMP_CSR_MODE_HIGHRATE,                                 ///< Comparator high rate mode
     emCOMP_Mode_MediumSpeed = COMP_CSR_MODE_MEDIUMRATE,                             ///< Comparator medium rate mode
     emCOMP_Mode_LowPower = COMP_CSR_MODE_LOWPOWER,                                  ///< Comparator low power mode
     emCOMP_Mode_UltraLowPower = COMP_CSR_MODE_LOWESTPOWER                       ///< Comparator lowest power mode
 } EM_COMP_Mode;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief COMP_OutputLevel
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef enum {
     emCOMP_OutputLevel_High = COMP_CSR_OUT,  ///<  High output
     emCOMP_OutputLevel_Low  = 0x00000000     ///<  Low output
 } EM_COMP_OutputLevel;
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  COMP Init structure definition
 ////////////////////////////////////////////////////////////////////////////////
+#if !defined(__MM3N1)
 typedef struct {
     u32 Invert;                                                             ///< Selects the inverting input of the comparator.
     u32 NonInvert;                                                          ///< Selects the non inverting input of the comparator.
@@ -149,13 +162,15 @@ typedef struct {
     u32 OFLT;                                                              ///< to adjust the speed/consumption.
 #endif
 } COMP_InitTypeDef;
+#endif
+
 /// @}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup COMP_Exported_Constants
 /// @{
 
-#if defined(__MM3N1) || (__MM0N1)
+#if defined(__MM0N1)
     #define COMP1               ((u32)0x00000000)                               ///< Select comparator 1
     #define COMP2               ((u32)0x00000004)                               ///< Select comparator 2
 #endif
@@ -194,6 +209,7 @@ typedef struct {
 /// @defgroup COMP_Exported_Functions
 /// @{
 
+#if !defined(__MM3N1)
 void COMP_DeInit(u32 selection);
 void COMP_Init(u32 selection, COMP_InitTypeDef *COMP_InitStruct);
 void COMP_StructInit(COMP_InitTypeDef *COMP_InitStruct);
@@ -208,6 +224,9 @@ void exCOMP_CrvCmd(FunctionalState state);
 void exCOMP_SwitchCrv(u32 crv);
 void exCOMP_CrvSrc(u32 src);
 #endif
+
+#endif
+
 /// @}
 
 /// @}

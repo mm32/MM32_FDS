@@ -162,14 +162,14 @@ void ADC_RegularChannelConfig(ADC_TypeDef* ADCn, u32 channel, u8 rank, ADCSAM_Ty
     ADCn->CHSR |=  (1 << channel);
 
 #if defined(__MM3N1)
-    if (channel & ADC_CHSR_CHTVEN)
+    if (channel & ADC_CHSR_CHTV)
         ADC_TempSensorVrefintCmd(ENABLE);
 #endif
 
 #if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
-    if (channel & ADC_CHSR_CHTSEN)
+    if (channel & ADC_CHSR_CHT)
         ADC_TempSensorVrefintCmd(ENABLE);
-    else if (channel & ADC_CHSR_CHVSEN)
+    else if (channel & ADC_CHSR_CHV)
         ADC_TempSensorVrefintCmd(ENABLE);
 #endif
 }
@@ -298,18 +298,18 @@ void ADC_TempSensorVrefintCmd(FunctionalState state)
 void exADC_TempSensorVrefintCmd(u32 chs, FunctionalState state)
 {
 #if defined(__MM3N1)
-    if (chs & ADC_CHSR_CHTVEN) {
+    if (chs & ADC_CHSR_CHTV) {
         (state) ? (ADC1->CFGR |=   ADC_CFGR_TVEN,  ADC2->CFGR |=  ADC_CFGR_TVEN)
                 : (ADC1->CFGR &=  ~ADC_CFGR_TVEN,  ADC2->CFGR &= ~ADC_CFGR_TVEN);
     }
 #endif
 
 #if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
-    if (chs & ADC_CHSR_CHTSEN) {
+    if (chs & ADC_CHSR_CHT) {
         (state) ? (ADC1->CFGR |=  ADC_CFGR_TEN)
                 : (ADC1->CFGR &= ~ADC_CFGR_TEN);
     }
-    else if (chs & ADC_CHSR_CHVSEN) {
+    else if (chs & ADC_CHSR_CHV) {
         (state) ? (ADC1->CFGR |=  ADC_CFGR_VEN)
                 : (ADC1->CFGR &= ~ADC_CFGR_VEN);
     }

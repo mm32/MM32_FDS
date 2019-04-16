@@ -35,11 +35,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup EEPROM_Exported_Constants
 /// @{
+#if defined(__MM0Q1)
+#define EEPROM1     ((u32*)0x08006000)
+#define EEPROM2     ((u32*)0x08006800)
+#define EEPROM3     ((u32*)0x08007000)
+#define EEPROM4     ((u32*)0x08007800)
+#endif
 
+#if defined(__MM3N1) || defined(__MM3O1) || defined(__MM0N1) || defined(__MM0P1)
 #define EEPROM1     ((u32*)0x0800E000)
 #define EEPROM2     ((u32*)0x0800E800)
 #define EEPROM3     ((u32*)0x0800F000)
 #define EEPROM4     ((u32*)0x0800F800)
+#endif
 
 /// @}
 

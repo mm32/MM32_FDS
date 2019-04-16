@@ -1,17 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Version compatibility definition
 ////////////////////////////////////////////////////////////////////////////////
-#define ADDATA_DATA                     ADC_DR
+#define ADDATA_DATA                     ADC_DR_DATA
 
 #define ADDATA_CHANNELSEL               ADC_DR_CH
-#define ADDATA_CHANNELSEL_CH0           ADC_DR_CH0
-#define ADDATA_CHANNELSEL_CH1           ADC_DR_CH1
-#define ADDATA_CHANNELSEL_CH2           ADC_DR_CH2
-#define ADDATA_CHANNELSEL_CH3           ADC_DR_CH3
-#define ADDATA_CHANNELSEL_CH4           ADC_DR_CH4
-#define ADDATA_CHANNELSEL_CH5           ADC_DR_CH5
-#define ADDATA_CHANNELSEL_CH6           ADC_DR_CH6
-#define ADDATA_CHANNELSEL_CH7           ADC_DR_CH7
+#define ADDATA_CHANNELSEL_0             ADC_DR_CH0
+#define ADDATA_CHANNELSEL_1             ADC_DR_CH1
+#define ADDATA_CHANNELSEL_2             ADC_DR_CH2
+#define ADDATA_CHANNELSEL_3             ADC_DR_CH3
+#define ADDATA_CHANNELSEL_4             ADC_DR_CH4
+#define ADDATA_CHANNELSEL_5             ADC_DR_CH5
+#define ADDATA_CHANNELSEL_6             ADC_DR_CH6
+#define ADDATA_CHANNELSEL_7             ADC_DR_CH7
 
 #if defined(__MM3N1)
     #define ADDATA_CHANNELSEL_Sensor    ADC_DR_Sensor
@@ -32,6 +32,7 @@
 
 #define ADDATA_OVERRUN                  ADC_DR_OVERRUN
 #define ADDATA_VALID                    ADC_DR_VALID
+
 #define ADCFG_ADEN                      ADC_CFGR_ADEN
 #define ADCFG_ADWEN                     ADC_CFGR_ADWEN
 
@@ -93,8 +94,8 @@
 #define ADCR_DMAEN                      ADC_CR_DMAEN
 #define ADCR_ADST                       ADC_CR_ADST
 #define ADCR_ADMD                       ADC_CR_MODE
-#define ADCR_ADMD_SINGLE                ADC_CR_SINGLE
-#define ADCR_ADMD_PERIOD                ADC_CR_PERIOD
+#define ADCR_ADMD_SINGLE                ADC_CR_IMM
+#define ADCR_ADMD_PERIOD                ADC_CR_SCAN
 #define ADCR_ADMD_CONTINUE              ADC_CR_CONTINUE
 #define ADCR_ALIGN                      ADC_CR_ALIGN
 #define ADCR_ALIGN_LEFT                 ADC_CR_LEFT
@@ -171,30 +172,30 @@
     #define ADCR_CALIBSEL               ADC_CR_CALIBSEL
 #endif
 
-#define ADCHS_CHEN0                     ADC_CHSR_CH0EN
-#define ADCHS_CHEN1                     ADC_CHSR_CH1EN
-#define ADCHS_CHEN2                     ADC_CHSR_CH2EN
-#define ADCHS_CHEN3                     ADC_CHSR_CH3EN
-#define ADCHS_CHEN4                     ADC_CHSR_CH4EN
-#define ADCHS_CHEN5                     ADC_CHSR_CH5EN
-#define ADCHS_CHEN6                     ADC_CHSR_CH6EN
-#define ADCHS_CHEN7                     ADC_CHSR_CH7EN
+#define ADCHS_CHEN0                     ADC_CHSR_CH0
+#define ADCHS_CHEN1                     ADC_CHSR_CH1
+#define ADCHS_CHEN2                     ADC_CHSR_CH2
+#define ADCHS_CHEN3                     ADC_CHSR_CH3
+#define ADCHS_CHEN4                     ADC_CHSR_CH4
+#define ADCHS_CHEN5                     ADC_CHSR_CH5
+#define ADCHS_CHEN6                     ADC_CHSR_CH6
+#define ADCHS_CHEN7                     ADC_CHSR_CH7
 #define ADCHS_ALL                       ADC_CHSR_CHALL
 
 #if defined(__MM3N1)
-    #define ADCHS_SENSOREN              ADC_CHSR_CHTVEN
+    #define ADCHS_SENSOREN              ADC_CHSR_CHTV
 #endif
 
 #if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
-    #define ADCHS_CHEN8                 ADC_CHSR_CH8EN
-    #define ADCHS_CHEN9                 ADC_CHSR_CH9EN
-    #define ADCHS_CHENTS                ADC_CHSR_CHTSEN
-    #define ADCHS_CHENVS                ADC_CHSR_CHVSEN
+    #define ADCHS_CHEN8                 ADC_CHSR_CH8
+    #define ADCHS_CHEN9                 ADC_CHSR_CH9
+    #define ADCHS_CHENTS                ADC_CHSR_CHT
+    #define ADCHS_CHENVS                ADC_CHSR_CHV
 #endif
 
 #if defined(__MM0P1) || defined(__MM0Q1)
-    #define ADCHS_CHEN10                ADC_CHSR_CH10EN
-    #define ADCHS_CHEN11                ADC_CHSR_CH11EN
+    #define ADCHS_CHEN10                ADC_CHSR_CH10
+    #define ADCHS_CHEN11                ADC_CHSR_CH11
     #define ADCHS_CHCALIB               ADC_CHSR_CHCALIB
 #endif
 
@@ -204,7 +205,7 @@
 #define ADSTA_ADIF                      ADC_SR_ADIF
 #define ADSTA_ADWIF                     ADC_SR_ADWIF
 #define ADSTA_BUSY                      ADC_SR_BUSY
-#define ADSTA_CHANNEL                   ADC_SR_
+#define ADSTA_CHANNEL                   ADC_SR_CH
 #define ADSTA_CHANNEL_CH0               ADC_SR_CH0
 #define ADSTA_CHANNEL_CH1               ADC_SR_CH1
 #define ADSTA_CHANNEL_CH2               ADC_SR_CH2
@@ -223,9 +224,9 @@
 #define ADSTA_VALID                     ADC_SR_VALID
 #define ADSTA_OVERRUN                   ADC_SR_OVERRUN
 
-#define ADDR_DATA                       ADC_CHnDR_DATA
-#define ADDR_OVERRUN                    ADC_CHnDR_OVERRUN
-#define ADDR_VALID                      ADC_CHnDR_VALID
+#define ADDR_OVERRUN                    ADC_CHDR_OVERRUN
+#define ADDR_VALID                      ADC_CHDR_VALID
+#define ADDR_DATA                       ADC_CHDR_DATA
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Version compatibility definition
@@ -245,6 +246,10 @@
     #define AES_IVR3                    AES_IVRn                                ///< AES Initialization Vector Register 3
 
 
+#if defined(__MM3N1) || defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+#define CRC_DR_DR                       CRC_DR_DATA
+#define CRC_IDR_IDR                     CRC_IDR_DATA
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Version compatibility definition
 ////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +278,7 @@
 #define CRS_IT_ESYNC                    CRS_ISR_ESYNCF                          ///< Expected SYNC
 #define CRS_IT_TRIMOVF                  CRS_ISR_TRIMOVF                         ///< Trimming overflow or underflow
 #define CRS_IT_SYNCERR                  CRS_ISR_SYNCERR                         ///< SYNC error
-#define CRS_IT_SYNCMISS                 CRS_ISR_SYNCMISS                        ///< SYNC missed*/
+#define CRS_IT_SYNCMISS                 CRS_ISR_SYNCMISS                        ///< SYNC missed
 
 #define CRS_FLAG_SYNCOK                 CRS_ISR_SYNCOKF                         ///< SYNC event OK
 #define CRS_FLAG_SYNCWARN               CRS_ISR_SYNCWARNF                       ///< SYNC warning
@@ -281,7 +286,7 @@
 #define CRS_FLAG_ESYNC                  CRS_ISR_ESYNCF                          ///< Expected SYNC
 #define CRS_FLAG_TRIMOVF                CRS_ISR_TRIMOVF                         ///< Trimming overflow or underflow
 #define CRS_FLAG_SYNCERR                CRS_ISR_SYNCERR                         ///< SYNC error
-#define CRS_FLAG_SYNCMISS               CRS_ISR_SYNCMISS                        ///< SYNC missed*/
+#define CRS_FLAG_SYNCMISS               CRS_ISR_SYNCMISS                        ///< SYNC missed
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Version compatibility definition
 ////////////////////////////////////////////////////////////////////////////////
@@ -293,7 +298,7 @@
 #define DMA_CCR1_PSIZE_0                DMA_CCR_PSIZE
 #define DMA_CCR1_MSIZE_0                DMA_CCR_MSIZE
 #define DMA_CCR1_PL0                    DMA_CCR_PL
-#define DMA_CCR1_MEM2MEM                DMA_CCR_MEM2MEM
+#define DMA_CCR1_MEM2MEM                DMA_CCR_M2M
 
 
 #define DMA_IT_TC                       DMA_CCR_TCIE                            //(0x00000002U)
@@ -525,7 +530,7 @@
 #define EXTI_PR_PR16                    EXTI_PR_16
 
 #if defined(__MM3N1) || defined(__MM3O1)
-    #define EXTI_IMR_MR17               EXTI_IMR_18
+    #define EXTI_IMR_MR17               EXTI_IMR_17
 #endif
 
 #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
@@ -552,7 +557,7 @@
 #endif
 
 #if defined(__MM3N1) || defined(__MM3O1)
-    #define EXTI_EMR_MR17               EXTI_EMR_18
+    #define EXTI_EMR_MR17               EXTI_EMR_17
 #endif
 
 #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
@@ -579,7 +584,7 @@
 #endif
 
 #if defined(__MM3N1) || defined(__MM3O1)
-    #define EXTI_RTSR_MR17              EXTI_RTSR_18
+    #define EXTI_RTSR_MR17              EXTI_RTSR_17
 #endif
 
 #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
@@ -633,7 +638,7 @@
 #endif
 
 #if defined(__MM3N1) || defined(__MM3O1)
-    #define EXTI_SWIER_MR17             EXTI_SWIER_18
+    #define EXTI_SWIER_MR17             EXTI_SWIER_17
 #endif
 
 #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
@@ -660,7 +665,7 @@
 #endif
 
 #if defined(__MM3N1) || defined(__MM3O1)
-    #define EXTI_PR_MR17                EXTI_PR_18
+    #define EXTI_PR_MR17                EXTI_PR_17
 #endif
 
 #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
@@ -826,6 +831,15 @@
 #define I2C_SDA_SET_UP                  I2C_SETUP_CNT
 #define I2C_ACK_GENERAL_CALL            I2C_GCR_GC
 
+
+#define IWDG_PR_PR                      IWDG_PR_PRE
+#define IWDG_PR_PR_DIV4                 IWDG_PR_PRE_DIV4
+#define IWDG_PR_PR_DIV8                 IWDG_PR_PRE_DIV8
+#define IWDG_PR_PR_DIV16                IWDG_PR_PRE_DIV16
+#define IWDG_PR_PR_DIV32                IWDG_PR_PRE_DIV32
+#define IWDG_PR_PR_DIV64                IWDG_PR_PRE_DIV64
+#define IWDG_PR_PR_DIV128               IWDG_PR_PRE_DIV128
+#define IWDG_PR_PR_DIV256               IWDG_PR_PRE_DIV256
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Version compatibility definition
 ////////////////////////////////////////////////////////////////////////////////
@@ -1017,26 +1031,142 @@
 #define SPI_RXDNR_RXDNR                 SPI_RDNR_RDN
 
 #define SPI_EXTCTL_EXTLEN               SPI_ECR_EXTLEN
-#define UART_Mode_Rx                    UART_GCR_RXEN
-#define UART_Mode_Tx                    UART_GCR_TXEN
-#define UART_EN                         UART_GCR_UARTEN
-#define UART_IT_RXBRK                   UART_IER_RXBRKEN
-#define UART_IT_ERR                     UART_IER_RXFERREN
-#define UART_IT_PE                      UART_IER_RXPERREN
-#define UART_OVER_ERR                   UART_IER_RXOERREN
-#define UART_IT_RXIEN                   UART_IER_RXIEN
-#define UART_IT_TXIEN                   UART_IER_TXIEN
+#define TIM_CR1_ARPE                    TIM_CR1_ARPEN
+
+#define TIM_SMCR_ECE                    TIM_SMCR_ECEN
+
+#define TIM_DIER_UIE                    TIM_DIER_UIEN
+#define TIM_DIER_CC1IE                  TIM_DIER_CC1IEN
+#define TIM_DIER_CC2IE                  TIM_DIER_CC2IEN
+#define TIM_DIER_CC3IE                  TIM_DIER_CC3IEN
+#define TIM_DIER_CC4IE                  TIM_DIER_CC4IEN
+#define TIM_DIER_COMIE                  TIM_DIER_COMIEN
+#define TIM_DIER_TIE                    TIM_DIER_TIEN
+#define TIM_DIER_BIE                    TIM_DIER_BIEN
+#define TIM_DIER_UDE                    TIM_DIER_UDEN
+#define TIM_DIER_CC1DE                  TIM_DIER_CC1DEN
+#define TIM_DIER_CC2DE                  TIM_DIER_CC2DEN
+#define TIM_DIER_CC3DE                  TIM_DIER_CC3DEN
+#define TIM_DIER_CC4DE                  TIM_DIER_CC4DEN
+#define TIM_DIER_COMDE                  TIM_DIER_COMDEN
+#define TIM_DIER_TDE                    TIM_DIER_TDEN
 
 #if defined(__MM0P1) || defined(__MM0Q1)
-    #define UART_IT_RXB8                UART_IER_RXB8IEN
-    #define UART_IT_TXBRK               UART_IER_TXBRKIEN
-    #define UART_IT_TXCIEN              UART_IER_TXCIEN
+#define TIM_DIER_CC5IE                  TIM_DIER_CC5IEN
+#define TIM_DIER_CC5DE                  TIM_DIER_CC5DEN
 #endif
 
-#define UART_DMAReq_EN                  UART_GCR_DMAMODE
+#define TIM_SR_UIF                      TIM_SR_UI
+#define TIM_SR_CC1IF                    TIM_SR_CC1I
+#define TIM_SR_CC2IF                    TIM_SR_CC2I
+#define TIM_SR_CC3IF                    TIM_SR_CC3I
+#define TIM_SR_CC4IF                    TIM_SR_CC4I
+#define TIM_SR_COMIF                    TIM_SR_COMI
+#define TIM_SR_TIF                      TIM_SR_TI
+#define TIM_SR_BIF                      TIM_SR_BI
+#define TIM_SR_CC1OF                    TIM_SR_CC1O
+#define TIM_SR_CC2OF                    TIM_SR_CC2O
+#define TIM_SR_CC3OF                    TIM_SR_CC3O
+#define TIM_SR_CC4OF                    TIM_SR_CC4O
 
+#if defined(__MM0P1) || defined(__MM0Q1)
+#define TIM_SR_CC5IF                    TIM_SR_CC5I
+#endif
 
-#define UART_FLAG_TXEMPTY               UART_CSR_TXBUF_EMPTY
+#define TIM_CCMR1_OC1FE                 TIM_CCMR1_OC1FEN
+#define TIM_CCMR1_OC1PE                 TIM_CCMR1_OC1PEN
+#define TIM_CCMR1_OC1CE                 TIM_CCMR1_OC1CEN
+#define TIM_CCMR1_OC2FE                 TIM_CCMR1_OC2FEN
+#define TIM_CCMR1_OC2PE                 TIM_CCMR1_OC2PEN
+#define TIM_CCMR1_OC2CE                 TIM_CCMR1_OC2CEN
+
+#define TIM_CCMR2_OC3FE                 TIM_CCMR2_OC3FEN
+#define TIM_CCMR2_OC3PE                 TIM_CCMR2_OC3PEN
+#define TIM_CCMR2_OC3CE                 TIM_CCMR2_OC3CEN
+#define TIM_CCMR2_OC4FE                 TIM_CCMR2_OC4FEN
+#define TIM_CCMR2_OC4PE                 TIM_CCMR2_OC4PEN
+#define TIM_CCMR2_OC4CE                 TIM_CCMR2_OC4CEN
+
+#define TIM_CCER_CC1E                   TIM_CCER_CC1EN
+#define TIM_CCER_CC1NE                  TIM_CCER_CC1NEN
+#define TIM_CCER_CC2E                   TIM_CCER_CC2EN
+#define TIM_CCER_CC2NE                  TIM_CCER_CC2NEN
+#define TIM_CCER_CC3E                   TIM_CCER_CC3EN
+#define TIM_CCER_CC3NE                  TIM_CCER_CC3NEN
+#define TIM_CCER_CC4E                   TIM_CCER_CC4EN
+
+#if defined(__MM0P1) || defined(__MM0Q1)
+#define TIM_CCER_CC5E                   TIM_CCER_CC5EN
+#endif
+
+#define TIM_BDTR_BKE                    TIM_BDTR_BKEN
+#define TIM_BDTR_AOE                    TIM_BDTR_AOEN
+#define TIM_BDTR_MOE                    TIM_BDTR_MOEN
+
+#if defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+#define TIM_BDTR_DOE                    TIM_BDTR_DOEN
+#endif
+
+#if defined(__MM0P1) || defined(__MM0Q1)
+#define TIM_CCMR3_OC5FE                 TIM_CCMR3_OC5FEN
+#define TIM_CCMR3_OC5PE                 TIM_CCMR3_OC5PEN
+#define TIM_CCMR3_OC5CE                 TIM_CCMR3_OC5CEN
+#endif
+#define UART_TDR_TXREG                  UART_TDR_DATA
+#define UART_RDR_RXREG                  UART_RDR_DATA
+
+#define UART_ISR_TX_INTF                UART_ISR_TX
+#define UART_ISR_RX_INTF                UART_ISR_RX
+#define UART_ISR_RXOERR_INTF            UART_ISR_RXOERR
+#define UART_ISR_RXPERR_INTF            UART_ISR_RXPERR
+#define UART_ISR_RXFERR_INTF            UART_ISR_RXFERR
+#define UART_ISR_RXBRK_INTF             UART_ISR_RXBRK
+
+#define UART_IER_TXIEN                  UART_IER_TX
+#define UART_IER_RXIEN                  UART_IER_RXI
+#define UART_IER_RXOERREN               UART_IER_RXOERR
+#define UART_IER_RXPERREN               UART_IER_RXPERR
+#define UART_IER_RXFERREN               UART_IER_RXFERR
+#define UART_IER_RXBRKEN                UART_IER_RXBRK
+
+#define UART_ICR_TXICLR                 UART_ICR_TX
+#define UART_ICR_RXICLR                 UART_ICR_RX
+#define UART_ICR_RXOERRCLR              UART_ICR_RXOERR
+#define UART_ICR_RXPERRCLR              UART_ICR_RXPERR
+#define UART_ICR_RXFERRCLR              UART_ICR_RXFERR
+#define UART_ICR_RXBRKCLR               UART_ICR_RXBRK
+
+#define UART_Mode_Rx                    UART_GCR_RX
+#define UART_Mode_Tx                    UART_GCR_TX
+#define UART_EN                         UART_GCR_UART
+#define UART_IT_RXBRK                   UART_IER_RXBRK
+#define UART_IT_ERR                     UART_IER_RXFERR
+#define UART_IT_PE                      UART_IER_RXPERR
+#define UART_OVER_ERR                   UART_IER_RXOERR
+#define UART_IT_RXIEN                   UART_IER_RX
+#define UART_IT_TXIEN                   UART_IER_TX
+
+#define UART_BRR_DIV_MANTISSA           UART_BRR_MANTISSA
+#define UART_BRR_DIV_FRACTION           UART_BRR_FRACTION
+
+#if defined(__MM0P1) || defined(__MM0Q1)
+    #define UART_ISR_TXC_INTF           UART_ISR_TXC
+    #define UART_ISR_TXBRK_INTF         UART_ISR_TXBRK
+    #define UART_ISR_RXB8_INTF          UART_ISR_RXB8
+
+    #define UART_IT_RXB8                UART_IER_RXB8
+    #define UART_IT_TXBRK               UART_IER_TXBRK
+    #define UART_IT_TXCIEN              UART_IER_TXC
+    #define UART_ICR_TXCCLR             UART_ICR_TXC
+    #define UART_ICR_TXBRKCLR           UART_ICR_TXBRK
+    #define UART_ICR_RXB8CLR            UART_ICR_RXB8
+    #define UART_SCR_SCAEN              UART_SCR_SCARB
+#endif
+
+#define UART_DMAReq_EN                  UART_GCR_DMA
+
+#define UART_FLAG_TXEMPTY               UART_CSR_TXEPT
 #define UART_FLAG_TXFULL                UART_CSR_TXFULL
 #define UART_FLAG_RXAVL                 UART_CSR_RXAVL
 #define UART_FLAG_TXEPT                 UART_CSR_TXC
+#define WWDG_CR_T                       WWDG_CR_CNT

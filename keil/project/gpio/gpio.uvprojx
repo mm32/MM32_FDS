@@ -407,6 +407,16 @@
 			</TargetOption>
 			<Groups>
 				<Group>
+					<GroupName>app</GroupName>
+					<Files>
+						<File>
+							<FileName>gpio.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\app\gpio\gpio.c</FilePath>
+						</File>
+					</Files>
+				</Group>
+				<Group>
 					<GroupName>bsp</GroupName>
 					<Files>
 						<File>
@@ -758,16 +768,6 @@
 							<FileName>HAL_wwdg.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\..\library\HAL_lib\HAL_wwdg.c</FilePath>
-						</File>
-					</Files>
-				</Group>
-				<Group>
-					<GroupName>app</GroupName>
-					<Files>
-						<File>
-							<FileName>gpio.c</FileName>
-							<FileType>1</FileType>
-							<FilePath>..\..\app\gpio\gpio.c</FilePath>
 						</File>
 					</Files>
 				</Group>
@@ -1200,6 +1200,16 @@
 			</TargetOption>
 			<Groups>
 				<Group>
+					<GroupName>app</GroupName>
+					<Files>
+						<File>
+							<FileName>gpio.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\app\gpio\gpio.c</FilePath>
+						</File>
+					</Files>
+				</Group>
+				<Group>
 					<GroupName>bsp</GroupName>
 					<Files>
 						<File>
@@ -1551,16 +1561,6 @@
 							<FileName>HAL_wwdg.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\..\library\HAL_lib\HAL_wwdg.c</FilePath>
-						</File>
-					</Files>
-				</Group>
-				<Group>
-					<GroupName>app</GroupName>
-					<Files>
-						<File>
-							<FileName>gpio.c</FileName>
-							<FileType>1</FileType>
-							<FilePath>..\..\app\gpio\gpio.c</FilePath>
 						</File>
 					</Files>
 				</Group>

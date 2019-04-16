@@ -87,7 +87,7 @@ typedef struct {
 /*  --------------------------------------------------------------------
     The Sub Handle Index table
 --------------------------------------------------------------------  */
-#if defined(__MM3N1) || defined(__MM0N1)
+#if defined(__MM0N1)
     static u32  tbIpBase[]          = {COMP1, COMP2};
     static s8 tbSubHandleIdx[]      = {0,     1};
 // e.g.
@@ -122,7 +122,9 @@ typedef struct {
     The End of Sub Handle Index table
 --------------------------------------------------------------------  */
 
+#if !defined(__MM3N1)
 GLOBAL static tDRV_COMP_INSTANT  instance[INSTANCE_NUM];
+#endif
 
 #else
 #define GLOBAL extern

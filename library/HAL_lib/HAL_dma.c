@@ -66,7 +66,7 @@ void DMA_Init(DMA_Channel_TypeDef* channel, DMA_InitTypeDef* pInitStruct)
 {
     MODIFY_REG(
         channel->CCR,
-        (DMA_CCR_DIR | DMA_CCR_CIRC | DMA_CCR_PINC | DMA_CCR_MINC | DMA_CCR_PSIZE | DMA_CCR_MSIZE | DMA_CCR_PL | DMA_CCR_MEM2MEM),
+        (DMA_CCR_DIR | DMA_CCR_CIRC | DMA_CCR_PINC | DMA_CCR_MINC | DMA_CCR_PSIZE | DMA_CCR_MSIZE | DMA_CCR_PL | DMA_CCR_M2M),
         ((u32)pInitStruct->DIR | (u32)pInitStruct->Mode | (u32)pInitStruct->PeripheralInc |
          (u32)pInitStruct->MemoryInc | (u32)pInitStruct->PeripheralDataSize | (u32)pInitStruct->MemoryDataSize |
          (u32)pInitStruct->Priority | (u32)pInitStruct->M2M));

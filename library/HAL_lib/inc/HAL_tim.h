@@ -398,16 +398,16 @@ typedef enum {
 /// @brief TIM_interrupt_sources
 /// @anchor TIM_Master_Slave_Mode
 typedef enum {
-    TIM_IT_Update  = TIM_DIER_UIE,                              ///< TIM update Interrupt source
-    TIM_IT_CC1     = TIM_DIER_CC1IE,                            ///< TIM Capture Compare 1 Interrupt source
-    TIM_IT_CC2     = TIM_DIER_CC2IE,                            ///< TIM Capture Compare 2 Interrupt source
-    TIM_IT_CC3     = TIM_DIER_CC3IE,                            ///< TIM Capture Compare 3 Interrupt source
-    TIM_IT_CC4     = TIM_DIER_CC4IE,                            ///< TIM Capture Compare 4 Interrupt source
-    TIM_IT_COM     = TIM_DIER_COMIE,                            ///< TIM Commutation Interrupt source
-    TIM_IT_Trigger = TIM_DIER_TIE,                              ///< TIM Trigger Interrupt source
-    TIM_IT_Break   = TIM_DIER_BIE                               ///< TIM Break Interrupt source
+    TIM_IT_Update  = TIM_DIER_UI,                               ///< TIM update Interrupt source
+    TIM_IT_CC1     = TIM_DIER_CC1I,                             ///< TIM Capture Compare 1 Interrupt source
+    TIM_IT_CC2     = TIM_DIER_CC2I,                             ///< TIM Capture Compare 2 Interrupt source
+    TIM_IT_CC3     = TIM_DIER_CC3I,                             ///< TIM Capture Compare 3 Interrupt source
+    TIM_IT_CC4     = TIM_DIER_CC4I,                             ///< TIM Capture Compare 4 Interrupt source
+    TIM_IT_COM     = TIM_DIER_COMI,                             ///< TIM Commutation Interrupt source
+    TIM_IT_Trigger = TIM_DIER_TI,                               ///< TIM Trigger Interrupt source
+    TIM_IT_Break   = TIM_DIER_BI                                ///< TIM Break Interrupt source
 #if defined(__MM0P1) || defined(__MM0Q1)
-    ,TIM_IT_CC5     = TIM_DIER_CC5IE                            ///< TIM Capture Compare 5 Interrupt source
+    ,TIM_IT_CC5     = TIM_DIER_CC5I                             ///< TIM Capture Compare 5 Interrupt source
 #endif
 } TIMIT_TypeDef;
 
@@ -436,15 +436,15 @@ typedef enum {
 /// @brief TIM_DMA_sources
 /// @anchor TIM_DMA_sources
 typedef enum {
-    TIM_DMA_Update  = TIM_DIER_UDE,                             ///< TIM update Interrupt source
-    TIM_DMA_CC1     = TIM_DIER_CC1DE,                           ///< TIM Capture Compare 1 DMA source
-    TIM_DMA_CC2     = TIM_DIER_CC2DE,                           ///< TIM Capture Compare 2 DMA source
-    TIM_DMA_CC3     = TIM_DIER_CC3DE,                           ///< TIM Capture Compare 3 DMA source
-    TIM_DMA_CC4     = TIM_DIER_CC4DE,                           ///< TIM Capture Compare 4 DMA source
-    TIM_DMA_COM     = TIM_DIER_COMDE,                           ///< TIM Commutation DMA source
-    TIM_DMA_Trigger = TIM_DIER_TDE                              ///< TIM Trigger DMA source
+    TIM_DMA_Update  = TIM_DIER_UD,                              ///< TIM update Interrupt source
+    TIM_DMA_CC1     = TIM_DIER_CC1D,                            ///< TIM Capture Compare 1 DMA source
+    TIM_DMA_CC2     = TIM_DIER_CC2D,                            ///< TIM Capture Compare 2 DMA source
+    TIM_DMA_CC3     = TIM_DIER_CC3D,                            ///< TIM Capture Compare 3 DMA source
+    TIM_DMA_CC4     = TIM_DIER_CC4D,                            ///< TIM Capture Compare 4 DMA source
+    TIM_DMA_COM     = TIM_DIER_COMD,                            ///< TIM Commutation DMA source
+    TIM_DMA_Trigger = TIM_DIER_TD                               ///< TIM Trigger DMA source
 #if defined(__MM0P1) || defined(__MM0Q1)
-    ,TIM_DMA_CC5    = TIM_DIER_CC5DE                            ///< TIM Capture Compare 5 DMA source
+    ,TIM_DMA_CC5    = TIM_DIER_CC5D                             ///< TIM Capture Compare 5 DMA source
 #endif
 } TIMDMASRC_Typedef;
 

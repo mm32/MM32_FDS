@@ -112,7 +112,7 @@ typedef enum {
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {
     DMA_M2M_Disable = 0U,
-    DMA_M2M_Enable  = DMA_CCR_MEM2MEM                                           // 0x00004000U
+    DMA_M2M_Enable  = DMA_CCR_M2M                                               // 0x00004000U
 } DMA_memory_to_memory_TypeDef;
 
 ////////////////////////////////////////////////////////////////////////////////

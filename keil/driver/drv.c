@@ -50,27 +50,27 @@ fpCreateFile createFileInterface[emIP_COUNT] = {
     ADC_CreateFile,                 // 2
     AES_CreateFile,                 // 3
     BKP_CreateFile,                 // 4
-    COMP_CreateFile,                // 5
-    CRC_CreateFile,                 // 6
-    CRS_CreateFile,                 // 7
-    DAC_CreateFile,                 // 8
-    DIV_CreateFile,                 // 9
-    DMA_CreateFile,                 // 10
-    EXTI_CreateFile,                // 11
-    GPIO_CreateFile,                // 12
-    I2C_CreateFile,                 // 13
-    IWDG_CreateFile,                // 14
-    OPAMP_CreateFile,               // 15
-    POWER_CreateFile,               // 16
-    RCC_CreateFile,                 // 17
-    RTC_CreateFile,                 // 18
-    SPI_CreateFile,                 // 19
-    SQRT_CreateFile,                // 20
-    TIM_CreateFile,                 // 21
-    UART_CreateFile,                // 22
-    WWDG_CreateFile,                // 23
-    EEPROM_CreateFile,              // 24
-    PROTECT_CreateFile              // 25
+//  COMP_CreateFile,                //
+    CRC_CreateFile,                 // 5
+//  CRS_CreateFile,                 //
+    DAC_CreateFile,                 // 6
+//  DIV_CreateFile,                 //
+    DMA_CreateFile,                 // 7
+    EXTI_CreateFile,                // 8
+    GPIO_CreateFile,                // 9
+    I2C_CreateFile,                 // 10
+    IWDG_CreateFile,                // 11
+//  OPAMP_CreateFile,               //
+    POWER_CreateFile,               // 12
+    RCC_CreateFile,                 // 13
+    RTC_CreateFile,                 // 14
+    SPI_CreateFile,                 // 15
+//  SQRT_CreateFile,                //
+    TIM_CreateFile,                 // 16
+    UART_CreateFile,                // 17
+    WWDG_CreateFile,                // 18
+    EEPROM_CreateFile,              // 19
+    PROTECT_CreateFile              // 20
 };
 
 HANDLE createFileList[emIP_COUNT];

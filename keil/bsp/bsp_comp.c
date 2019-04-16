@@ -42,9 +42,8 @@
 /// @addtogroup COMP_Exported_Functions
 /// @{
 
-/* ---------------------------------------------------------------------
-------  P e r i p h e r a l s    i n i t i a l i z a t i o n   ---------
---------------------------------------------------------------------- */
+#if !defined(__MM3N1)
+
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  Initialize the  channel of comparator.
 /// @param  COMPx: the selected comparator.
@@ -218,7 +217,7 @@ void BSP_COMP_GPIO_Configure(u32 COMPx, u8 inp, u8 inm, u8 out)
 #endif
         break;
 
-#if defined(MZ308)
+#if defined(__MM0P1)
     case COMP3:             GPIOB->CRH  = GPIOB->CRH  & ~(0x0F << ((8  % 8) * 4));
                             GPIOB->AFRH = GPIOB->AFRH & ~(0x0F << ((12 % 8) * 4)) | (0x07 << ((12 % 8) * 4));
                             GPIOB->CRH  = GPIOB->CRH  & ~(0x0F << ((9  % 8) * 4));
@@ -354,6 +353,8 @@ void BSP_COMP_GPIO_Configure(u32 COMPx, u8 inp, u8 inm, u8 out)
 #endif           /* ----------------- End Access  ------------------- */
 /* -------------------------------------------------------------------------- */
 }
+
+#endif
 
 /// @}
 

@@ -721,11 +721,11 @@ static void HardwareConfig(tAPP_SPI_DCB* pDcb, u8 idx)
     switch(pDcb->mode) {
         case 0:
         InitStructure.SPI_CPOL  = (SPI_CPOL_TypeDef)0;
-        InitStructure.SPI_CPHA  = (SPI_CPHA_TypeDef)0;
+        InitStructure.SPI_CPHA  = (SPI_CPHA_TypeDef)SPI_CCR_CPHA;
         break;
         case 1:
         InitStructure.SPI_CPOL  = (SPI_CPOL_TypeDef)0;
-        InitStructure.SPI_CPHA  = (SPI_CPHA_TypeDef)SPI_CCR_CPHA;
+        InitStructure.SPI_CPHA  = (SPI_CPHA_TypeDef)0;
         break;
         case 2:
         InitStructure.SPI_CPOL  = (SPI_CPOL_TypeDef)SPI_CCR_CPOL;

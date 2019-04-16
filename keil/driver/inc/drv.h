@@ -59,28 +59,28 @@ typedef enum {
     emIP_ADC,                       ///< 2
     emIP_AES,                       ///< 3
     emIP_BKP,                       ///< 4
-    emIP_COMP,                      ///< 5
-    emIP_CRC,                       ///< 6
-    emIP_CRS,                       ///< 7
-    emIP_DAC,                       ///< 8
-    emIP_DIV,                       ///< 9
-    emIP_DMA,                       ///< 10
-    emIP_EXTI,                      ///< 11
-    emIP_GPIO,                      ///< 12
-    emIP_I2C,                       ///< 13
-    emIP_IWDG,                      ///< 14
-    emIP_OPAMP,                     ///< 15
-    emIP_POWER,                     ///< 16
-    emIP_RCC,                       ///< 17
-    emIP_RTC,                       ///< 18
-    emIP_SPI,                       ///< 19
-    emIP_SQRT,                      ///< 20
-    emIP_TIM,                       ///< 21
-    emIP_UART,                      ///< 22
-    emIP_WWDG,                      ///< 23
-    emIP_EEPROM,                    ///< 24
-    emIP_PROTECT,                   ///< 25
-    emIP_COUNT                      ///< 26
+//  emIP_COMP,                      ///<
+    emIP_CRC,                       ///< 5
+//  emIP_CRS,                       ///<
+    emIP_DAC,                       ///< 6
+//  emIP_DIV,                       ///<
+    emIP_DMA,                       ///< 7
+    emIP_EXTI,                      ///< 8
+    emIP_GPIO,                      ///< 9
+    emIP_I2C,                       ///< 10
+    emIP_IWDG,                      ///< 11
+//  emIP_OPAMP,                     ///<
+    emIP_POWER,                     ///< 12
+    emIP_RCC,                       ///< 13
+    emIP_RTC,                       ///< 14
+    emIP_SPI,                       ///< 15
+//  emIP_SQRT,                      ///<
+    emIP_TIM,                       ///< 16
+    emIP_UART,                      ///< 17
+    emIP_WWDG,                      ///< 18
+    emIP_EEPROM,                    ///< 19
+    emIP_PROTECT,                   ///< 20
+    emIP_COUNT                      ///< 21
 } EM_IP;
 
 
@@ -1102,22 +1102,22 @@ void DISPLAY_CreateFile(HANDLE handle);
 void ADC_CreateFile(HANDLE handle);
 void AES_CreateFile(HANDLE handle);
 void BKP_CreateFile(HANDLE handle);
-void COMP_CreateFile(HANDLE handle);
+//void COMP_CreateFile(HANDLE handle);
 void CRC_CreateFile(HANDLE handle);
-void CRS_CreateFile(HANDLE handle);
+//void CRS_CreateFile(HANDLE handle);
 void DAC_CreateFile(HANDLE handle);
-void DIV_CreateFile(HANDLE handle);
+//void DIV_CreateFile(HANDLE handle);
 void DMA_CreateFile(HANDLE handle);
 void EXTI_CreateFile(HANDLE handle);
 void GPIO_CreateFile(HANDLE handle);
 void I2C_CreateFile(HANDLE handle);
 void IWDG_CreateFile(HANDLE handle);
-void OPAMP_CreateFile(HANDLE handle);
+//void OPAMP_CreateFile(HANDLE handle);
 void POWER_CreateFile(HANDLE handle);
 void RCC_CreateFile(HANDLE handle);
 void RTC_CreateFile(HANDLE handle);
 void SPI_CreateFile(HANDLE handle);
-void SQRT_CreateFile(HANDLE handle);
+//void SQRT_CreateFile(HANDLE handle);
 void TIM_CreateFile(HANDLE handle);
 void UART_CreateFile(HANDLE handle);
 void WWDG_CreateFile(HANDLE handle);

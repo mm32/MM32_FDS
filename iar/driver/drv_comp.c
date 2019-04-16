@@ -46,6 +46,8 @@
 /// @addtogroup COMP_Exported_Functions
 /// @{
 
+#if !defined(__MM3N1)
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  Return the output level (high or low) of the selected comparator.
@@ -309,7 +311,7 @@ static int COMP_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 
     return DRV_COMP_CheckStatus((u32)instance[tbSubHandleIdx[handle->idx]].sPrefix.pBase);
 }
-
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  COMP CreateFile
 /// @param  handle: pointer to a HANDLE structure that contains
@@ -318,6 +320,7 @@ static int COMP_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 ////////////////////////////////////////////////////////////////////////////////
 void COMP_CreateFile(HANDLE handle)
 {
+#if !defined(__MM3N1)
     static bool first = true;
     if (first) {
         first = false;
@@ -331,6 +334,7 @@ void COMP_CreateFile(HANDLE handle)
     handle->closeFile   = (int*)&COMP_CloseFile;
     handle->readFile    = (int*)&COMP_ReadFile;
     handle->writeFile   = NULL;
+#endif
 }
 
 

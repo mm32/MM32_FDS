@@ -33,7 +33,7 @@
 /// @{
 
 
-#if defined(__MM0P1) || defined(__MM0Q1)
+#if defined(__MM0P1)
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup SQRT_Exported_Constants
 /// @{

@@ -90,8 +90,8 @@ void UART_Init(UART_TypeDef* UARTx, UART_InitTypeDef* pInitStruct)
 
     /*---------------------------- UART GCR Configuration
      * -----------------------*/
-    MODIFY_REG(UARTx->GCR, (UART_GCR_TXEN | UART_GCR_RXEN), pInitStruct->Mode);
-    MODIFY_REG(UARTx->GCR, UART_GCR_AUTOFLOWEN, pInitStruct->HWFlowControl);
+    MODIFY_REG(UARTx->GCR, (UART_GCR_TX | UART_GCR_RX), pInitStruct->Mode);
+    MODIFY_REG(UARTx->GCR, UART_GCR_AUTOFLOW, pInitStruct->HWFlowControl);
 
     /*---------------------------- UART BRR Configuration
      * -----------------------*/
@@ -134,7 +134,7 @@ void UART_StructInit(UART_InitTypeDef* pInitStruct)
 ////////////////////////////////////////////////////////////////////////////////
 void UART_Cmd(UART_TypeDef* UARTx, FunctionalState state)
 {
-    MODIFY_REG(UARTx->GCR, UART_GCR_UARTEN, state << UART_GCR_UARTEN_Pos);
+    MODIFY_REG(UARTx->GCR, UART_GCR_UART, state << UART_GCR_UART_Pos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +171,7 @@ void UART_ITConfig(UART_TypeDef* UARTx, u16 it, FunctionalState state)
 ////////////////////////////////////////////////////////////////////////////////
 void UART_DMACmd(UART_TypeDef* UARTx, u16 DMAReq, FunctionalState state)
 {
-    MODIFY_REG(UARTx->GCR, UART_GCR_DMAMODE, state << UART_GCR_DMAMODE_Pos);
+    MODIFY_REG(UARTx->GCR, UART_GCR_DMA, state << UART_GCR_DMA_Pos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -280,7 +280,7 @@ void UART_ReceiverWakeUpCmd(UART_TypeDef* UARTx, FunctionalState state)
 ////////////////////////////////////////////////////////////////////////////////
 void UART_SetRXAddress(UART_TypeDef* UARTx, u8 address)
 {
-    MODIFY_REG(UARTx->RXADDR, UART_RXADDR_RXADDR, address);
+    MODIFY_REG(UARTx->RXAR, UART_RXAR_ADDR, address);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -291,7 +291,7 @@ void UART_SetRXAddress(UART_TypeDef* UARTx, u8 address)
 ////////////////////////////////////////////////////////////////////////////////
 void UART_SetRXMASK(UART_TypeDef* UARTx, u8 address)
 {
-    MODIFY_REG(UARTx->RXMASK, UART_RXMASK_RXMASK, address);
+    MODIFY_REG(UARTx->RXMR, UART_RXMR_MASK, address);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -383,7 +383,7 @@ void UART_SmartCardCmd(UART_TypeDef* UARTx, FunctionalState state)
 ////////////////////////////////////////////////////////////////////////////////
 void UART_SmartCardNACKCmd(UART_TypeDef* UARTx, FunctionalState state)
 {
-    MODIFY_REG(UARTx->SCR, UART_SCR_SCAEN, state << UART_SCR_SCAEN_Pos);
+    MODIFY_REG(UARTx->SCR, UART_SCR_SCARB, state << UART_SCR_SCARB_Pos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

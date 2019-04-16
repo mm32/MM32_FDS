@@ -271,8 +271,8 @@ static int DMA_OpenFile(HANDLE handle, tAPP_DMA_DCB* pDcb)
     if (pDcb->dir == emDMA_DIR_m2p)                 SET_BIT(ch->CCR,   DMA_CCR_DIR);
     else                                            CLEAR_BIT(ch->CCR, DMA_CCR_DIR);
 
-    if (pDcb->dir == emDMA_DIR_m2m)                 SET_BIT(ch->CCR,   DMA_CCR_MEM2MEM);
-    else                                            CLEAR_BIT(ch->CCR, DMA_CCR_MEM2MEM);
+    if (pDcb->dir == emDMA_DIR_m2m)                 SET_BIT(ch->CCR,   DMA_CCR_M2M);
+    else                                            CLEAR_BIT(ch->CCR, DMA_CCR_M2M);
 
     if (pDcb->periphInc == emDMA_INC_Enable)        SET_BIT(ch->CCR,   DMA_CCR_PINC);
     else                                            CLEAR_BIT(ch->CCR, DMA_CCR_PINC);

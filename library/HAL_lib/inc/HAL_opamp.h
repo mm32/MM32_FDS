@@ -45,10 +45,10 @@
 /// @brief OPAMP_OutputLevel
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {
-    OPAMP1 = OPAMP1_EN,
-    OPAMP2 = OPAMP2_EN,
-    OPAMP3 = OPAMP3_EN,
-    OPAMP4 = OPAMP4_EN
+    OPAMP1 = OPAMP_CSR_OP1, //  OPAMP1_EN,
+    OPAMP2 = OPAMP_CSR_OP2,
+    OPAMP3 = OPAMP_CSR_OP3,
+    OPAMP4 = OPAMP_CSR_OP4
 } emOPAMP_OutEn;
 /// @}
 

@@ -115,7 +115,7 @@ typedef enum {
     FLASH_FLAG_EOP      = FLASH_SR_EOP,                                         ///< FLASH End of Operation flag
     FLASH_FLAG_PGERR    = FLASH_SR_PGERR,                                       ///< FLASH Program error flag
     FLASH_FLAG_WRPRTERR = FLASH_SR_WRPRTERR,                                    ///< FLASH Write protected error flag
-    FLASH_FLAG_BSY      = FLASH_SR_BSY,                                         ///< FLASH Busy flag
+    FLASH_FLAG_BSY      = FLASH_SR_BUSY,                                        ///< FLASH Busy flag
     FLASH_FLAG_OPTERR   = FLASH_OBR_OPTERR                                      ///< FLASH Option Byte error flag
 } FLASH_FLAG_TypeDef;
 

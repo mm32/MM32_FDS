@@ -518,7 +518,7 @@ void TIM1_UP_IRQHandler(void)                                                   
 }
 #endif
 
-//#if defined(MT304)
+//#if defined(__MM3N1)
 //void TIM1_TRG_COM_IRQHandler(void)                                            // TIM1 COM Interrupt Handler
 //{
 //    DRV_TIM_6Step(TIM1);

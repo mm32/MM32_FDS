@@ -620,14 +620,14 @@ static void HardwareConfig(tAPP_UART_DCB* pDcb, u8 idx)
     else if (pDcb->parity == 2)             InitStructure.Parity    = UART_Parity_Odd;
     else                                    InitStructure.Parity    = UART_Parity_No;
 
-    InitStructure.HWFlowControl = (UART_HW_FLOWCONTROL_TypeDef)((pDcb->hardFlow) ? UART_GCR_AUTOFLOWEN : 0);
+    InitStructure.HWFlowControl = (UART_HW_FLOWCONTROL_TypeDef)((pDcb->hardFlow) ? UART_GCR_AUTOFLOW : 0);
 
     if      (pDcb->modeTxRx == emTXRX_Tx)   InitStructure.Mode = (EM_UARTMODE)UART_Mode_Rx;
     else if (pDcb->modeTxRx == emTXRX_Rx)   InitStructure.Mode = (EM_UARTMODE)UART_Mode_Tx;
     else                                    InitStructure.Mode = (EM_UARTMODE)(UART_Mode_Rx | UART_Mode_Tx);
 
-    if      (pDcb->type == emTYPE_DMA)      InitStructure.Mode |=  UART_GCR_DMAMODE;
-    else                                    InitStructure.Mode &= ~UART_GCR_DMAMODE;
+    if      (pDcb->type == emTYPE_DMA)      InitStructure.Mode |=  UART_GCR_DMA;
+    else                                    InitStructure.Mode &= ~UART_GCR_DMA;
 
     Set_UART_Clock(UARTx);
 
@@ -637,7 +637,7 @@ static void HardwareConfig(tAPP_UART_DCB* pDcb, u8 idx)
 // Enable Interrupt
     if (pDcb->type == emTYPE_DMA) {
         DRV_UART_DMA_ConfigChannel(UARTx);
-        UART_DMACmd(UARTx, UART_GCR_DMAMODE, ENABLE);
+        UART_DMACmd(UARTx, UART_GCR_DMA, ENABLE);
     }
 
     BSP_UART_GPIO_Configure(UARTx, pDcb->remapEn, pDcb->remapIdx);

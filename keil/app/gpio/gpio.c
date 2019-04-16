@@ -17,24 +17,16 @@
 /// <H2><CENTER>&COPY; COPYRIGHT 2018-2019 MINDMOTION </CENTER></H2>
 ////////////////////////////////////////////////////////////////////////////////
 
-/* -----------------------------------------------------------------------------
-  THE PROGRAM IS SUITABLE FOR MM32 MINIBOARD DEVELOPMENT BOARD AND SUPPORTS
-  MM32F031/MM32L0XX/MM32F103 FOR REFERENCE IN NON BLOCKING AND BLOCKING
-  PROGRAMMING.
-  WHEN CHOOSING NON BLOCKING AND BLOCKING PROGRAMMING, USERS MUST DEFINE OR
-  CANCEL THE DEFINITION OF NONBLOCK MACROS.
-
-  Copyright(c) 2017-2018 MindMotion, MM32 Library Ver.2.00 beta.0
-  Author : ZhangQ
------------------------------------------------------------------------------ */
-
 // Define to prevent recursive inclusion  --------------------------------------
 #define _GPIO_C_
 
 // Files includes  -------------------------------------------------------------
 #include <string.h>
 #include "types.h"
+#include "mm32.h"
+
 #include "system_mm32.h"
+
 
 #include "drv.h"
 #include "gpio.h"
