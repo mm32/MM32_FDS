@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// @file     SPI_POLLING.C
 /// @author   Z Yan
-/// @version  2.0.0 Beta4
-/// @date     2019-02-10
-/// @brief    THIS FILE PROVIDES ALL THE SPI_DMA EXAMPLE.
+/// @version  v2.0.0
+/// @date     2019-03-13
+/// @brief    THIS FILE PROVIDES ALL THE SPI_POLLING EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
 ///

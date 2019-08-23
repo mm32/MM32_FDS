@@ -2,7 +2,7 @@
 /// @file     DRV_EXTI.C
 /// @author   YQ Liu
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE EXTI DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -63,9 +63,9 @@ void Set_GPIO_Clock(GPIO_TypeDef* GPIOx)
 /// @param
 /// @retval None
 ////////////////////////////////////////////////////////////////////////////////
-void DRV_EXTI_GPIO_Configure(GPIO_TypeDef*GPIOx, u32 line)
+void DRV_EXTI_GPIO_Configure(GPIO_TypeDef*GPIOx, u8 idx, u32 line)
 {
-    GPIO_Mode_IN_Init(GPIOx, 1 << line,  GPIO_Mode_IPU, NO_REMAP, -1);
+    GPIO_Mode_IN_Init(GPIOx, 1 << line,  (instance[idx].edge == emEDGE_Falling) ? GPIO_Mode_IPU : GPIO_Mode_IPD, NO_REMAP, -1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +140,7 @@ void DVR_EXTI_NVIC_Init(u32 line)
 static void InstanceConfig(tAPP_EXTI_DCB* pDcb, u8 idx)
 {
     instance[idx].sync  = pDcb->sync;
+    instance[idx].edge  = pDcb->edge;
     instance[idx].cb    = pDcb->cb;
     instance[0].cb      = pDcb->cb;
 }
@@ -156,7 +157,7 @@ static void HardwareConfig(tAPP_EXTI_DCB* pDcb, u8 idx)
 
     Set_GPIO_Clock(GPIOx);
 
-    DRV_EXTI_GPIO_Configure(GPIOx, pDcb->hSub);
+    DRV_EXTI_GPIO_Configure(GPIOx, idx, pDcb->hSub);
 
     EXTI_LineConfig(pDcb->port, pDcb->hSub);
 

@@ -2,7 +2,7 @@
 /// @file     I2C_SLAVE_IT.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE I2C_SLAVE_IT EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -116,7 +116,7 @@ int main(void)
         .cbTx       = (u32)&SYNC_I2C_TxCallback,
         .cbRx       = (u32)&SYNC_I2C_RxCallback,
 
-        .block      = emTYPE_Block,         // emTYPE_Block or emTYPE_Non_Block
+        .block      = emTYPE_Non_Block,         // emTYPE_Block or emTYPE_Non_Block
         .sync       = emTYPE_Sync,          // emTYPE_Sync or emTYPE_ASync
         .remapEn    = true,                 // GPIO remap or not
         .remapIdx   = 0,                    // GPIO remap index
@@ -125,10 +125,10 @@ int main(void)
 // I2C parameter
         .fast       = false,                // fast or standard speed mode
         .master     = false,                // master or slave mode
-        .ownaddr    = 0x20,                 // I2C Own Address
         .slave      = 0x20,                 // slave address
         .subAddr    = 0x00,                 // SubAddress
-        .subSize    = 1                     // SubAddress size
+        .subSize    = 1,                    // SubAddress size
+        .ownaddr    = 0x20                  // I2C Own Address
     };
 
 // Step 4:  Open File Device     ---------------------->>>>>
@@ -143,7 +143,7 @@ int main(void)
 //          rxSuccess = true;
 //      }
 
-        if (SysKeyboard(&vkKey)) {
+       if (SysKeyboard(&vkKey)) {
             switch  (vkKey) {
             case  VK_K0:
                 KeyProcess_Key0();

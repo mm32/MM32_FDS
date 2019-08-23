@@ -2,7 +2,7 @@
 /// @file     SPI.H
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE SPI
 ///           EXAMPLES.
 ////////////////////////////////////////////////////////////////////////////////

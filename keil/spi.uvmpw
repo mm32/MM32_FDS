@@ -17,6 +17,9 @@
 		<PathAndName>.\project\spi\spi_dma_slave_tx.uvprojx</PathAndName>
 	</project>
 	<project>
+		<PathAndName>.\project\spi\spi_flash.uvprojx</PathAndName>
+	</project>
+	<project>
 		<PathAndName>.\project\spi\spi_it_master_rx.uvprojx</PathAndName>
 	</project>
 	<project>
@@ -27,6 +30,15 @@
 	</project>
 	<project>
 		<PathAndName>.\project\spi\spi_it_slave_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_lcd.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_nrf24l01_tx.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\spi\spi_nrf24l01_rx.uvprojx</PathAndName>
 	</project>
 	<project>
 		<PathAndName>.\project\spi\spi_polling_master_rx.uvprojx</PathAndName>

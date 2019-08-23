@@ -2,7 +2,7 @@
 /// @file     BSP_SPI.H
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE SPI
 ///           BSP LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +31,7 @@
 /// @defgroup SPI_BSP
 /// @brief  SPI BSP modules
 /// @{
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup SPI_Exported_Types

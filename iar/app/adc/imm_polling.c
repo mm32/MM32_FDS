@@ -2,7 +2,7 @@
 /// @file     IMM_POLLING.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE IMM_POLLING EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -54,7 +54,7 @@ void AppTaskTick(void)
         tickCnt  = 0;
         tickFlag = SET;
     }
-    samFlag = true;
+    samFlag1 = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ void AppTaskTick(void)
 void Callback(void* ptr, u16 len)
 {
     /* Set Conversion flag: Conversion complete */
-    ADC_Filter((u32*)ptr, 16);                                                  // IIR filter
+    ADC1_Filter((u32*)ptr, 16);                                                 // IIR filter
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -139,18 +139,18 @@ int main(void)
         if (dcb.mode != emADC_Continue) {
             if ((dcb.mode == emADC_Imm) && (dcb.type == emTYPE_Polling)) {
                 if (dcb.trig == emTRIGGER_Software) {
-                    if (samFlag) {
-                        samFlag = false;
+                    if (samFlag1) {
+                        samFlag1 = false;
 // Step 5:  Read File Device    ---------------------->>>>>
                         u16 n = ReadFile(hADC, emFILE_ADC1, (u8*)&temp, 16);    // Start ADC & Getting ADC1 Conversion Data
-                        if (n > 0) ADC_Filter((u32*)&temp, n);                  // IIR filter
+                        if (n > 0) ADC1_Filter((u32*)&temp, n);                 // IIR filter
                     }
                 }
             }
             else {
                 if (dcb.trig == emTRIGGER_Software) {
-                    if (samFlag) {
-                        samFlag = false;
+                    if (samFlag1) {
+                        samFlag1 = false;
 // Step 5:  Write File Device    --------------------->>>>>
                         WriteFile(hADC, emFILE_ADC1, 0, 0);                     // Software Start ADC1
                     }
@@ -159,7 +159,7 @@ int main(void)
                 if (dcb.sync == emTYPE_ASync ) {
 // Step 6:  Read File Device    ---------------------->>>>>
                     u16 n = ReadFile(hADC, emFILE_ADC1, (u8*)&temp, 16);        // Start ADC & Getting ADC1 Conversion Data
-                    if (n > 0) ADC_Filter((u32*)&temp, n);                      // IIR filter
+                    if (n > 0) ADC1_Filter((u32*)&temp, n);                     // IIR filter
                 }
             }
         }

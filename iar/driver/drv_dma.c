@@ -2,7 +2,7 @@
 /// @file     DRV_DMA.C
 /// @author   QR Wang
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE DMA DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

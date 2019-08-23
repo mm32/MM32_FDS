@@ -193,8 +193,8 @@ EM_MCUID SetSystemClock(EM_SYSTICK enable , u32* callbackPtr)
     return SystemInit(SYSCLK_HSI_72MHz, enable, callbackPtr);
 #else
     #if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1)
-//      return SystemInit(SYSCLK_HSI_96MHz, enable, callbackPtr);
-        return SystemInit(SYSCLK_HSI_72MHz, enable, callbackPtr);
+        return SystemInit(SYSCLK_HSI_96MHz, enable, callbackPtr);
+//      return SystemInit(SYSCLK_HSI_72MHz, enable, callbackPtr);
     #endif
 
     #if defined(__MM0Q1)

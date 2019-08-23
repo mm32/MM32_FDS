@@ -2,7 +2,7 @@
 /// @file     BSP_KEY.C
 /// @author   AE Team
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE KEY BSP LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

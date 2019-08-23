@@ -2,7 +2,7 @@
 /// @file     I2C_POLLING.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE I2C_POLLING EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -45,9 +45,6 @@
 #define RX_DATA_SIZE 128
 
 u8 newTxBuffer[TX_DATA_SIZE] = {
-//    0xa0,       // Slave Address
-//    0x00,       // SubAddress
-
     0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00, 0x11,
     0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99
 };
@@ -132,32 +129,28 @@ int main(void)
 // I2C parameter
         .fast       = false,                // fast or standard speed mode
         .master     = true,                 // master or slave mode
-        .ownaddr    = 0x20,                 // I2C Own Address
-        .slave      = 0xa0,                 // slave address
+        .slave      = 0xA0,                 // slave address
         .subAddr    = 0x00,                 // SubAddress
-        .subSize    = 1                     // SubAddress size
+        .subSize    = 1,                    // SubAddress size
+        .ownaddr    = 0x20                  // I2C Own Address
     };
 
 // Step 4:  Open File Device     ---------------------->>>>>
     if (!OpenFile(hI2C, (void*)&dcb))       while(1);
 
     while(1){
-        if (!txSuccess && i2cReady && WriteFile(hI2C, emFILE_I2C1, newTxBuffer, 10)) {
-            txSuccess = true;
-            i2cReady = false;
+       if (!txSuccess) {
+           if (WriteFile(hI2C, emFILE_I2C1, newTxBuffer, 10) > 0) {
+               txSuccess = true;
+           }
+        }
+        if (!rxSuccess) {
+            if (ReadFile(hI2C, emFILE_I2C1, newRxBuffer, 5) > 0) {
+                rxSuccess = true;
+            }
         }
 
-        if (tickFlag) {
-            tickFlag = false;
-            i2cReady = true;
-        }
-
-        if (!rxSuccess && i2cReady && ReadFile(hI2C, emFILE_I2C1, newRxBuffer, 5)) {
-            rxSuccess = true;
-            i2cReady = false;
-        }
-
-        if (SysKeyboard(&vkKey)) {
+       if (SysKeyboard(&vkKey)) {
             switch  (vkKey) {
             case  VK_K0:
                 KeyProcess_Key0();

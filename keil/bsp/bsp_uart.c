@@ -2,7 +2,7 @@
 /// @file     BSP_UART.C
 /// @author   QR Wang
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE UART BSP LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

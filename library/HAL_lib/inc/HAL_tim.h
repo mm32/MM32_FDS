@@ -2,7 +2,7 @@
 /// @file     HAL_TIM.H
 /// @author   D Chen
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE TIM
 ///           FIRMWARE LIBRARY.
 ////////////////////////////////////////////////////////////////////////////////
@@ -619,7 +619,7 @@ void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* pInitStruct);
 void TIM_PrescalerConfig(TIM_TypeDef* TIMx, u16 prescaler, TIMUG_Typedef reloadMode);
 void TIM_CounterModeConfig(TIM_TypeDef* TIMx, TIMCOUNTMODE_Typedef counterMode);
 void TIM_SetCounter(TIM_TypeDef* TIMx, u32 counter);
-void TIM_SetAutoreload(TIM_TypeDef* TIMx, u16 autoReload);
+void TIM_SetAutoreload(TIM_TypeDef* TIMx, u32 autoReload);
 void TIM_UpdateDisableConfig(TIM_TypeDef* TIMx, FunctionalState state);
 void TIM_UpdateRequestConfig(TIM_TypeDef* TIMx, TIMURS_Typedef source);
 void TIM_ARRPreloadConfig(TIM_TypeDef* TIMx, FunctionalState state);

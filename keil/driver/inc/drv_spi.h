@@ -2,7 +2,7 @@
 /// @file     DRV_SPI.H
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE SPI
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +70,12 @@ typedef struct{
     bool            txComplete  :1;     ///< SPI transform complete status
     bool            rxProcess   :1;     ///< SPI receive process status
     bool            rxComplete  :1;     ///< SPI receive complete status
+
+    u8              protocol;
+    u8              command;
+    u8              parameter[4];
+    u16             parameterLength;
+
 
 }tDRV_SPI_INSTANT;
 

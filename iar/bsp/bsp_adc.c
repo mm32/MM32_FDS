@@ -2,7 +2,7 @@
 /// @file     BSP_ADC.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE ADC BSP LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -63,6 +63,16 @@ void BSP_ADC_GPIO_Configure(ADC_TypeDef* ADCx, u32 chs)
     #endif
     }
     else {
+    #if defined(__REGISTER)
+        COMMON_EnableIpClock(emCLOCK_GPIOB);
+        GPIOB->CRL = (GPIOB->CRL & 0xFFFFFF00);                                 // GPIOB_Pin0~1-Analog
+    #else
+        COMMON_EnableIpClock(emCLOCK_GPIOB);
+        for (u8 i = 0; i < 8; i++) {
+            if (chs & 1 << i)
+                GPIO_Mode_IN_Init(GPIOB, 1 << i, GPIO_Mode_AIN ,NO_REMAP, NO_REMAP);    // PB0,PB1... be ignored
+        }
+    #endif
         // Todo
     }
 }

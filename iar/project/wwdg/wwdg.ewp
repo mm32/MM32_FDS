@@ -3910,6 +3910,9 @@
 			<name>$PROJ_DIR$\..\..\bsp\bsp_adc.c</name>
 		</file>
 		<file>
+			<name>$PROJ_DIR$\..\..\bsp\bsp_can.c</name>
+		</file>
+		<file>
 			<name>$PROJ_DIR$\..\..\bsp\bsp_comp.c</name>
 		</file>
 		<file>
@@ -3971,6 +3974,9 @@
 		</file>
 		<file>
 			<name>$PROJ_DIR$\..\..\driver\drv_bkp.c</name>
+		</file>
+		<file>
+			<name>$PROJ_DIR$\..\..\driver\drv_can.c</name>
 		</file>
 		<file>
 			<name>$PROJ_DIR$\..\..\driver\drv_comp.c</name>

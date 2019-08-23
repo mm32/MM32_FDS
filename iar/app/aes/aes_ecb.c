@@ -2,7 +2,7 @@
 /// @file     AES_ECB.C
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE AES_ECB EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -78,16 +78,18 @@ int main(void)
     while (1) {
 // Step 4:  Open and write File Device   --------------------->>>>>
 //---- 128 bit ----------
+/*
         dcb.bits    = emAES_BITS_128;                                           // 128bit
         dcb.key     = key_data_128;
-        dcb.iv      = iv_data_128;
+//      dcb.iv      = iv_data_128;
 
         OpenFile(hAES, (void*)&dcb);
 
         hAES->mode = emBOOL_Encrypt;
+        memcpy(input_data, input_data_128, sizeof(input_data_128));
         memcpy(inOutBuffer, input_data_128, sizeof(input_data_128));
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));
-        memcpy(cipher_128, inOutBuffer, sizeof(inOutBuffer));
+        memcpy(cipher, inOutBuffer, sizeof(inOutBuffer));
 
         hAES->mode = emBOOL_Decrypt;
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));
@@ -96,30 +98,32 @@ int main(void)
 //---- 192 bit ----------
         dcb.bits    = emAES_BITS_192;                                           // 192bit
         dcb.key     = key_data_192;
-        dcb.iv      = iv_data_192;
+//      dcb.iv      = iv_data_192;
 
         OpenFile(hAES, (void*)&dcb);
 
         hAES->mode = emBOOL_Encrypt;
+        memcpy(input_data, input_data_192, sizeof(input_data_128));
         memcpy(inOutBuffer, input_data_192, sizeof(input_data_192));
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));
-        memcpy(cipher_192, inOutBuffer, sizeof(inOutBuffer));
+        memcpy(cipher, inOutBuffer, sizeof(inOutBuffer));
 
         hAES->mode = emBOOL_Decrypt;
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));
         result_192 = (!memcmp(input_data_192, inOutBuffer, 16)) ?  true : false;
-
+*/
 //---- 256 bit ----------
         dcb.bits    = emAES_BITS_256;                   // 256bit
         dcb.key     = key_data_256;
-        dcb.iv      = iv_data_256;
+//      dcb.iv      = iv_data_256;
 
         OpenFile(hAES, (void*)&dcb);
 
         hAES->mode = emBOOL_Encrypt;
+        memcpy(input_data, input_data_256, sizeof(input_data_128));
         memcpy(inOutBuffer, input_data_256, sizeof(input_data_256));
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));
-        memcpy(cipher_256, inOutBuffer, sizeof(inOutBuffer));
+        memcpy(cipher, inOutBuffer, sizeof(inOutBuffer));
 
         hAES->mode = emBOOL_Decrypt;
         WriteFile(hAES, NULL, (u8*)inOutBuffer, sizeof(inOutBuffer));

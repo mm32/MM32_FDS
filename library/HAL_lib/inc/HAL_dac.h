@@ -2,7 +2,7 @@
 /// @file     HAL_DAC.H
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE DAC
 ///           FIRMWARE LIBRARY.
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ typedef enum {
     DAC_Trigger_T2_TRIG  = (DAC_CR_TSEL1_TIM2_TRIG | DAC_CR_TEN1),
     DAC_Trigger_T4_TRIG  = (DAC_CR_TSEL1_TIM4_TRIG | DAC_CR_TEN1),
     DAC_Trigger_Ext_IT9  = (DAC_CR_TSEL1_EXTI9 | DAC_CR_TEN1),
-    DAC_Trigger_Software = (DAC_CR_TSEL1_SOFTWARE | DAC_CR_TEN1)
+    DAC_Trigger_Software = (DAC_CR_TSEL1_SOFTWARE)
 } emDACTRIG_TypeDef;
 
 ////////////////////////////////////////////////////////////////////////////////

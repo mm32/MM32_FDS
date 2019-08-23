@@ -2131,7 +2131,7 @@
 				<option>
 					<name>CCDefines</name>
 					<state>__IAR</state>
-					<state>__MZ306</state>
+					<state>__MM0P1</state>
 					<state>__EX_UART</state>
 					<state>__MM32_MINIBOARD</state>
 					<state>OVERTIME=0</state>
@@ -3106,7 +3106,7 @@
 				<option>
 					<name>CCDefines</name>
 					<state>__IAR</state>
-					<state>__MZ306</state>
+					<state>__MM0Q1</state>
 					<state>__EX_UART</state>
 					<state>__MM32_MINIBOARD</state>
 					<state>OVERTIME=0</state>
@@ -3916,6 +3916,9 @@
 			<name>$PROJ_DIR$\..\..\bsp\bsp_adc.c</name>
 		</file>
 		<file>
+			<name>$PROJ_DIR$\..\..\bsp\bsp_can.c</name>
+		</file>
+		<file>
 			<name>$PROJ_DIR$\..\..\bsp\bsp_comp.c</name>
 		</file>
 		<file>
@@ -3965,6 +3968,9 @@
 		</file>
 		<file>
 			<name>$PROJ_DIR$\..\..\driver\drv_bkp.c</name>
+		</file>
+		<file>
+			<name>$PROJ_DIR$\..\..\driver\drv_can.c</name>
 		</file>
 		<file>
 			<name>$PROJ_DIR$\..\..\driver\drv_comp.c</name>

@@ -40,7 +40,7 @@
 /// @{
 
 
-#if defined(__MM3N1) || defined(__MM0N1)
+#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM3O1)
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief CAN_Initialization
@@ -49,22 +49,6 @@ typedef enum {
     CANINITFAILED = 0x00000000,  ///< CAN initialization failed
     CANINITOK     = 0x00000001   ///< CAN initialization ok
 } emCAN_INIT_Typedef;
-
-////////////////////////////////////////////////////////////////////////////////
-/// @brief CAN_sleep_constants
-////////////////////////////////////////////////////////////////////////////////
-typedef enum {
-    CANSLEEPFAILED = 0x00000000,  ///< CAN did not enter the sleep mode
-    CANSLEEPOK     = 0x00000001   ///< CAN entered the sleep mode
-} emCAN_SLEEP_conts_Typedef;
-
-////////////////////////////////////////////////////////////////////////////////
-/// @brief CAN_wake_up_constants
-////////////////////////////////////////////////////////////////////////////////
-typedef enum {
-    CANWAKEUPFAILED = 0x00000000,  ///< CAN did not leave the sleep mode
-    CANWAKEUPOK     = 0x00000001   ///< CAN leaved the sleep mode
-} emCAN_WAKE_conts_Typedef;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief CAN_Mode
@@ -77,8 +61,7 @@ typedef enum {
     CAN_ListenOnlyMode    = 0x00000002,
     CAN_SeftTestMode      = 0x00000004,
     CAN_FilterMode_Singal = 0x00000008,
-    CAN_FilterMode_Double = 0x000000f7,
-    CAN_SleepMode         = 0x00000010
+    CAN_FilterMode_Double = 0x000000f7
 } emCAN_CAN_Mode_Typedef;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +82,6 @@ typedef enum {
     CAN_IT_TI  = CAN_IR_TI,                                                     ///< Transmit interrupt enable
     CAN_IT_EI  = CAN_IR_EI,                                                     ///< Error interrupt enable
     CAN_IT_DOI = CAN_IR_DOI,                                                    ///< Receive interrupt enable
-    CAN_IT_WUI = 0x00001010,                                                    ///< Receive interrupt enable
     CAN_IT_EPI = CAN_IR_EPI,                                                    ///< Receive interrupt enable
     CAN_IT_ALI = CAN_IR_ALI,                                                    ///< Receive interrupt enable
     CAN_IT_BEI = CAN_IR_BEI,                                                    ///< Receive interrupt enable
@@ -148,11 +130,6 @@ typedef struct {
     FlagStatus      SAM;
     u8              TESG2;
     u8              TESG1;
-    FunctionalState GTS;
-    u8              CDCLK;
-    u8              CLOSE_OPEN_CLK;
-    u8              RXINTEN;
-    u8              CBP;
 } CAN_Basic_InitTypeDef;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -292,6 +269,8 @@ void CAN_Mode_Cmd(CAN_TypeDef* CANx, u32 mode);
 void CAN_ResetMode_Cmd(CAN_TypeDef* CANx, FunctionalState state);
 void CAN_ClearDataOverflow(CAN_TypeDef* CANx);
 void CAN_ClearITPendingBit(CAN_TypeDef* CANx);
+//void exCAN_ClearITPendingBit(CAN_Peli_TypeDef* CANx);
+u32 exCAN_ClearITPendingBit(CAN_Peli_TypeDef* CANx);
 
 // Basic Work function ---------------------------------------------------------
 void CAN_DeInit(CAN_TypeDef* CANx);
@@ -304,14 +283,10 @@ void CAN_Receive(CAN_TypeDef* CANx, CanBasicRxMsg* BasicRxMessage);
 
 u8 CAN_Transmit(CAN_TypeDef* CANx, CanBasicTxMsg* BasicTxMessage);
 u8 CAN_Init(CAN_TypeDef* CANx, CAN_Basic_InitTypeDef* CAN_Basic_InitStruct);
-u8 CAN_Sleep(CAN_TypeDef* CANx);
-u8 CAN_WakeUp(CAN_TypeDef* CANx);
-
 FlagStatus CAN_GetFlagStatus(CAN_TypeDef* CANx, u32 flag);
 ITStatus   CAN_GetITStatus(CAN_TypeDef* CANx, u32 CAN_IT);
 
 // Peli Work function ----------------------------------------------------------
-void CAN_Peli_SleepMode_Cmd(FunctionalState state);
 void CAN_Peli_Init(CAN_Peli_InitTypeDef* CAN_InitStruct);
 void CAN_Peli_StructInit(CAN_Peli_InitTypeDef* CAN_Peli_InitStruct);
 void CAN_Peli_FilterInit(CAN_Peli_FilterInitTypeDef* CAN_Peli_FilterInitStruct);
@@ -328,6 +303,8 @@ u8  CAN_Peli_GetReceiveErrorCounter(void);
 u8  CAN_Peli_GetLSBTransmitErrorCounter(void);
 
 ITStatus CAN_Peli_GetITStatus(u32 CAN_IT);
+
+
 
 #endif
 

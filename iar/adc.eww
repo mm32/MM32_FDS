@@ -30,6 +30,12 @@
 	<project>
 		<path>$WS_DIR$\project\adc\m_scan_dma_time.ewp</path>
 	</project>
+	<project>
+		<path>$WS_DIR$\project\adc\dual_adc_sync.ewp</path>
+	</project>
+	<project>
+		<path>$WS_DIR$\project\adc\adc_dac_onoffTrig.ewp</path>
+	</project>
 	<batchBuild>
 		<batchDefinition>
 			<name>MM32L373</name>

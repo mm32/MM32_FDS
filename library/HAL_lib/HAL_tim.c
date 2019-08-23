@@ -2,7 +2,7 @@
 /// @file     HAL_TIM.C
 /// @author   D Chen
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE TIM FIRMWARE FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -297,7 +297,7 @@ void TIM_PWMIConfig(TIM_TypeDef* TIMx, TIM_ICInitTypeDef* pInitStruct)
 void TIM_BDTRConfig(TIM_TypeDef* TIMx, TIM_BDTRInitTypeDef* pInitStruct)
 {
     TIMx->BDTR = (u32)pInitStruct->TIM_OSSRState | pInitStruct->TIM_OSSIState | pInitStruct->TIM_LOCKLevel |
-                 pInitStruct->TIM_DeadTime | pInitStruct->TIM_Break | pInitStruct->TIM_BreakPolarity |
+                 (pInitStruct->TIM_DeadTime & 0xFF) | pInitStruct->TIM_Break | pInitStruct->TIM_BreakPolarity |
                  pInitStruct->TIM_AutomaticOutput;
 }
 
@@ -1243,9 +1243,20 @@ void TIM_SelectMasterSlaveMode(TIM_TypeDef* TIMx, TIMMSM_Typedef mode)
 /// @param  autoReload: specifies the Counter register new value.
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void TIM_SetAutoreload(TIM_TypeDef* TIMx, u16 autoReload)
+void TIM_SetAutoreload(TIM_TypeDef* TIMx, u32 autoReload)
 {
-    WRITE_REG(TIMx->ARR, autoReload);
+    //WRITE_REG(TIMx->ARR, autoReload); //???chend:190514
+#if defined(__MM3O1)
+    if ((TIMx == TIM2) || (TIMx == TIM5))
+        WRITE_REG(TIMx->ARR, (u32)autoReload);
+    else
+#endif
+#if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
+    if (TIMx == TIM2)
+        WRITE_REG(TIMx->ARR, (u32)autoReload);
+    else
+#endif
+        WRITE_REG(TIMx->ARR, (u16)autoReload);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

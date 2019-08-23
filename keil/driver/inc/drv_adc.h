@@ -2,7 +2,7 @@
 /// @file     DRV_ADC.H
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE ADC
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,9 +109,15 @@ typedef struct {
 GLOBAL static tDRV_ADC_INSTANCE     instance[INSTANCE_NUM];
 
 
-u32 adcValue[8];
-u16 temp0[128];
-u16 temp1[128];
+u32 adc1Value[8];
+u32 adc2Value[8];
+u16 temp1_0[128];
+u16 temp1_1[128];
+
+u16 temp2_0[128];
+u16 temp2_1[128];
+
+
 
 #else
 #define GLOBAL extern
@@ -120,6 +126,8 @@ extern u32 adcValue[];
 #endif
 
 GLOBAL u32 ADC1_value, ADC2_value;
+
+
 
 #undef GLOBAL
 

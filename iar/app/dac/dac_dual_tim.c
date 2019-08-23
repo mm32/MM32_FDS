@@ -2,7 +2,7 @@
 /// @file     DAC_DUAL_TIM.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE DAC_DUAL_TIM EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -82,14 +82,14 @@ int main(void)
     };
 
 // Step 4:  Open File Device     ---------------------->>>>>
-    dcb.hSub = emFILE_DAC_CH2;                          // DAC ch0
+    dcb.hSub = emFILE_DAC_CH1;                          // DAC ch0
     if (!OpenFile(hDAC, (void*)&dcb))       while(1);
 
-    dcb.hSub = emFILE_DAC_CH1;                          // DAC ch1
+    dcb.hSub = emFILE_DAC_CH2;                          // DAC ch1
     if (!OpenFile(hDAC, (void*)&dcb))       while(1);
 
-    WriteFile(hDAC, 0, (u8*)sineWave1, 32);                                 //Output a sine wave
-    WriteFile(hDAC, 1, (u8*)sineWave2, 32);                                 //Output a sine wave
+    WriteFile(hDAC, 0, (u8*)sineWave2, 32);                                 //Output a sine wave
+    WriteFile(hDAC, 1, (u8*)sineWave4, 32);                                 //Output a sine wave
 
     while (1) {
         if (SysKeyboard(&vkKey)) {

@@ -2,7 +2,7 @@
 /// @file     DRV_SPI.C
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE SPI DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -143,10 +143,15 @@ u8 Get_SPI_IRQ_Index(SPI_TypeDef* SPIx)
 ////////////////////////////////////////////////////////////////////////////////
 void DRV_SPI_DMA_IRQHandler_RxCommon(u8 idx)
 {
+    SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
     instance[idx].rxComplete = true;
     instance[idx].rxRealCnt = instance[idx].rxCnt;
+    SPI_DMACmd(SPIx, DISABLE);
+
     if (instance[idx].sync == emTYPE_Sync) {
-        ((fpSPI)instance[idx].cbRx)(idx);
+        if (instance[idx].cbRx != NULL){
+            ((fpSPI)instance[idx].cbRx)(idx);
+        }
     }
 }
 
@@ -157,11 +162,27 @@ void DRV_SPI_DMA_IRQHandler_RxCommon(u8 idx)
 ////////////////////////////////////////////////////////////////////////////////
 void DRV_SPI_DMA_IRQHandler_TxCommon(u8 idx)
 {
+    SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
+
+
+    while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT));
     instance[idx].txComplete = true;
     instance[idx].txRealCnt = instance[idx].txCnt;
+    instance[idx].txCnt = 0;
+
+//    while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+//        READ_REG(SPIx->RDR);
+//    }
+//
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+//    }
     if (instance[idx].sync == emTYPE_Sync) {
-        ((fpSPI)instance[idx].cbTx)(idx);
+        if (instance[idx].cbTx != NULL){
+            ((fpSPI)instance[idx].cbTx)(idx);
+        }
     }
+    return;
 }
 
 #if defined(__MM3N1)
@@ -170,11 +191,11 @@ void DRV_SPI_DMA_IRQHandler_TxCommon(u8 idx)
 /// @param  None.
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void DMA1_Channel2_IRQHandler()
-{
-    DMA_ClearFlag(DMA_ISR_TCIF2);
-    DRV_SPI_DMA_IRQHandler_RxCommon(instance[tbSubHandleIdx[0]].sPrefix.subIdx);
-}
+//void DMA1_Channel2_IRQHandler()
+//{
+//  DMA_ClearFlag(DMA_ISR_TCIF2);
+//    DRV_SPI_DMA_IRQHandler_RxCommon(instance[tbSubHandleIdx[0]].sPrefix.subIdx);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  SPI DMA communication channel 3 interrupt handler.
@@ -270,105 +291,53 @@ static void DRV_SPI_IRQ_Common(u8 idx)
     if ((SPIx->IER & SPI_IER_TX_IEN) && SPI_GetITStatus(SPIx, SPI_IT_TX)) {
         SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
 
-        if ((instance[idx].txCnt / 4) > 0) {
-            instance[idx].txCnt -= 4;
-            instance[idx].txRealCnt += 4;
-            instance[idx].txPtr += sizeof(u32);
+        instance[idx].txCnt --;
+        instance[idx].txRealCnt ++;
+
+        if(instance[idx].txCnt > 0){
+            WRITE_REG(SPIx->TDR, *++instance[idx].txPtr);
         }
         else{
-            instance[idx].txCnt --;
-            instance[idx].txRealCnt ++;
-            instance[idx].txPtr ++;
-        }
-
-        if((instance[idx].txCnt / 4) == 0 && (instance[idx].txCnt > 0)) {
-            CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-            MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-            SPI_SendData(SPIx, *instance[idx].txPtr);
-        }
-
-        if((instance[idx].txCnt / 4) > 0 && (instance[idx].txCnt > 0)) {
-            SPI_SendData(SPIx, *((u32*)instance[idx].txPtr));
-        }
-
-        if (instance[idx].txCnt == 0) {
             while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT));
             instance[idx].txComplete = true;
             CLEAR_BIT(SPIx->IER, SPI_IT_TX);
-            if (instance[idx].master) {
-                BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
-            }
+//            if (instance[idx].master) {
+//                BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+//            }
             if (instance[idx].sync == emTYPE_Sync) {
-                ((fpSPI)instance[idx].cbTx)(idx);
+                if (instance[idx].cbTx != NULL){
+                    ((fpSPI)instance[idx].cbTx)(idx);
+                }
             }
             return;
         }
-
-//        if ((instance[idx].txCnt / 4) > 0) {
-//            instance[idx].txCnt -= 4;
-//            instance[idx].txRealCnt += 4;
-//            instance[idx].txPtr += sizeof(u32);
-//            SPI_SendData(SPIx, *((u32*)instance[idx].txPtr));
-//        }
-//        else{
-//            CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-//            MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-//            instance[idx].txCnt --;
-//            instance[idx].txRealCnt ++;
-//            SPI_SendData(SPIx, *++instance[idx].txPtr);
-//        }
         return;
     }
 
     if ((SPIx->IER & SPI_IER_RX_IEN) && SPI_GetITStatus(SPIx, SPI_IT_RX)) {
         SPI_ClearITPendingBit(SPIx, SPI_IT_RX);
 
-        if ((instance[idx].rxCnt / 4) > 0) {
-            instance[idx].rxCnt -= 4;
-            instance[idx].rxRealCnt += 4;
-            *(u32*)instance[idx].rxPtr = SPI_ReceiveData(SPIx);
-            instance[idx].rxPtr += sizeof(u32);
+        while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+            instance[idx].rxCnt --;
+            instance[idx].rxRealCnt ++;
+            *instance[idx].rxPtr++ = (u8)READ_REG(SPIx->RDR);
+        }
 
-            if (instance[idx].rxCnt == 0) {
-                instance[idx].rxComplete = true;
-                CLEAR_BIT(SPIx->IER, SPI_IER_RX_IEN);
-                if (instance[idx].sync == emTYPE_Sync) {
-                    ((fpSPI)instance[idx].cbRx)(idx);
-                }
-                return;
-            }
 
-            if ((instance[idx].rxCnt / 4) == 0) {
-                CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-                MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-                if (instance[idx].master) {
-                    SPI_SendData(SPIx, 0x0A);
-                }
-            }
-            else{
-                if (instance[idx].master) {
-                    SPI_SendData(SPIx, 0x01020304);
-                }
+        if (instance[idx].rxCnt > 0) {
+            if (instance[idx].master) {
+                SPI_SendData(SPIx, 0x0F);
             }
         }
         else{
-            instance[idx].rxCnt --;
-            instance[idx].rxRealCnt ++;
-            *instance[idx].rxPtr++ = (u8)SPI_ReceiveData(SPIx);
-
-            if (instance[idx].rxCnt > 0) {
-                if (instance[idx].master) {
-                    SPI_SendData(SPIx, 0x0A);
-                }
-            }
-            else{
-                instance[idx].rxComplete = true;
-                CLEAR_BIT(SPIx->IER, SPI_IER_RX_IEN);
-                if (instance[idx].sync == emTYPE_Sync) {
+            instance[idx].rxComplete = true;
+            CLEAR_BIT(SPIx->IER, SPI_IER_RX_IEN);
+            if (instance[idx].sync == emTYPE_Sync) {
+                if (instance[idx].cbRx != NULL){
                     ((fpSPI)instance[idx].cbRx)(idx);
                 }
-                return;
             }
+            return;
         }
         return;
     }
@@ -464,55 +433,45 @@ static bool SPI_PollingSendPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
-    if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-    }
+#if defined(__MT309)
+    SET_BIT(SPIx->CCR, 1 << 7);
+#endif
 
-    if ((instance[idx].txCnt / 4) > 0) {
-        SET_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 0);
-        SPI_SendData(SPIx, *((u32*)instance[idx].txPtr));
-        instance[idx].txPtr += sizeof(u32);
-        instance[idx].txCnt -= 4;
-        instance[idx].txRealCnt += 4;
-    }
-    else{
-        CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-        SPI_SendData(SPIx, *instance[idx].txPtr++);
-        instance[idx].txCnt --;
-        instance[idx].txRealCnt ++;
-    }
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//    }
+//
+//    if(instance[idx].command != 0){
+//        WRITE_REG(SPIx->TDR, instance[idx].command);
+//    }
+
+    WRITE_REG(SPIx->TDR, *instance[idx].txPtr++);
+    instance[idx].txCnt --;
+    instance[idx].txRealCnt ++;
 
     while(instance[idx].txCnt > 0) {
         if (SPI_GetITStatus(SPIx, SPI_IT_TX)){
             SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
-            if ((instance[idx].txCnt / 4) > 0) {
-                SET_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-                MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 0);
-                SPI_SendData(SPIx, *((u32*)instance[idx].txPtr));
-                instance[idx].txPtr += sizeof(u32);
-                instance[idx].txCnt -= 4;
-                instance[idx].txRealCnt += 4;
-            }
-            else{
-                CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-                MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-                SPI_SendData(SPIx, *instance[idx].txPtr++);
-                instance[idx].txCnt --;
-                instance[idx].txRealCnt ++;
-            }
+            WRITE_REG(SPIx->TDR, *instance[idx].txPtr++);
+            instance[idx].txCnt --;
+            instance[idx].txRealCnt ++;
         }
     }
     while(SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT) == 0) {
     }
 
-    if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
-    }
+//    while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+//        READ_REG(SPIx->RDR);
+//    }
+//
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+//    }
     instance[idx].txComplete = true;
     if (instance[idx].sync == emTYPE_Sync) {
-        ((fpSPI)instance[idx].cbTx)(idx);
+        if (instance[idx].cbTx != NULL){
+            ((fpSPI)instance[idx].cbTx)(idx);
+        }
     }
     return true;
 }
@@ -528,48 +487,34 @@ static bool SPI_PollingRcvPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
-    if (instance[idx].master){
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-    }
+//    if (instance[idx].master){
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//        if(instance[idx].command != 0){
+//            WRITE_REG(SPIx->TDR, instance[idx].command);
+//            while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL));
+//            READ_REG(SPIx->RDR);
+//        }
+//    }
 
     while(instance[idx].rxCnt > 0) {
-        if ((instance[idx].rxCnt / 4) > 0) {
-            SET_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-            MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 0);
-
-            if (instance[idx].master){
-                SPI_SendData(SPIx, 0x01020304);
-            }
-
-            while(SPI_GetITStatus(SPIx, SPI_IT_RX) == 0);
-            SPI_ClearITPendingBit(SPIx, SPI_IT_RX);
-            *((u32*)instance[idx].rxPtr) = SPI_ReceiveData(SPIx);
-            instance[idx].rxPtr += sizeof(u32);
-            instance[idx].rxCnt -= 4;
-            instance[idx].rxRealCnt += 4;
+        if (instance[idx].master){
+            WRITE_REG(SPIx->TDR, 0xFF);
         }
-        else{
-            CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-            MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-
-            if (instance[idx].master){
-                SPI_SendData(SPIx, 0x0A);
-            }
-
-            while(SPI_GetITStatus(SPIx, SPI_IT_RX) == 0);
-            SPI_ClearITPendingBit(SPIx, SPI_IT_RX);
-            *instance[idx].rxPtr++ = (u8)SPI_ReceiveData(SPIx);
-            instance[idx].rxCnt --;
-            instance[idx].rxRealCnt ++;
-        }
+        while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL));
+        *instance[idx].rxPtr++ = (u8)READ_REG(SPIx->RDR);
+        instance[idx].rxCnt --;
+        instance[idx].rxRealCnt ++;
     }
+
     instance[idx].rxComplete = true;
-    if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
-    }
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+//    }
 
     if (instance[idx].sync == emTYPE_Sync) {
-        ((fpSPI)instance[idx].cbRx)(idx);
+        if(instance[idx].cbRx != NULL){
+            ((fpSPI)instance[idx].cbRx)(idx);
+        }
     }
     return true;
 }
@@ -583,23 +528,17 @@ static void SPI_ItSendPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
+
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//    }
+
+    SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
+
     SET_BIT(SPIx->GCR, SPI_GCR_IEN);
     SET_BIT(SPIx->IER, SPI_IER_TX_IEN);
 
-    if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-    }
-
-    if ((instance[idx].txCnt / 4) > 0) {
-        SET_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 0);
-        SPI_SendData(SPIx, *((u32*)instance[idx].txPtr));
-    }
-    else{
-        CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
-        SPI_SendData(SPIx, *instance[idx].txPtr);
-    }
+    WRITE_REG(SPIx->TDR, *instance[idx].txPtr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -611,24 +550,24 @@ static void SPI_ItRcvPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
-    if ((instance[idx].rxCnt / 4) > 0) {
-        SET_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 0);
+    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//
+//        if(instance[idx].command != 0){
+//            WRITE_REG(SPIx->TDR, instance[idx].command);
+//            while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL));
+//            READ_REG(SPIx->RDR);
+//            SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
+//        }
+        SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
+        SPI_SendData(SPIx, 0xFF);
+        while(!SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT));
 
-        if (instance[idx].master) {
-            BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-            SPI_SendData(SPIx, 0x01020304);
-        }
-    }
-    else{
-        CLEAR_BIT(SPIx->GCR, SPI_GCR_DWSEL);
-        MODIFY_REG(SPIx->ECR , SPI_ECR_EXTLEN, 8);
+//        while(!SPI_GetITStatus(SPIx, SPI_IT_TX));
 
-        if (instance[idx].master) {
-            BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-            SPI_SendData(SPIx, 0x0A);
-        }
+
     }
+
     SET_BIT(SPIx->GCR, SPI_GCR_IEN);
     SET_BIT(SPIx->IER, SPI_IER_RX_IEN);
 }
@@ -642,9 +581,16 @@ static void SPI_DMASendPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
-    if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
-    }
+//    if (instance[idx].master) {
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//    }
+//    if(instance[idx].command != 0){
+//        WRITE_REG(SPIx->TDR, instance[idx].command);
+//        SPI_ClearITPendingBit(SPIx, SPI_IT_TX);
+//    }
+    SPI_DMACmd(SPIx, ENABLE);
+
+
     DRV_DMA_TransmitPacket(Get_SPI_DMA_TxChannel(SPIx), (u32)instance[idx].txPtr, instance[idx].txCnt);
 }
 
@@ -657,10 +603,13 @@ static void SPI_DMARcvPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
+//    SPI_ClearITPendingBit(SPIx, SPI_IT_RX);
+    SPI_DMACmd(SPIx, ENABLE);
+
     DRV_DMA_TransmitPacket(Get_SPI_DMA_RxChannel(SPIx), (u32)instance[idx].rxPtr, instance[idx].rxCnt);
 
     if (instance[idx].master) {
-        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+//        BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
         DRV_DMA_TransmitPacket(Get_SPI_DMA_TxChannel(SPIx), (u32)instance[idx].rxPtr, instance[idx].rxCnt);
     }
 }
@@ -692,6 +641,18 @@ static void InstanceConfig(tAPP_SPI_DCB* pDcb, u8 idx)
     instance[idx].rxComplete    = false;
     instance[idx].txRealCnt     = 0;
     instance[idx].rxRealCnt     = 0;
+
+    instance[idx].command           = pDcb->command;
+    instance[idx].protocol          = pDcb->protocol;
+
+    instance[idx].parameter[0]      = pDcb->parameter[0];
+    instance[idx].parameter[1]      = pDcb->parameter[1];
+    instance[idx].parameter[2]      = pDcb->parameter[2];
+    instance[idx].parameter[3]      = pDcb->parameter[3];
+
+//    *(u32 *)instance[idx].parameter = *(u32 *)pDcb->parameter;
+    instance[idx].parameterLength   = pDcb->parameterLength;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -713,7 +674,7 @@ static void HardwareConfig(tAPP_SPI_DCB* pDcb, u8 idx)
     else if (pDcb->type == emTYPE_DMA) {
         DRV_SPI_NVIC_DMA_Init(SPIx);
         DRV_SPI_DMA_ConfigChannel(SPIx);
-        SPI_DMACmd(SPIx, ENABLE);
+//        SPI_DMACmd(SPIx, ENABLE);
     }
 
     SPI_InitTypeDef InitStructure;
@@ -737,7 +698,7 @@ static void HardwareConfig(tAPP_SPI_DCB* pDcb, u8 idx)
         break;
     }
 
-    InitStructure.SPI_DataWidth         = pDcb->dataWidth;
+    InitStructure.SPI_DataWidth         = 8;
 
     InitStructure.SPI_NSS               = (SPI_NSS_TypeDef)((pDcb->hardNss) ? SPI_GCR_NSS  : 0);
     InitStructure.SPI_Mode              = (SPI_Mode_TypeDef)((pDcb->master) ? SPI_GCR_MODE : 0);
@@ -749,6 +710,14 @@ static void HardwareConfig(tAPP_SPI_DCB* pDcb, u8 idx)
 
     SPI_BiDirectionalLineConfig(SPIx, SPI_Direction_Tx);
     SPI_BiDirectionalLineConfig(SPIx, SPI_Direction_Rx);
+
+    if (pDcb->fastMode == true){
+        SET_BIT(SPIx->CCR, SPI_CCR_RXEDGE | SPI_CCR_TXEDGE);
+    }
+    else{
+        CLEAR_BIT(SPIx->CCR, SPI_CCR_RXEDGE | SPI_CCR_TXEDGE);
+    }
+
 
     SPI_Cmd(SPIx, ENABLE);
 }
@@ -802,6 +771,8 @@ static void SPI_CloseFile(HANDLE handle)
 static int SPI_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 {
     s8 idx = DRV_FindTrueIdx(hSub, (u8*)&instance, sizeof(instance[0]), INSTANCE_NUM);
+    SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
+
     if (idx == -1)  return false;
 
     if (!instance[idx].rxProcess) {
@@ -811,6 +782,26 @@ static int SPI_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
         instance[idx].rxPtr = ptr;
         instance[idx].rxCnt = len;
 
+        if (instance[idx].master) {
+            BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+
+            if(instance[idx].protocol == 1){
+                WRITE_REG(SPIx->TDR, instance[idx].command);
+
+                for(u8 i = 0; i < instance[idx].parameterLength; i++){
+                    WRITE_REG(SPIx->TDR, instance[idx].parameter[i]);
+                }
+
+                while(SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT) == 0) {
+                }
+                while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+                    READ_REG(SPIx->RDR);
+                }
+
+            }
+        }
+
+
         if (instance[idx].type == emTYPE_Polling)    SPI_PollingRcvPacket(idx);
         else if (instance[idx].type == emTYPE_IT)    SPI_ItRcvPacket(idx);
         else if (instance[idx].type == emTYPE_DMA)   SPI_DMARcvPacket(idx);
@@ -818,11 +809,19 @@ static int SPI_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 
     if (instance[idx].block == emTYPE_Block) {
         while(!instance[idx].rxComplete);
+        if (instance[idx].master) {
+            BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+        }
         instance[idx].rxProcess = false;
     }
     else{
         if (!instance[idx].rxComplete) {
             return false;
+        }
+        else{
+            if (instance[idx].master) {
+                BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+            }
         }
     }
     return instance[idx].rxRealCnt;
@@ -840,6 +839,8 @@ static int SPI_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 static int SPI_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 {
     s8 idx = DRV_FindTrueIdx(hSub, (u8*)&instance, sizeof(instance[0]), INSTANCE_NUM);
+    SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
+
     if (idx == -1)  return false;
 
     if (!instance[idx].txProcess) {
@@ -849,6 +850,22 @@ static int SPI_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
         instance[idx].txPtr = ptr;
         instance[idx].txCnt = len;
 
+        if (instance[idx].master) {
+            BSP_SPI_NSS_Configure(SPIx, 0, 0, ENABLE);
+
+            if(instance[idx].protocol == 1){
+                WRITE_REG(SPIx->TDR, instance[idx].command);
+
+                for(u8 i = 0; i < instance[idx].parameterLength; i++){
+                    WRITE_REG(SPIx->TDR, instance[idx].parameter[i]);
+                }
+
+                while(SPI_GetFlagStatus(SPIx, SPI_FLAG_TXEPT) == 0) {
+                }
+            }
+        }
+
+
         if (instance[idx].type == emTYPE_Polling)    SPI_PollingSendPacket(idx);
         else if (instance[idx].type == emTYPE_IT)    SPI_ItSendPacket(idx);
         else if (instance[idx].type == emTYPE_DMA)   SPI_DMASendPacket(idx);
@@ -856,11 +873,27 @@ static int SPI_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 
     if (instance[idx].block == emTYPE_Block) {
         while(!instance[idx].txComplete);
+        while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+            READ_REG(SPIx->RDR);
+        }
+
+        if (instance[idx].master) {
+            BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+        }
         instance[idx].txProcess = false;
     }
     else{
         if (!instance[idx].txComplete) {
             return false;
+        }
+        else{
+            while(SPI_GetFlagStatus(SPIx, SPI_FLAG_RXAVL)){
+                READ_REG(SPIx->RDR);
+            }
+
+            if (instance[idx].master) {
+                BSP_SPI_NSS_Configure(SPIx, 0, 0, DISABLE);
+            }
         }
     }
 

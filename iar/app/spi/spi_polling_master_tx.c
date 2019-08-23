@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// @file     SPI_POLLING.C
+/// @file     SPI_POLLING_MASTER_TX.C
 /// @author   Z Yan
-/// @version  2.0.0 Beta4
-/// @date     2019-02-10
-/// @brief    THIS FILE PROVIDES ALL THE SPI_DMA EXAMPLE.
+/// @version  v2.0.0
+/// @date     2019-03-13
+/// @brief    THIS FILE PROVIDES ALL THE SPI_POLLING_MASTER_TX EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
 ///
@@ -41,7 +41,7 @@
 /// @{
 
 
-#define BUFFER_SIZE 199
+#define BUFFER_SIZE 200
 u8 newTxBuffer[BUFFER_SIZE];
 u8 newRxBuffer[BUFFER_SIZE];
 
@@ -94,7 +94,6 @@ u8 Buffercmp(const u8* pBuffer, u8* pBuffer1, u16 BufferLength)
 void TxCallback()
 {
     /* Set transmission flag: transfer complete */
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,30 +140,17 @@ int main(void)
         .remapIdx           = 0,                    // u8 value
 
 // SPI parameter
-//      .baudRatePrescaler  = 64,
-//
-//#if (1)
-//        .spiUnionMode.transmitMode = SPI_MODE0,
-//#else
-//        .spiUnionMode.together.clkPolarity = emSPI_POLARITY_LOW,
-//        .spiUnionMode.together.clkPhase = emSPI_PHASE_1EDGE,
-//#endif
-//
-//      .nss                = emSPI_NSS_Soft,
-//      .firstBit           = emSPI_MSB_FIRST,
-//      .spiMode            = emBOOL_Master
-        .prescaler          = 64,
+        .prescaler          = 4,
         .mode               = emSPI_MODE_0,
         .hardNss            = false,
         .firstLsb           = false,
         .master             = true
-
     };
 
     if (!OpenFile(hSPI, (void*)&dcb))       while(1);
 
     for (u8 i = 0; i < sizeof(newTxBuffer); i++) {
-        newTxBuffer[i] = i;
+        newTxBuffer[i] = i + 1;
     }
 
     while(1){

@@ -2,7 +2,7 @@
 /// @file     ADC_COMMON.H
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE ADC_COMMON
 ///           EXAMPLES.
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,8 @@ typedef struct {
 
 #define GLOBAL
 
-u32 midAdcValue[4] = {0};
+u32 midAdc1Value[4] = {0};
+u32 midAdc2Value[4] = {0};
 
 
 #else
@@ -70,10 +71,15 @@ u32 midAdcValue[4] = {0};
 
 #endif
 
-GLOBAL ADC_DAT item;
-GLOBAL bool samFlag;
-GLOBAL bool transFlag;
-GLOBAL u8 samCnt;
+GLOBAL ADC_DAT item1;
+GLOBAL bool samFlag1;
+GLOBAL bool transFlag1;
+GLOBAL u8 samCnt1;
+
+GLOBAL ADC_DAT item2;
+GLOBAL bool samFlag2;
+GLOBAL bool transFlag2;
+GLOBAL u8 samCnt2;
 
 
 
@@ -84,7 +90,8 @@ GLOBAL u8 samCnt;
 /// @defgroup ADC_Exported_Functions
 /// @{
 
-void ADC_Filter(u32* ptr, u16 len);
+void ADC1_Filter(u32* ptr, u16 len);
+void ADC2_Filter(u32* ptr, u16 len);
 
 /// @}
 

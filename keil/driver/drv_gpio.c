@@ -2,7 +2,7 @@
 /// @file     DRV_GPIO.C
 /// @author   C Yuan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE GPIO DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -55,6 +55,7 @@ static void InstanceConfig(tAPP_GPIO_DCB* pDcb, u8 idx)
     instance[idx].dir       = pDcb->dir;
     instance[idx].mode      = pDcb->mode;
     instance[idx].inSta     = pDcb->state;
+    instance[idx].mask      = pDcb->mask;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,28 +67,31 @@ static void InstanceConfig(tAPP_GPIO_DCB* pDcb, u8 idx)
 static void HardwareConfig(tAPP_GPIO_DCB* pDcb, u8 idx)
 {
     GPIOx_ClockEnable((EM_GPIO_PORT)instance[idx].sPrefix.trueIdx);
+
     u16 dir                 = pDcb->dir;
     u16 mode                = pDcb->mode;
     u16 inSta               = pDcb->state;
+    u16 mask                = pDcb->mask;
 
     for (u8 i = 0; i < 16; i++) {
-        if (dir & 0x0001) {
-            /* input */
-            if (inSta & 0x0001) {
-                (mode & 0x0001) ?
-                    GPIO_Mode_IPU_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF) :       // pull up
-                    GPIO_Mode_IPD_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF);        // pull down
+        if (mask & 0x0001) {
+            if (dir & 0x0001) {
+                /* input */
+                if (inSta & 0x0001) {
+                    (mode & 0x0001) ?
+                        GPIO_Mode_IPU_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF) :       // pull up
+                        GPIO_Mode_IPD_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF);        // pull down
+                }
+                else    GPIO_Mode_FLOATING_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF);   // floating input
             }
-            else    GPIO_Mode_FLOATING_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i, NO_REMAP, NO_FUNCAF);   // floating input
+            else {
+                /* output */
+                (mode & 0x0001) ? GPIO_Mode_OUT_OD_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i) :               // Open drain output
+                                  GPIO_Mode_OUT_PP_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i);                // Push-pull
+            }
         }
-        else {
-            /* output */
-            (mode & 0x0001) ? GPIO_Mode_OUT_OD_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i) :               // Open drain output
-                              GPIO_Mode_OUT_PP_Init((GPIO_TypeDef*)instance[idx].sPrefix.pBase, 1 << i);                // Push-pull
-        }
-        dir   >>= 1;        mode  >>= 1;        inSta >>= 1;
+        dir   >>= 1;        mode  >>= 1;        inSta >>= 1;    mask >>= 1;
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

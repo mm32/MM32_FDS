@@ -2,7 +2,7 @@
 /// @file     DRV_TIM.C
 /// @author   D Chen
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE TIM DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -707,7 +707,7 @@ void DRV_TIM_DMA_ConfigChannel(tDRV_TIM_DCB* dcb)
 /// @param  dcb : device control block.
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void DRV_TIM_PWM_CH1_Init(tDRV_TIM_DCB* dcb)
+void DRV_TIM_PWM_CHx_Init(tDRV_TIM_DCB* dcb)
 {
     TIM_TimeBaseInitTypeDef pBase = {
         .TIM_Prescaler         = dcb->psc,
@@ -732,23 +732,27 @@ void DRV_TIM_PWM_CH1_Init(tDRV_TIM_DCB* dcb)
 
     if (dcb->ch == emTIM_CH1) {
         TIM_OC1Init(dcb->tim, &pOC);
+        TIM_OC1PreloadConfig(dcb->tim, TIM_OCPreload_Enable);
         TIM_ITConfig(dcb->tim, TIM_IT_CC1, ENABLE);
     }
     if (dcb->ch == emTIM_CH2) {
         TIM_OC2Init(dcb->tim, &pOC);
+        TIM_OC2PreloadConfig(dcb->tim, TIM_OCPreload_Enable);
         TIM_ITConfig(dcb->tim, TIM_IT_CC2, ENABLE);
     }
     if (dcb->ch == emTIM_CH3) {
         TIM_OC3Init(dcb->tim, &pOC);
+        TIM_OC3PreloadConfig(dcb->tim, TIM_OCPreload_Enable);
         TIM_ITConfig(dcb->tim, TIM_IT_CC3, ENABLE);
     }
     if (dcb->ch == emTIM_CH4) {
         TIM_OC4Init(dcb->tim, &pOC);
+        TIM_OC4PreloadConfig(dcb->tim, TIM_OCPreload_Enable);
         TIM_ITConfig(dcb->tim, TIM_IT_CC4, ENABLE);
     }
     TIM_ITConfig(dcb->tim, TIM_IT_Update, ENABLE);
 
-    TIM_CCPreloadControl(dcb->tim, ENABLE);
+    //TIM_CCPreloadControl(dcb->tim, ENABLE);
     TIM_CtrlPWMOutputs(dcb->tim, ENABLE);
 
     if (dcb->type == emTYPE_IT) {
@@ -1074,7 +1078,7 @@ void DRV_TIM_Init(tDRV_TIM_DCB* dcb)
     //------------------- Configure timer dcb --------------------------------//
     if (dcb->mode == emTIM_PWM) {
         BSP_TIM_PWM_GPIO_Configure(dcb->tim, dcb->ch, dcb->remapEn, dcb->remapIdx);
-        DRV_TIM_PWM_CH1_Init(dcb);
+        DRV_TIM_PWM_CHx_Init(dcb);
     }
     if (dcb->mode == emTIM_CapturePulse) {
         memset(&capValueStructure, 0 , sizeof(capValueStructure));
@@ -1143,7 +1147,7 @@ static void HardwareConfig(tAPP_TIM_DCB* pDcb, u8 idx)
         .mode     = instance[idx].mode,
         .cntFreq  = instance[idx].cntFreq,
         .arr      = instance[idx].period - 1,
-        .pulse    = instance[idx].pulse,
+        .pulse    = instance[idx].pulse - 1,
         .ch       = instance[idx].ch,
         .trgo     = instance[idx].trgo
     };
@@ -1246,7 +1250,15 @@ static int TIM_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
     }
 
     if (instance[idx].mode == emTIM_PWM) {
-        TIM_SetCompare1((TIM_TypeDef*)instance[idx].sPrefix.pBase, *(u16*)ptr);
+        if (instance[idx].ch == emTIM_CH1)
+            //TIM_SetCompare1((TIM_TypeDef*)instance[idx].sPrefix.pBase, (TIM_TypeDef*)instance[idx].pulse);
+            TIM_SetCompare1((TIM_TypeDef*)instance[idx].sPrefix.pBase, *(u16*)ptr);
+        if (instance[idx].ch == emTIM_CH2)
+            TIM_SetCompare2((TIM_TypeDef*)instance[idx].sPrefix.pBase, *(u16*)ptr);
+        if (instance[idx].ch == emTIM_CH3)
+            TIM_SetCompare3((TIM_TypeDef*)instance[idx].sPrefix.pBase, *(u16*)ptr);
+        if (instance[idx].ch == emTIM_CH4)
+            TIM_SetCompare4((TIM_TypeDef*)instance[idx].sPrefix.pBase, *(u16*)ptr);
     }
 
     if (instance[idx].mode == emTIM_6Step) {

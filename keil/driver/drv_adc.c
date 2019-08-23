@@ -2,7 +2,7 @@
 /// @file     DRV_ADC.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE ADC DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -34,6 +34,7 @@
 #include "bsp_adc.h"
 
 #include "drv.h"
+//#include "adc.h"
 #include "common.h"
 #include "drv_dma.h"
 #include "drv_adc.h"
@@ -142,11 +143,22 @@ void DRV_ADC_IT_DMA_Enable(ADC_TypeDef* ADCx, EM_TYPE type, EM_ADC_MODE mode)
         (mode == emADC_WindowComp) ? ADC_ITConfig(ADCx, ADC_IT_AWD, ENABLE) : ADC_ITConfig(ADCx, ADC_IT_EOC, ENABLE);
     }
     else if (type == emTYPE_DMA) {
-        DRV_ADC_DMA_ConfigChannel(ADCx);
-        DMA_Cmd(DMA1_ch1, ENABLE);
-        DMA_ITConfig(DMA1_ch1,DMA_IT_TC,ENABLE);
-        DRV_ADC_NVIC_DMA_Init(ADCx);
-        ADC_DMACmd(ADCx, ENABLE);
+        if (ADCx == ADC1) {
+            DRV_ADC_DMA_ConfigChannel(ADCx);
+            DMA_Cmd(DMA1_ch1, ENABLE);
+            DMA_ITConfig(DMA1_ch1,DMA_IT_TC,ENABLE);
+            DRV_ADC_NVIC_DMA_Init(ADCx);
+            ADC_DMACmd(ADCx, ENABLE);
+        }
+#if defined(__MM3N1) || defined(__MM0P1)
+        if (ADCx == ADC2) {
+            DRV_ADC_DMA_ConfigChannel(ADCx);
+            DMA_Cmd(DMA1_ch2, ENABLE);
+            DMA_ITConfig(DMA1_ch2,DMA_IT_TC,ENABLE);
+            DRV_ADC_NVIC_DMA_Init(ADCx);
+            ADC_DMACmd(ADCx, ENABLE);
+        }
+#endif
     }
 }
 
@@ -218,17 +230,20 @@ void DMA1_Channel1_IRQHandler()
 
     DMA_ClearITPendingBit(DMA1_IT_TC1);
 
+
     if (instance[instance[tbSubHandleIdx[0]].sPrefix.subIdx].trig == emTRIGGER_Ext7)
         EXTI_ClearFlag(LEFT_SHIFT_BIT(11));
 
-    if (instance[instance[tbSubHandleIdx[0]].sPrefix.subIdx].trig == emTRIGGER_Ext4) {
+    u8* data;
+    if ((instance[instance[tbSubHandleIdx[0]].sPrefix.subIdx].trig == emTRIGGER_Ext0) | (instance[instance[tbSubHandleIdx[0]].sPrefix.subIdx].trig == emTRIGGER_Ext6)) {
         DMA_Cmd(DMA1_ch1, DISABLE);
-        exDMA_SetMemoryAddress(DMA1_ch1, ((DMA1_ch1->CMAR == (u32)&temp0) ? (u32)&temp1 : (u32)&temp0));
+        data = (u8*)DMA1_ch1->CMAR;
+        exDMA_SetMemoryAddress(DMA1_ch1, ((DMA1_ch1->CMAR == (u32)&temp1_0) ? (u32)&temp1_1 : (u32)&temp1_0));
         DMA_Cmd(DMA1_ch1, ENABLE);
     }
 
     if (instance[idx].sync == emTYPE_Sync && instance[idx].cb)
-        ((fpADC)instance[idx].cb)((u8*)&adcValue, instance[idx].chNo * 4);
+        ((fpADC)instance[idx].cb)(data, instance[idx].chNo * 4);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,21 +253,24 @@ void DMA1_Channel1_IRQHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void DMA1_Channel2_IRQHandler()
 {
-#if defined(__MM3N1) || defined(_MZ308)
+#if defined(__MM3N1) || defined(__MM0P1)
     u8 idx = instance[tbSubHandleIdx[1]].sPrefix.subIdx;
     DMA_ClearITPendingBit(DMA1_IT_TC2);
+
 
     if (instance[instance[tbSubHandleIdx[1]].sPrefix.subIdx].trig == emTRIGGER_Ext7)
         EXTI_ClearFlag(LEFT_SHIFT_BIT(15));
 
-    if (instance[instance[tbSubHandleIdx[1]].sPrefix.subIdx].trig == emTRIGGER_Ext4) {
+    u8* data;
+    if ((instance[instance[tbSubHandleIdx[1]].sPrefix.subIdx].trig == emTRIGGER_Ext0) | (instance[instance[tbSubHandleIdx[1]].sPrefix.subIdx].trig == emTRIGGER_Ext6)) {
         DMA_Cmd(DMA1_ch2, DISABLE);
-        exDMA_SetMemoryAddress(DMA1_ch2, ((DMA1_ch2->CMAR == (u32)&temp0) ? (u32)&temp1 : (u32)&temp0));
+        data = (u8*)DMA1_ch2->CMAR;
+        exDMA_SetMemoryAddress(DMA1_ch2, ((DMA1_ch2->CMAR == (u32)&temp2_0) ? (u32)&temp2_1 : (u32)&temp2_0));
         DMA_Cmd(DMA1_ch2, ENABLE);
     }
 
     if (instance[idx].sync == emTYPE_Sync && instance[idx].cb)
-        ((fpADC)instance[idx].cb)((u8*)&adcValue, instance[idx].chNo * 4);
+        ((fpADC)instance[idx].cb)(data, instance[idx].chNo * 4);
 #endif
 }
 
@@ -349,8 +367,8 @@ void DRV_ADC_DMA_ConfigChannel(ADC_TypeDef* ADCx)
     tDRV_DMA_DCB dma;
     dma.base                = ADCx;
 
-    dma.MemoryBaseAddr      = (u32)&adcValue;
-    dma.BufferSize          = DataInOnBitsSum(ADCx->CHSR);
+    dma.MemoryBaseAddr      = (ADCx == ADC1) ? (u32)&adc1Value : (u32)&adc1Value;
+    dma.BufferSize          = 4;//DataInOnBitsSum(ADCx->CHSR);
     dma.PeripheralDataSize  = DMA_PeripheralDataSize_HalfWord;
     dma.MemoryDataSize      = DMA_MemoryDataSize_Word;
 
@@ -395,7 +413,14 @@ void DRV_ADC_RegularChannelConfig(ADC_TypeDef* ADCx, u32 chs, ADCSAM_TypeDef sam
 ////////////////////////////////////////////////////////////////////////////////
 void DRV_ADC_NVIC_DMA_Init(ADC_TypeDef* ADCx)
 {
-    COMMON_NVIC_Configure(Get_ADC_DMA_IRQ_TxIndex(ADCx),  0,  3);
+    if (ADCx == ADC1) {
+        COMMON_NVIC_Configure(Get_ADC_DMA_IRQ_TxIndex(ADCx),  0,  3);
+    }
+#if defined(__MM3N1) || defined(__MM0P1)
+    if (ADCx == ADC2) {
+        COMMON_NVIC_Configure(Get_ADC_DMA_IRQ_TxIndex(ADCx),  0,  2);
+    }
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -452,7 +477,8 @@ bool DRV_ADC_DMA_PollingStatus(u8 idx)
 ////////////////////////////////////////////////////////////////////////////////
 static void InstanceConfig(tAPP_ADC_DCB* pDcb, u8 idx)
 {
-    memset(adcValue, 0 , sizeof(adcValue));
+    memset(adc1Value, 0 , sizeof(adc1Value));
+    memset(adc2Value, 0 , sizeof(adc2Value));
 
     instance[idx].mode  = pDcb->mode;
     instance[idx].cb    = pDcb->cb;
@@ -568,8 +594,15 @@ static int ADC_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
         return 0;
 
     if ((instance[idx].mode == emADC_Continue) || (instance[idx].type == emTYPE_DMA)) {
-        if (instance[idx].sync == emTYPE_ASync)
-            memcpy(ptr, adcValue, n);
+        if (instance[idx].sync == emTYPE_ASync) {
+            ADC_TypeDef* ADCx = (ADC_TypeDef*)instance[idx].sPrefix.pBase;
+            if (ADCx == ADC1) {
+                memcpy(ptr, adc1Value, n);
+            }
+            else {
+                memcpy(ptr, adc2Value, n);
+            }
+        }
         else n = 0;
     }
     else if (instance[idx].mode == emADC_Imm) {

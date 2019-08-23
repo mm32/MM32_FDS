@@ -289,7 +289,6 @@ typedef struct _DeviceVectors {
     void* pfnTIM17_IRQHandler;                      ///< TIM17
     void* pfnI2C1_IRQHandler;                       ///< I2C1
     void* pfnReserved9_Handler;                     ///< Reserved
-    void* pfnReserved10_Handler;                    ///< Reserved
     void* pfnSPI1_IRQHandler;                       ///< SPI2
     void* pfnSPI2_IRQHandler;                       ///< SPI2
     void* pfnUART1_IRQHandler;                      ///< UART1

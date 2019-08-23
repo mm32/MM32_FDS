@@ -416,7 +416,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #define SPI2_BASE                       (APB1PERIPH_BASE + 0x3800)              ///< Base Address: 0x40003000
 
-#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1)
+#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
     #define SPI1_BASE                   (APB2PERIPH_BASE + 0x3000)              ///< Base Address: 0x40003000
 #endif
 
@@ -1173,6 +1173,9 @@ typedef struct {
 
     __IO u32 RESERVED13;                                                        ///< Reserved                                       offset: 0x7C
 
+#if (0)
+    __IO u32 SETUP[8];
+#else
     __IO u32 SETUP0;                                                            ///< SETUP Packet Byte 0 Register                   offset: 0x80
     __IO u32 SETUP1;                                                            ///< SETUP Packet Byte 1 Register                   offset: 0x84
     __IO u32 SETUP2;                                                            ///< SETUP Packet Byte 2 Register                   offset: 0x88
@@ -1181,6 +1184,7 @@ typedef struct {
     __IO u32 SETUP5;                                                            ///< SETUP Packet Byte 5 Register                   offset: 0x94
     __IO u32 SETUP6;                                                            ///< SETUP Packet Byte 6 Register                   offset: 0x98
     __IO u32 SETUP7;                                                            ///< SETUP Packet Byte 7 Register                   offset: 0x9C
+#endif
     __IO u32 PACKET_SIZE0;                                                      ///< DMA Max Packet Size 0 Register                 offset: 0xA0
     __IO u32 PAKCET_SIZE1;                                                      ///< DMA Max Packet Size 1 Register                 offset: 0xA4
 
@@ -1387,7 +1391,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////////
 #define SPI2                            ((SPI_TypeDef*) SPI2_BASE)
 
-#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1)
+#if defined(__MM3N1) || defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
     #define SPI1                        ((SPI_TypeDef*) SPI1_BASE)
 #endif
 
@@ -1650,12 +1654,16 @@ typedef struct {
     #define ADC_CR_T3_CC1               (0x06U << ADC_CR_TRGSEL_L_Pos)          ///< The external trigger source of the ADC is T3_CC1
     #define ADC_CR_EXTI_11              (0x07U << ADC_CR_TRGSEL_L_Pos)          ///< The external trigger source of the ADC is EXTI_11
     #define ADC_CR_T1_TRIG              ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x00U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T1_TRIG
+    #if defined(__MM0P1)
     #define ADC_CR_T8_CC4               ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x01U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T8_CC4
     #define ADC_CR_T8_CC4_CC5           ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x02U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T8_CC4_CC5
+    #endif
     #define ADC_CR_T2_CC1               ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x03U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T2_CC1
     #define ADC_CR_T3_CC4               ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x04U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T3_CC4
     #define ADC_CR_T2_TRIG              ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x05U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T2_TRIG
+    #if defined(__MM0P1)
     #define ADC_CR_T8_CC5               ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x06U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is T8_CC5
+    #endif
     #define ADC_CR_EXTI_15              ((0x01U << ADC_CR_TRGSEL_H_Pos) + (0x07U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is EXTI_15
     #define ADC_CR_TIM1_CC4             ((0x02U << ADC_CR_TRGSEL_H_Pos) + (0x00U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is TIM1_CC4
     #define ADC_CR_TIM1_CC5             ((0x02U << ADC_CR_TRGSEL_H_Pos) + (0x01U << ADC_CR_TRGSEL_L_Pos))   ///< The external trigger source of the ADC is TIM1_CC5
@@ -1791,10 +1799,10 @@ typedef struct {
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief ADC_SREXT Register Bit Definition
 ////////////////////////////////////////////////////////////////////////////////
-    #define  ADC_SREXT_VALID_Pos        (1)
-    #define  ADC_SREXT_VALID            (0x07U << ADC_SREXT_VALID_Pos)          ///< VALID[3:1] ADC channel 13..15 valid flag
-    #define  ADC_SREXT_OVERRUN_Pos      (5)
-    #define  ADC_SREXT_OVERRUN          (0x07U << ADC_SREXT_OVERRUN_Pos)        ///< OVERRUN[7:5] ADC channel 13..15 data covered flag
+    #define  ADC_SREXT_VALID_Pos        (0)
+    #define  ADC_SREXT_VALID            (0x0FU << ADC_SREXT_VALID_Pos)          ///< VALID[3:0] ADC channel 12, 14, 15 valid flag
+    #define  ADC_SREXT_OVERRUN_Pos      (4)
+    #define  ADC_SREXT_OVERRUN          (0x0FU << ADC_SREXT_OVERRUN_Pos)        ///< OVERRUN[7:4] ADC channel 12, 14, 15 data covered flag
 #endif
 
 
@@ -1955,8 +1963,6 @@ typedef struct {
     #define CAN_CMR_RRB                 (0x01U << CAN_CMR_RRB_Pos)              ///< CAN release receive buffer
     #define CAN_CMR_CDO_Pos             (3)
     #define CAN_CMR_CDO                 (0x01U << CAN_CMR_CDO_Pos)              ///< CAN clear data overrun
-    #define CAN_CMR_GTS_Pos             (4)
-    #define CAN_CMR_GTS                 (0x01U << CAN_CMR_GTS_Pos)              ///< CAN go to sleep
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief CAN_SR register Bit definition
@@ -2126,6 +2132,24 @@ typedef struct {
     #define CAN_IR_BEI                  (0x01U << CAN_IR_BEI_Pos)               ///< CAN bus error interrupt
 
 ////////////////////////////////////////////////////////////////////////////////
+/// @brief CAN_IR register Bit definition
+////////////////////////////////////////////////////////////////////////////////
+    #define CAN_IER_RIE_Pos             (0)
+    #define CAN_IER_RIE                 (0x01U << CAN_IER_RIE_Pos)              ///< CAN receive interrupt enable
+    #define CAN_IER_TIE_Pos             (1)
+    #define CAN_IER_TIE                 (0x01U << CAN_IER_TIE_Pos)              ///< CAN transmit interrupt enable
+    #define CAN_IER_EIE_Pos             (2)
+    #define CAN_IER_EIE                 (0x01U << CAN_IER_EIE_Pos)              ///< CAN error interrupt enable
+    #define CAN_IER_DOIE_Pos            (3)
+    #define CAN_IER_DOIE                (0x01U << CAN_IER_DOIE_Pos)             ///< CAN data overrun interrupt enable
+    #define CAN_IER_EPIE_Pos            (5)
+    #define CAN_IER_EPIE                (0x01U << CAN_IER_EPI_Pos)              ///< CAN error passive interrupt enable
+    #define CAN_IER_ALIE_Pos            (6)
+    #define CAN_IER_ALIE                (0x01U << CAN_IER_ALIE_Pos)             ///< CAN arbitration lost interrupt enable
+    #define CAN_IER_BEIE_Pos            (7)
+    #define CAN_IER_BEIE                (0x01U << CAN_IER_BEIE_Pos)             ///< CAN bus error interrupt enable
+
+////////////////////////////////////////////////////////////////////////////////
 /// @brief CAN_ACRn register Bit definition
 ////////////////////////////////////////////////////////////////////////////////
     #define CAN_ACRn_AC_Pos             (0)
@@ -2189,7 +2213,7 @@ typedef struct {
     #define CAN_FF_DLC_2_Pos            (2)
     #define CAN_FF_DLC_2                (0x01U << CAN_FF_DLC_2_Pos)             ///< CAN data length code bit
     #define CAN_FF_DLC_3_Pos            (3)
-      #define CAN_FF_DLC_3              (0x01U << CAN_FF_DLC_3_Pos)             ///< CAN data length code bit
+    #define CAN_FF_DLC_3                (0x01U << CAN_FF_DLC_3_Pos)             ///< CAN data length code bit
     #define CAN_FF_RTR_Pos              (6)
     #define CAN_FF_RTR                  (0x01U << CAN_FF_RTR_Pos)               ///< CAN remote transmission request
     #define CAN_FF_FF_Pos               (7)

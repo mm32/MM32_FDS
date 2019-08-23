@@ -34,4 +34,10 @@
 	<project>
 		<PathAndName>.\project\adc\m_scan_dma_time.uvprojx</PathAndName>
 	</project>
+	<project>
+		<PathAndName>.\project\adc\dual_adc_sync.uvprojx</PathAndName>
+	</project>
+	<project>
+		<PathAndName>.\project\adc\adc_dac_onoffTrig.uvprojx</PathAndName>
+	</project>
 </ProjectWorkspace>

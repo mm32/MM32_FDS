@@ -2,7 +2,7 @@
 /// @file     KEY_LED.C
 /// @author   C Yuan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE KEY_LED EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

@@ -2,7 +2,7 @@
 /// @file     SPI_FLASH_NVIC_MAIN.C
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE SPI_FLASH_NVIC_MAIN EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

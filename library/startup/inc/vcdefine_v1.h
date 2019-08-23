@@ -149,12 +149,16 @@
     #define ADCR_TRGSEL_T1_CC4_CC5      ADC_CR_T1_CC4_CC5
     #define ADCR_TRGSEL_T3_CC1          ADC_CR_T3_CC1
     #define ADCR_TRGSEL_T1_TRGO         ADC_CR_T1_TRIG
+    #if defined(__MM0P1)
     #define ADCR_TRGSEL_T8_CC4          ADC_CR_T8_CC4
     #define ADCR_TRGSEL_T8_CC4_CC5      ADC_CR_T8_CC4_CC5
+    #endif
     #define ADCR_TRGSEL_T2_CC1          ADC_CR_T2_CC1
     #define ADCR_TRGSEL_T3_CC4          ADC_CR_T3_CC4
     #define ADCR_TRGSEL_T2_TRGO         ADC_CR_T2_TRIG
+    #if defined(__MM0P1)
     #define ADCR_TRGSEL_T8_CC5          ADC_CR_T8_CC5
+    #endif
     #define ADCR_TRGSEL_EXTI_15         ADC_CR_EXTI_15
     #define ADCR_TRGSEL_TIM1_CC4        ADC_CR_TIM1_CC4
     #define ADCR_TRGSEL_TIM1_CC5        ADC_CR_TIM1_CC5

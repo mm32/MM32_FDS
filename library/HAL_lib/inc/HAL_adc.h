@@ -2,7 +2,7 @@
 /// @file     HAL_ADC.H
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE ADC
 ///           FIRMWARE LIBRARY.
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,12 +162,16 @@ typedef enum {
 #if defined(__MM0P1) || defined(__MM0Q1)
     ADC1_ExternalTrigConv_T1_CC4_CC5    = ADC_CR_T1_CC4_CC5,
     ADC1_ExternalTrigConv_T1_TRIG       = ADC_CR_T1_TRIG,
+    #if defined(__MM0P1)
     ADC1_ExternalTrigConv_T8_CC4        = ADC_CR_T8_CC4,
     ADC1_ExternalTrigConv_T8_CC4_CC5    = ADC_CR_T8_CC4_CC5,
+    #endif
     ADC1_ExternalTrigConv_T2_CC1        = ADC_CR_T2_CC1,
     ADC1_ExternalTrigConv_T3_CC4        = ADC_CR_T3_CC4,
     ADC1_ExternalTrigConv_T2_TRIG       = ADC_CR_T2_TRIG,
+    #if defined(__MM0P1)
     ADC1_ExternalTrigConv_T8_CC5        = ADC_CR_T8_CC5,
+    #endif
     ADC1_ExternalTrigConv_EXTI_15       = ADC_CR_EXTI_15,
     ADC1_ExternalTrigConv_T1_CC4        = ADC_CR_TIM1_CC4,
     ADC1_ExternalTrigConv_T1_CC5        = ADC_CR_TIM1_CC5

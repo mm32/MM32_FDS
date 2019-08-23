@@ -2,7 +2,7 @@
 /// @file     HAL_GPIO.C
 /// @author   C Yuan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE GPIO FIRMWARE FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -23,6 +23,8 @@
 // Files includes  -------------------------------------------------------------
 #include "hal_gpio.h"
 #include "hal_rcc.h"
+#include "hal_bkp.h"
+
 
 #include "common.h"
 
@@ -87,6 +89,34 @@ void GPIO_AFIODeInit()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// @brief  Reads all data from the Data Backup Registers,then clear the
+///         registers, transfer the data to the registers at last.
+/// @param  None.
+/// @retval None.
+////////////////////////////////////////////////////////////////////////////////
+void GPIO_checkBKP(void)
+{
+#if defined(__MM3N1) || defined(__MM3O1) || defined(__MM0N1) || defined(__MM0P1)
+    u16 BKPBuff[BKP_NUMBER];
+    exBKP_Init();
+    for (u8 i = 0;i < BKP_NUMBER;i++) {
+        BKPBuff[i] = exBKP_ImmRead((BKPDR_Typedef)(BKP_DR1 + 0x04 * i));
+    }
+#if defined(__MM3N1) || defined(__MM3O1)
+    BKP_DeInit();
+#endif
+#if defined(__MM0N1) || defined(__MM0P1)
+    for (u8 i = 0;i < BKP_NUMBER;i++) {
+        exBKP_ImmWrite((BKPDR_Typedef)(BKP_DR1 + 0x04 * i), 0x0000);
+    }
+#endif
+    for (u8 i = 0;i < BKP_NUMBER;i++) {
+        exBKP_ImmWrite((BKPDR_Typedef)(BKP_DR1 + 0x04 * i), BKPBuff[i]);
+    }
+#endif
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /// @brief  Initializes the GPIOx peripheral according to the specified
 ///         parameters in the pInitStruct.
 /// @param  GPIOx: where x can be (A..D) to select the GPIO peripheral.
@@ -97,6 +127,13 @@ void GPIO_AFIODeInit()
 ////////////////////////////////////////////////////////////////////////////////
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* pInitStruct)
 {
+    switch (*(u32*)&GPIOx) {
+        case (u32)GPIOC:
+            GPIO_checkBKP();
+            break;
+        default: break;
+    }
+
     u8   idx;
     __IO u32* pReg;
 

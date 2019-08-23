@@ -2,7 +2,7 @@
 /// @file     DRV_I2C.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE I2C DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -193,7 +193,7 @@ void DRV_I2C_DMA_ConfigChannel(I2C_TypeDef* I2Cx)
     dma.channel             = Get_I2C_DMA_RxChannal(I2Cx, &n);
     dma.PeripheralBaseAddr  = (u32) &(I2Cx->DR);
     dma.dmaDir              = emDMA_p2m;
-    dma.Mode                = DMA_Mode_Circular;
+    dma.Mode                = DMA_Mode_Normal;
     DRV_DMA_Init(&dma);
 
 // TX
@@ -216,7 +216,9 @@ void I2CComplete(u8 idx)
 
     I2C_GenerateSTOP(I2Cx, ENABLE);
     I2C_ClearFlag(I2Cx, I2Cx->RAWISR);
-    instance[idx].sadd = false;
+    I2C_ClearITPendingBit(I2Cx, I2C_IT_TX_EMPTY);
+    instance[idx].sadd = true;
+    instance[idx].flag = (instance[idx].optRD ? instance[idx].rx_cnt : instance[idx].tx_cnt);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,11 +238,29 @@ void I2CTxByte(I2C_TypeDef* I2Cx, u8 dat)
 /// @param  idx: index of I2Cx
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void I2CSendAddr(u8 idx)
+void I2CSendAddr(u8 idx, bool remapEn, u8 remapIdx)
 {
+    I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
+
     if (instance[idx].master) {
         GPIO_InitTypeDef  GPIO_InitStructure;
-        GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_8 | GPIO_Pin_9;
+        switch (*(u32*)&I2Cx) {
+        case (u32)I2C1:
+            if (!remapEn) GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_6 | GPIO_Pin_7;
+            else {
+                if (remapIdx == 0) GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_8 | GPIO_Pin_9;
+                #if defined (__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
+                if (remapIdx == 1) GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_10 | GPIO_Pin_11;
+                #endif
+            }
+            break;
+        #if defined (__MM3N1)
+        case (u32)I2C2:
+            if (!remapEn) GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_10 | GPIO_Pin_11;
+            break;
+        #endif
+        default: break;
+        }
         GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
         GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -270,41 +290,59 @@ void I2Cx_IRQHandler_Common(u8 idx)
     I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
 //---------- Master mode Interrupt -----------
     if (instance[idx].master) {
-        static  u8 n = 0;
-        static  u8 m = 0;
-        static  u8 _cnt;
+        static u8 n = 0;
+        static u8 m = 0;
+        static u8 _cnt;
 
         if (instance[idx].flag != emRETURN_Busy) {
             I2C_ClearITPendingBit(I2Cx,I2C_IT_STOP_DET);
             I2C_ITConfig(I2Cx, I2C_IT_RX_FULL | I2C_IT_TX_EMPTY | I2C_IT_STOP_DET | I2C_IT_START_DET | I2C_IT_ACTIVITY, DISABLE);
         }
         else if (instance[idx].revRD) {
-            if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT))
+            if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT)) {
+                instance[idx].rx_cnt = emRETURN_NoAck;
                 I2CComplete(idx);
+            }
             else {
                 if (I2C_GetITStatus(I2Cx, I2C_IT_TX_EMPTY)) {
                     (m++ < (instance[idx].rx_len - 1)) ? I2C_ReadCmd(I2Cx) : I2C_ClearITPendingBit(I2Cx, I2C_IT_TX_EMPTY);
                 }
                 if (I2C_GetITStatus(I2Cx, I2C_IT_RX_FULL)) {
                     *instance[idx].rx_ptr++ = I2C_ReceiveData(I2Cx);
+                    instance[idx].rx_cnt++;
                     if  ((n++ >= (instance[idx].rx_len - 1))) {
                         I2CComplete(idx);
+                        instance[idx].rxComplete = true;
                     }
                 }
             }
         }
         else if (I2C_GetITStatus(I2Cx, I2C_IT_TX_EMPTY)) {
+            u16 subAddr = 0;
+            subAddr = instance[idx].subAddr;
             if (instance[idx].sadd) {
+                for (u8 i = 0; i < instance[idx].subSize; i++) {
+                    I2C_SendData(I2Cx, (u8)subAddr);
+                    subAddr >>= 8;
+                }
                 instance[idx].sadd = false;
                 m = 0; n = 0;
                 _cnt = (instance[idx].optRD) ?  0 : instance[idx].tx_len;
             }
+            else if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT)) {
+                instance[idx].tx_cnt = emRETURN_NoAck;
+                I2CComplete(idx);
+            }
             else if (n < _cnt) {
-                I2CTxByte(I2Cx, *instance[idx].tx_ptr++);
+                I2C_SendData(I2Cx, *instance[idx].tx_ptr++);
                 n++;
+                instance[idx].tx_cnt = n;
             }
             else if (!(instance[idx].optRD)) {
-                I2CComplete(idx);
+                if (I2C_GetFlagStatus(I2Cx, I2C_STATUS_FLAG_TFE)) {
+                    I2CComplete(idx);
+                    instance[idx].txComplete = true;
+                }
             }
             else {
                 instance[idx].revRD = instance[idx].optRD;
@@ -314,20 +352,27 @@ void I2Cx_IRQHandler_Common(u8 idx)
         }
     }
 //---------- Slave mode Interrupt -----------
-    if (!(instance[idx].master)) {
-        if (I2C_GetITStatus(I2Cx, I2C_IT_RD_REQ)) {
+    else {
+        if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT)) {
+            instance[idx].rx_cnt = emRETURN_NoAck;
+            I2CComplete(idx);
+        }
+        else if (I2C_GetITStatus(I2Cx, I2C_IT_RD_REQ)) {
             I2C_ClearITPendingBit(I2Cx, I2C_IT_RD_REQ);
             I2CTxByte(I2Cx, *instance[idx].tx_ptr);
+            instance[idx].tx_cnt++;
             instance[idx].tx_ptr++;
+            instance[idx].flag = instance[idx].tx_cnt;
             if (I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_FLAG_RX_DONE)) {
-                instance[idx].flag = emRETURN_Ready;
                 I2CComplete(idx);
             }
         }
         else if (I2C_GetITStatus(I2Cx, I2C_IT_RX_FULL)) {
             I2C_ClearITPendingBit(I2Cx, I2C_IT_RX_FULL);
             *instance[idx].rx_ptr = I2C_ReceiveData(I2Cx);
+            instance[idx].rx_cnt++;
             instance[idx].rx_ptr++;
+            instance[idx].flag = instance[idx].rx_cnt;
         }
     }
 }
@@ -364,17 +409,35 @@ void I2C2_EV_IRQHandler (void)
 /// @param  idx: index of I2Cx
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-static void I2C_PollingSendPacket_Block(u8 idx)
+static void I2C_PollingSendPacket(u8 idx)
 {
     I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
 
-    while (instance[idx].tx_len--) {
-        I2CTxByte(I2Cx, *instance[idx].tx_ptr);
-        instance[idx].tx_cnt++;
-        instance[idx].tx_ptr++;
+    u16 subAddr = 0;
+    subAddr = instance[idx].subAddr;
+    if (instance[idx].sadd) {
+        for (u8 i = 0; i < instance[idx].subSize; i++) {
+            I2CTxByte(I2Cx, (u8)subAddr);
+            subAddr >>= 8;
+        }
+        instance[idx].sadd = false;
     }
-    instance[idx].flag = instance[idx].tx_cnt;
-    I2CComplete(idx);
+    else {
+        if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT)) {
+            instance[idx].tx_cnt = emRETURN_NoAck;
+            I2CComplete(idx);
+        }
+        else {
+            I2CTxByte(I2Cx, *instance[idx].tx_ptr);
+            instance[idx].tx_cnt++;
+            instance[idx].tx_ptr++;
+            instance[idx].flag = instance[idx].tx_cnt;
+            if (instance[idx].tx_cnt == instance[idx].tx_len) {
+                I2CComplete(idx);
+                instance[idx].txComplete = true;
+            }
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -382,25 +445,44 @@ static void I2C_PollingSendPacket_Block(u8 idx)
 /// @param  idx: index of I2Cx
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-static void I2C_PollingRcvPacket_Block(u8 idx)
+static void I2C_PollingRcvPacket(u8 idx)
 {
+    static u8 n = 0;
+    static u8 m = 0;
+    u16 subAddr = 0;
     I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
 
-    instance[idx].rx_cnt = instance[idx].rx_len;
-    for (u8 i = 0; i < instance[idx].rx_len; i++) {
-        while(1) {
-            if (I2C_GetFlagStatus(I2Cx, I2C_STATUS_FLAG_TFE) && instance[idx].rx_cnt) {
-                I2C_ReadCmd(I2Cx);
-                instance[idx].rx_cnt--;
+    subAddr = instance[idx].subAddr;
+    if (instance[idx].sadd) {
+        for (u8 i = 0; i < instance[idx].subSize; i++) {
+            I2CTxByte(I2Cx, (u8)subAddr);
+            subAddr >>= 8;
+        }
+        instance[idx].sadd = false;
+        m = 0;
+        n = 0;
+    }
+    else {
+        if (I2C_GetITStatus(I2Cx, I2C_IT_TX_ABRT)) {
+            instance[idx].rx_cnt = emRETURN_NoAck;
+            I2CComplete(idx);
+        }
+        else {
+            if (I2C_GetFlagStatus(I2Cx, I2C_STATUS_FLAG_TFE)) {
+                if (m++ < (instance[idx].rx_len))
+                    I2C_ReadCmd(I2Cx);
             }
             if (I2C_GetFlagStatus(I2Cx, I2C_STATUS_FLAG_RFNE)) {
-                instance[idx].rx_ptr[i] = I2C_ReceiveData(I2Cx);
-                break;
+                *instance[idx].rx_ptr++ = I2C_ReceiveData(I2Cx);
+                instance[idx].flag = ++n;
+                if  ((n == instance[idx].rx_len)) {
+                    instance[idx].rx_cnt = n;
+                    I2CComplete(idx);
+                    instance[idx].rxComplete = true;
+                }
             }
         }
     }
-    instance[idx].flag = instance[idx].rx_len - instance[idx].rx_cnt;
-    I2CComplete(idx);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -415,6 +497,14 @@ static void I2C_PollingSendPacket_Slave(u8 idx)
         I2CTxByte((I2C_TypeDef*)instance[idx].sPrefix.pBase, *instance[idx].tx_ptr);
         instance[idx].tx_cnt++;
         instance[idx].tx_ptr++;
+//        if (instance[idx].tx_cnt == 3) {
+//            GPIO_InitTypeDef  GPIO_InitStructure;
+//            GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_8 | GPIO_Pin_9;
+//            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+//            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+//            GPIO_Init(GPIOB, &GPIO_InitStructure);
+//            I2C_Cmd(I2C1, DISABLE);
+//        }
     }
     if (I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_FLAG_RX_DONE))
         instance[idx].flag = instance[idx].tx_cnt;
@@ -432,8 +522,17 @@ static void I2C_PollingRcvPacket_Slave(u8 idx)
         *instance[idx].rx_ptr = I2C_ReceiveData((I2C_TypeDef*)instance[idx].sPrefix.pBase);
         instance[idx].rx_cnt++;
         instance[idx].rx_ptr++;
-//        if (!I2C_GetFlagStatus(instance[idx].I2Cx, I2C_STATUS_FLAG_RFNE))
-//            instance[idx].flag = emRETURN_Ready;
+        instance[idx].flag = instance[idx].rx_cnt;
+//        if (instance[idx].rx_cnt == 6) {
+//            GPIO_InitTypeDef  GPIO_InitStructure;
+//            GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_8 | GPIO_Pin_9;
+//            GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+//            GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+//            GPIO_Init(GPIOB, &GPIO_InitStructure);
+//            I2C_Cmd(I2C1, DISABLE);
+//        }
+        if (!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_RFNE))
+            I2CComplete(idx);
     }
 }
 
@@ -448,12 +547,16 @@ void DRV_I2C_DMA_SendPacket(u8 idx)
     u8 n = 0;
     I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
 
+    u16 subAddr = 0;
+    subAddr = instance[idx].subAddr;
+    for (u8 i = 0; i < instance[idx].subSize; i++) {
+        I2CTxByte(I2Cx, (u8)subAddr);
+        subAddr >>= 8;
+    }
+
     I2C_DMAConfigure(I2Cx, I2C_Direction_Transmitter);
 
     DRV_DMA_TransmitPacket(Get_I2C_DMA_TxChannal(I2Cx, &n), (u32)(instance[n].tx_ptr), instance[n].tx_len);
-    while(!I2C_GetFlagStatus(I2Cx, I2C_STATUS_FLAG_TFE));
-    instance[idx].flag = instance[idx].tx_len;
-    I2CComplete(idx);
 }
 
 #if defined(__EX_I2C)
@@ -467,6 +570,9 @@ void DMA1_Channel6_IRQHandler(void)
 {
     DMA_ClearITPendingBit(DMA1_IT_TC6);
     u8 idx = instance[tbSubHandleIdx[0]].sPrefix.subIdx;
+
+    instance[idx].tx_cnt = instance[idx].tx_len;
+    instance[idx].txComplete = true;
 
     if (instance[idx].sync == emTYPE_Sync) {
         ((fpI2C)instance[idx].cbTx)(idx);
@@ -482,9 +588,13 @@ void DMA1_Channel7_IRQHandler(void)
 {
     DMA_ClearITPendingBit(DMA1_IT_TC7);
     u8 idx = instance[tbSubHandleIdx[0]].sPrefix.subIdx;
-    instance[idx].rx_ptr++;
-    instance[idx].rx_cnt++;
-    instance[idx].rx_len--;
+//    instance[idx].rx_ptr++;
+//    instance[idx].rx_cnt++;
+//    instance[idx].rx_len--;
+
+    instance[idx].rx_cnt = instance[idx].rx_len;
+    instance[idx].rxComplete = true;
+    I2CComplete(idx);
 
     if (instance[idx].sync == emTYPE_Sync) {
         ((fpI2C)instance[idx].cbTx)(idx);
@@ -501,6 +611,9 @@ void DMA1_Channel4_IRQHandler(void)
     DMA_ClearITPendingBit(DMA1_IT_TC4);
     u8 idx = instance[tbSubHandleIdx[1]].sPrefix.subIdx;
 
+    instance[idx].tx_cnt = instance[idx].tx_len;
+    instance[idx].txComplete = true;
+
     if (instance[idx].sync == emTYPE_Sync) {
         ((fpI2C)instance[idx].cbTx)(idx);
     }
@@ -515,9 +628,14 @@ void DMA1_Channel5_IRQHandler(void)
 {
     DMA_ClearITPendingBit(DMA1_IT_TC5);
     u8 idx = instance[tbSubHandleIdx[1]].sPrefix.subIdx;
-    instance[idx].rx_ptr++;
-    instance[idx].rx_cnt++;
-    instance[idx].rx_len--;
+//    instance[idx].rx_ptr++;
+//    instance[idx].rx_cnt++;
+//    instance[idx].rx_len--;
+
+    instance[idx].rx_cnt = instance[idx].rx_len;
+    instance[idx].rxComplete = true;
+    I2CComplete(idx);
+
     if (instance[idx].sync == emTYPE_Sync) {
         ((fpI2C)instance[idx].cbTx)(idx);
     }
@@ -535,16 +653,22 @@ void DMA1_Channel2_3_IRQHandler(void)
     u8 idx = instance[tbSubHandleIdx[0]].sPrefix.subIdx;
     if (instance[idx].optRD) {
         DMA_ClearITPendingBit(DMA1_IT_TC3);
-        //I2C_ReadCmd(I2C1);
-        instance[idx].rx_ptr++;
-        instance[idx].rx_cnt++;
-        instance[idx].rx_len--;
+//        instance[idx].rx_ptr++;
+//        instance[idx].rx_cnt++;
+//        instance[idx].rx_len--;
+
+        instance[idx].rx_cnt = instance[idx].rx_len;
+        instance[idx].rxComplete = true;
+        I2CComplete(idx);
+
         if (instance[idx].sync == emTYPE_Sync) {
             ((fpI2C)instance[idx].cbTx)(idx);
         }
     }
     else {
         DMA_ClearITPendingBit(DMA1_IT_TC2);
+        instance[idx].tx_cnt = instance[idx].tx_len;
+        instance[idx].txComplete = true;
     }
 }
 #endif  // defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)
@@ -560,16 +684,16 @@ void DRV_I2C_DMA_RcvPacket(u8 idx)
     u8 n;
     I2C_TypeDef* I2Cx = (I2C_TypeDef*)instance[idx].sPrefix.pBase;
 
+    u16 subAddr = 0;
+    subAddr = instance[idx].subAddr;
+    for (u8 i = 0; i < instance[idx].subSize; i++) {
+        I2CTxByte(I2Cx, (u8)subAddr);
+        subAddr >>= 8;
+    }
+
     I2C_DMAConfigure(I2Cx, I2C_Direction_Receiver);
 
-    DRV_DMA_TransmitPacket(Get_I2C_DMA_RxChannal(I2Cx, &n), (u32)(instance[n].rx_ptr), 1);
-    while(1) {
-        I2C_ReadCmd(I2Cx);
-        if (!(instance[n].rx_len - 1))
-            break;
-    }
-    instance[idx].flag = instance[idx].rx_cnt;
-    I2CComplete(idx);
+    DRV_DMA_TransmitPacket(Get_I2C_DMA_RxChannal(I2Cx, &n), (u32)(instance[n].rx_ptr), instance[idx].rx_len);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -621,6 +745,8 @@ static void HardwareConfig(tAPP_I2C_DCB* pDcb, u8 idx)
 
     if (pDcb->type == emTYPE_DMA)   DRV_I2C_DMA_ConfigChannel(I2Cx);
     if (pDcb->master == false)      I2C_SendSlaveAddress(I2Cx, pDcb->ownaddr);
+
+    I2CSendAddr(idx, pDcb->remapEn, pDcb->remapIdx);
 
 }
 
@@ -680,55 +806,57 @@ static int I2C_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
     if (instance[idx].master) {
         if (instance[idx].flag  != emRETURN_Busy) {
             instance[idx].flag   = emRETURN_Busy;
-            instance[idx].sadd   = true;
+            instance[idx].txComplete = false;
             instance[idx].optRD  = false;
             instance[idx].revRD  = false;
+            instance[idx].sadd   = true;
             instance[idx].tx_cnt = 0;
             instance[idx].tx_len = len;
             instance[idx].tx_ptr = ptr;
 
-            I2CSendAddr(idx);
-            I2CTxByte((I2C_TypeDef*)instance[idx].sPrefix.pBase, instance[idx].subAddr);
-            if (!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_ACTIVITY))
-                return instance[idx].flag = emRETURN_NoAck;
 
-            switch (instance[idx].type) {
-            case emTYPE_Polling:
-                I2C_PollingSendPacket_Block(idx);
-                break;
-            case emTYPE_DMA:
-                DRV_I2C_DMA_SendPacket(idx);
-                break;
-            case emTYPE_IT:
-                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_TX_EMPTY | I2C_IT_STOP_DET | I2C_IT_START_DET | I2C_IT_ACTIVITY, ENABLE);
-                break;
-            default:
-                instance[idx].flag = emRETURN_Fault;
+            if (instance[idx].type == emTYPE_Polling) {
+                if (instance[idx].block == emTYPE_Block) {
+                    do I2C_PollingSendPacket(idx);
+                    while(!instance[idx].txComplete);
+                }
+                else {
+                    I2C_PollingSendPacket(idx);
+                    if (!instance[idx].txComplete) instance[idx].flag = emRETURN_Fault;;
+                }
             }
+            else if (instance[idx].type == emTYPE_DMA) {
+                DRV_I2C_DMA_SendPacket(idx);
+                if (instance[idx].block == emTYPE_Block) {
+                    while(!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_TFE));
+                    I2CComplete(idx);
+                }
+                else if (!instance[idx].txComplete) instance[idx].flag = emRETURN_Fault;;
+            }
+            else if (instance[idx].type == emTYPE_IT) {
+                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_TX_EMPTY | I2C_IT_ACTIVITY | I2C_IT_STOP_DET | I2C_IT_START_DET, ENABLE);
+            }
+            else instance[idx].flag = emRETURN_Fault;
         }
     }
 //---------- Slave mode ------------
     else {
-        I2CSendAddr(idx);
         if (instance[idx].flag  != emRETURN_Busy) {
             instance[idx].flag = emRETURN_Busy;
             instance[idx].optRD = false;
             instance[idx].tx_cnt = 0;
             instance[idx].tx_ptr = ptr;
 
-            switch (instance[idx].type) {
-            case emTYPE_Polling:
+            if (instance[idx].type == emTYPE_Polling) {
                 do {
                     I2C_PollingSendPacket_Slave(idx);
                 } while (instance[idx].flag <= 0);
-                break;
-            case emTYPE_IT:
-                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_RD_REQ, ENABLE);
-                while (!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_FLAG_RX_DONE));
-                break;
-            case emTYPE_DMA:
-                return emRETURN_Fault;
             }
+            else if (instance[idx].type == emTYPE_IT) {
+                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_RD_REQ, ENABLE);
+//                while (!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_FLAG_RX_DONE));
+            }
+            else instance[idx].flag = emRETURN_Fault;
         }
     }
     return instance[idx].flag;
@@ -752,56 +880,60 @@ static int I2C_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
     if (instance[idx].master) {
         if (instance[idx].flag  != emRETURN_Busy) {
             instance[idx].flag   = emRETURN_Busy;
-            instance[idx].sadd   = true;
+            instance[idx].rxComplete = false;
             instance[idx].optRD  = true;
             instance[idx].revRD  = false;
+            instance[idx].sadd   = true;
             instance[idx].rx_cnt = 0;
             instance[idx].rx_len = len;
             instance[idx].rx_ptr = ptr;
 
-            I2CSendAddr(idx);
-            for (u8 i = 0; i < instance[idx].subSize; i++) {
-                I2CTxByte((I2C_TypeDef*)instance[idx].sPrefix.pBase, instance[idx].subAddr);
-                if (!I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_ACTIVITY))
-                    return instance[idx].flag = emRETURN_NoAck;
+            if (instance[idx].type == emTYPE_Polling) {
+                if (instance[idx].block == emTYPE_Block) {
+                    do I2C_PollingRcvPacket(idx);
+                    while(!instance[idx].rxComplete);
+                }
+                else {
+                    I2C_PollingRcvPacket(idx);
+                    if (!instance[idx].rxComplete) instance[idx].flag = emRETURN_Fault;
+                }
             }
-
-            switch (instance[idx].type) {
-            case emTYPE_Polling:
-                I2C_PollingRcvPacket_Block(idx);
-                break;
-            case emTYPE_DMA:
+            else if (instance[idx].type == emTYPE_DMA) {
                 DRV_I2C_DMA_RcvPacket(idx);
-                break;
-            case emTYPE_IT:
-                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_TX_EMPTY | I2C_IT_STOP_DET | I2C_IT_START_DET | I2C_IT_ACTIVITY, ENABLE);
-                break;
-            default:
-                instance[idx].flag = emRETURN_Fault;
+                if (instance[idx].block == emTYPE_Block) {
+                    while(!instance[idx].rxComplete) {
+                        if (I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_TFE)) {
+                            if (instance[idx].rx_cnt++ < (instance[idx].rx_len)) {
+                                I2C_ReadCmd((I2C_TypeDef*)instance[idx].sPrefix.pBase);
+                            }
+                        }
+                    }
+                }
+                else if (!instance[idx].rxComplete) instance[idx].flag = emRETURN_Fault;;
             }
+            else if (instance[idx].type == emTYPE_IT) {
+                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_TX_EMPTY | I2C_IT_ACTIVITY | I2C_IT_STOP_DET | I2C_IT_START_DET, ENABLE);
+            }
+            else instance[idx].flag = emRETURN_Fault;
         }
     }
     else {
-        I2CSendAddr(idx);
         if (instance[idx].flag  != emRETURN_Busy) {
             instance[idx].flag = emRETURN_Busy;
             instance[idx].optRD = true;
             instance[idx].rx_cnt = 0;
             instance[idx].rx_ptr = ptr;
 
-            switch (instance[idx].type) {
-            case emTYPE_Polling:
+            if (instance[idx].type == emTYPE_Polling) {
                 do {
                     I2C_PollingRcvPacket_Slave(idx);
-                } while (1);
-                break;
-            case emTYPE_IT:
-                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_RX_FULL, ENABLE);
-                while (I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_RFNE));
-                break;
-            case emTYPE_DMA:
-                return emRETURN_Fault;
+                } while (instance[idx].flag <= 0);
             }
+            else if (instance[idx].type == emTYPE_IT) {
+                I2C_ITConfig((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_IT_TX_EMPTY | I2C_IT_STOP_DET | I2C_IT_START_DET | I2C_IT_ACTIVITY | I2C_IT_RX_FULL, ENABLE);
+                while (I2C_GetFlagStatus((I2C_TypeDef*)instance[idx].sPrefix.pBase, I2C_STATUS_FLAG_RFNE));
+            }
+            else instance[idx].flag = emRETURN_Fault;
         }
     }
     return instance[idx].flag;

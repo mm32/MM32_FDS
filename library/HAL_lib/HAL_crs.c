@@ -2,7 +2,7 @@
 /// @file     HAL_CRS.C
 /// @author   YQ Liu
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE CRS FIRMWARE FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

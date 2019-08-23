@@ -2,7 +2,7 @@
 /// @file     DRV_TIM.H
 /// @author   D Chen
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE TIM
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,6 @@
 ///
 /// <H2><CENTER>&COPY; COPYRIGHT 2018-2019 MINDMOTION </CENTER></H2>
 ////////////////////////////////////////////////////////////////////////////////
-
 
 // Define to prevent recursive inclusion  --------------------------------------
 #ifndef __DRV_TIM_H

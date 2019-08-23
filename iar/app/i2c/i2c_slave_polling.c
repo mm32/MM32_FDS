@@ -2,7 +2,7 @@
 /// @file     I2C_SLAVE_POLLING.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE I2C_SLAVE_POLLING EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -135,13 +135,13 @@ int main(void)
     if (!OpenFile(hI2C, (void*)&dcb))       while(1);
 
     while(1){
-        if (!txSuccess && WriteFile(hI2C, emFILE_I2C1, newTxBuffer, 0)) {
-            txSuccess = true;
-        }
-
-//      if (!rxSuccess && ReadFile(hI2C, emFILE_I2C1, newRxBuffer, 0)) {
-//          rxSuccess = true;
+//        if (!txSuccess && WriteFile(hI2C, emFILE_I2C1, newTxBuffer, 0)) {
+//          txSuccess = true;
 //      }
+
+        if (!rxSuccess && ReadFile(hI2C, emFILE_I2C1, newRxBuffer, 0)) {
+            rxSuccess = true;
+        }
 
         if (SysKeyboard(&vkKey)) {
             switch  (vkKey) {

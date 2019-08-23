@@ -2,7 +2,7 @@
 /// @file     DRV.H
 /// @author   AE Team
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,28 +59,29 @@ typedef enum {
     emIP_ADC,                       ///< 2
     emIP_AES,                       ///< 3
     emIP_BKP,                       ///< 4
-    emIP_COMP,                      ///< 5
+    emIP_CAN,                       ///< 5
+//  emIP_COMP,                      ///<
     emIP_CRC,                       ///< 6
-    emIP_CRS,                       ///< 7
-    emIP_DAC,                       ///< 8
-    emIP_DIV,                       ///< 9
-    emIP_DMA,                       ///< 10
-    emIP_EXTI,                      ///< 11
-    emIP_GPIO,                      ///< 12
-    emIP_I2C,                       ///< 13
-    emIP_IWDG,                      ///< 14
-    emIP_OPAMP,                     ///< 15
-    emIP_POWER,                     ///< 16
-    emIP_RCC,                       ///< 17
-    emIP_RTC,                       ///< 18
-    emIP_SPI,                       ///< 19
-    emIP_SQRT,                      ///< 20
-    emIP_TIM,                       ///< 21
-    emIP_UART,                      ///< 22
-    emIP_WWDG,                      ///< 23
-    emIP_EEPROM,                    ///< 24
-    emIP_PROTECT,                   ///< 25
-    emIP_COUNT                      ///< 26
+//  emIP_CRS,                       ///<
+    emIP_DAC,                       ///< 7
+//  emIP_DIV,                       ///<
+    emIP_DMA,                       ///< 8
+    emIP_EXTI,                      ///< 9
+    emIP_GPIO,                      ///< 10
+    emIP_I2C,                       ///< 11
+    emIP_IWDG,                      ///< 12
+//  emIP_OPAMP,                     ///<
+    emIP_POWER,                     ///< 13
+    emIP_RCC,                       ///< 14
+    emIP_RTC,                       ///< 15
+    emIP_SPI,                       ///< 16
+//  emIP_SQRT,                      ///<
+    emIP_TIM,                       ///< 17
+    emIP_UART,                      ///< 18
+    emIP_WWDG,                      ///< 19
+    emIP_EEPROM,                    ///< 20
+    emIP_PROTECT,                   ///< 21
+    emIP_COUNT                      ///< 22
 } EM_IP;
 
 
@@ -120,6 +121,43 @@ typedef enum {
     emFILE_BKP
 } EM_FILE_BKP;
 
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief CAN VORK Mode enumerate definition
+/// @anchor EM_CAN_WORK_MODE
+////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+    emTriple_Sample,                            ///< CAN_ResetMode
+    emSingle_Sample                             ///< CAN_ResetMode
+} EM_CAN_SAMPLE;
+////////////////////////////////////////////////////////////////////////////////
+/// @brief CAN VORK Mode enumerate definition
+/// @anchor EM_CAN_MODE
+////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+    emCAN_Basic,                            ///< CAN_ResetMode
+    emCAN_Peli                              ///< CAN_ResetMode
+} EM_CAN_Mode;
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief CAN VORK Mode enumerate definition
+/// @anchor EM_CAN_WORK_MODE
+////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+    emCAN_SeftTestMode,                                 ///< CAN_SeftTestMode
+    emCAN_ListenOnlyMode,                           ///< CAN_ListenOnlyMode
+    emCAN_WorkMode
+} EM_CAN_TEST_MODE;
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief CAN VORK Mode enumerate definition
+/// @anchor EM_CAN_WORK_MODE
+////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+    emCAN_FilterMode_Singal,                        ///< CAN_FilterMode_Singal
+    emCAN_FilterMode_Double                         ///< CAN_FilterMode_Double
+} EM_CAN_FILTER_MODE;
+
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Files of COMP enumerate definition.
 /// @anchor EM_FILE_COMP
@@ -147,6 +185,14 @@ typedef enum {
 typedef enum {
     emFILE_CRS
 } EM_FILE_CRS;
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Files of CAN enumerate definition.
+/// @anchor EM_FILE_CAN
+////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+    emFILE_CAN1
+} EM_FILE_CAN;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Files of DAC channel enumerate definition.
@@ -765,6 +811,25 @@ typedef struct {
 } tAPP_CRS_DCB;
 
 ////////////////////////////////////////////////////////////////////////////////
+/// @brief  CAN DCB structure definition
+////////////////////////////////////////////////////////////////////////////////
+typedef struct {
+    s8                  hSub;               ///< Sub handle,Set as emFILE_CAN1,emFILE_CAN1_PELI.
+    EM_CAN_Mode         canType;            ///< emBasic,emPeli
+    EM_TYPE             type;               ///< emTYPE_IT, emTYPE_Polling .
+    EM_TYPE             sync;               ///< sync mode. Set as emTYPE_Sync, emTYPE_ASync.
+    EM_TYPE             block;              ///< block mode.
+    u32                 cbTx;               ///< tx call back function.
+    u32                 cbRx;               ///< rx call back function.
+    u32                 baudRate;           ///< baudRate
+    u8                  sample;             ///<u8 sample
+    EM_CAN_TEST_MODE    testMode;           ///< CAN_SeftTestMode,CAN_ListenOnlyMode.
+    bool                remapEn;            ///< GPIO whether remap
+    u8                  remapIdx;           ///< GPIO remap index
+    u32                 id;                 ///< address
+} tAPP_CAN_DCB;
+
+////////////////////////////////////////////////////////////////////////////////
 /// @brief  DAC DCB structure definition
 ////////////////////////////////////////////////////////////////////////////////
 typedef struct {
@@ -828,6 +893,7 @@ typedef struct {
     u16                 dir;                ///< direction, input or output
     u16                 mode;               ///< mode, can be Push-pull output or Open drain output, can be pull up or pull down accroding to dir
     u16                 state;              ///< in input mode, floating or pull up/down
+    u16                 mask;               ///< 1:the pin need to be initialized, 0:the pin do not need operate
 } tAPP_GPIO_DCB;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -925,7 +991,7 @@ typedef struct {
     u32                 cbTx;               ///< SPI transmiting callback function address
     u32                 cbRx;               ///< SPI receiving callback function address
 
-    u8                  dataWidth;          ///< SPI data width
+//  u8                  dataWidth;          ///< SPI data width
     u16                 prescaler;          ///< Prescaler to control SPI clock frequency
     u32                 timeOut;
 
@@ -944,6 +1010,11 @@ typedef struct {
     u16                 para;               ///< parameter
     u8                  paraSize;           ///< parameter size
 
+    bool                fastMode;
+    u8                  protocol;
+    u8                  command;
+    u8                  parameter[4];
+    u8                  parameterLength;
 } tAPP_SPI_DCB;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1073,6 +1144,7 @@ typedef int  (*fpWriteFile) (HANDLE handle, u8 hSub, u8* ptr, u16 count);
 /// @{
 
 typedef void (*fpADC)(u8* ptr, u16 len);
+typedef void (*fpCAN)(u8 idx);
 typedef void (*fpDMA)(u8 idx);
 typedef void (*fpTIM)(u8 idx);
 typedef void (*fpPVD)(void);
@@ -1102,22 +1174,23 @@ void DISPLAY_CreateFile(HANDLE handle);
 void ADC_CreateFile(HANDLE handle);
 void AES_CreateFile(HANDLE handle);
 void BKP_CreateFile(HANDLE handle);
-void COMP_CreateFile(HANDLE handle);
+void CAN_CreateFile(HANDLE handle);
+//void COMP_CreateFile(HANDLE handle);
 void CRC_CreateFile(HANDLE handle);
-void CRS_CreateFile(HANDLE handle);
+//void CRS_CreateFile(HANDLE handle);
 void DAC_CreateFile(HANDLE handle);
-void DIV_CreateFile(HANDLE handle);
+//void DIV_CreateFile(HANDLE handle);
 void DMA_CreateFile(HANDLE handle);
 void EXTI_CreateFile(HANDLE handle);
 void GPIO_CreateFile(HANDLE handle);
 void I2C_CreateFile(HANDLE handle);
 void IWDG_CreateFile(HANDLE handle);
-void OPAMP_CreateFile(HANDLE handle);
+//void OPAMP_CreateFile(HANDLE handle);
 void POWER_CreateFile(HANDLE handle);
 void RCC_CreateFile(HANDLE handle);
 void RTC_CreateFile(HANDLE handle);
 void SPI_CreateFile(HANDLE handle);
-void SQRT_CreateFile(HANDLE handle);
+//void SQRT_CreateFile(HANDLE handle);
 void TIM_CreateFile(HANDLE handle);
 void UART_CreateFile(HANDLE handle);
 void WWDG_CreateFile(HANDLE handle);

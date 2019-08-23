@@ -2,7 +2,7 @@
 /// @file     DRV_I2C.H
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE I2C
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,16 +74,18 @@ typedef struct {
     u16                 subAddr;                            ///< SubAddress
     u8                  subSize;                            ///< SubAddress size
 
-    u16                 tx_cnt;                             ///< transform data count
+    int                 tx_cnt;                             ///< transform data count
     u16                 tx_len;                             ///< transform data length
     u8*                 tx_ptr;                             ///< transform buffer address
-    u16                 rx_cnt;                             ///< receive data count
+    int                 rx_cnt;                             ///< receive data count
     u16                 rx_len;                             ///< receive data length
     u8*                 rx_ptr;                             ///< receive buffer address
     u32                 timeOut;                            ///< timeOut count
 
     bool                master      :1;                     ///< mode: master or slave
     bool                sadd        :1;                     ///< Send address
+    bool                txComplete  :1;                     ///< I2C transform complete status
+    bool                rxComplete  :1;                     ///< I2C receive complete status
     u8                  optRD       :1;                     ///< option: write or read data, Read :1
     u8                  revRD       :1;                     ///< write or read
 
@@ -127,8 +129,6 @@ typedef struct {
 --------------------------------------------------------------------  */
 
 GLOBAL static tDRV_I2C_INSTANT      instance[INSTANCE_NUM];
-
-
 #else
 #define GLOBAL extern
 #endif
@@ -148,7 +148,7 @@ void DRV_I2C_DMA_ConfigChannel(I2C_TypeDef* I2Cx);
 
 void I2CComplete(u8 idx);
 void I2CTxByte(I2C_TypeDef* I2Cx, u8 dat);
-void I2CSendAddr(u8 idx);
+void I2CSendAddr(u8 idx, bool remapEn, u8 remapIdx);
 
 void DRV_I2C_DMA_SendPacket(u8 idx);
 void DRV_I2C_DMA_RcvPacket(u8 idx);

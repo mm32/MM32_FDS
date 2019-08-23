@@ -2,8 +2,8 @@
 /// @file     TESTTEMP.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
-/// @brief    THIS FILE PROVIDES ALL THE WINDOW_COMP EXAMPLE.
+/// @date     2019-03-13
+/// @brief    THIS FILE PROVIDES ALL THE TESTTEMP EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
 ///
@@ -54,7 +54,7 @@ void AppTaskTick(void)
         tickCnt  = 0;
         tickFlag = true;
     }
-    samFlag = true;
+    samFlag1 = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ void AppTaskTick(void)
 void Callback(void* ptr, u16 len)
 {
     /* Set Conversion flag: Conversion complete */
-    ADC_Filter((u32*)ptr, 16);
+    ADC1_Filter((u32*)ptr, 16);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,22 +109,22 @@ int main(void)
 // Step 4:  Open File Device     ---------------------->>>>>
     if (!OpenFile(hADC, (void*)&dcb))       while(1);                           // start temp
 
-    transFlag = 0;
+    transFlag1 = 0;
 
     while (1) {
-        if (samFlag) {
-            samFlag = false;
+        if (samFlag1) {
+            samFlag1 = false;
             u16 n = ReadFile(hADC, emFILE_ADC1, (u8*)&temp, 16);    // Start ADC & Getting ADC1 Conversion Data
-            if (n > 0) ADC_Filter((u32*)&temp, n);                  // IIR filter
+            if (n > 0) ADC1_Filter((u32*)&temp, n);                 // IIR filter
         }
-        if (transFlag) {
-            transFlag = false;
+        if (transFlag1) {
+            transFlag1 = false;
 #if defined(__MM3N1)
             float p;
-            p = item.AdcResult[0] * (3.3 / 4096);
+            p = item1.AdcResult[0] * (3.3 / 4096);
             temperate = (p - 1.5) / 0.004801 + 25;
 #elif defined(__MM0N1)
-            temperate = 27.0 + (item.AdcResult[0] - 1800) / 5.96;
+            temperate = 27.0 + (item1.AdcResult[0] - 1800) / 5.96;
 #endif
         }
 

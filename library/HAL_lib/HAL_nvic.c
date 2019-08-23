@@ -2,7 +2,7 @@
 /// @file     HAL_NVIC.C
 /// @author   YQ Liu
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE NVIC FIRMWARE FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -45,9 +45,9 @@
 /// @param  Offset
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void NVIC_SetVectorTable(u32 NVIC_VectTab, u32 Offset)
+void NVIC_SetVectorTable(u32 NVIC_VectTab, u32 offset)
 {
-    SCB->VTOR = NVIC_VectTab | (Offset & (u32)0x1FFFFF80);
+    SCB->VTOR = NVIC_VectTab | (offset & (u32)0x1FFFFF80);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

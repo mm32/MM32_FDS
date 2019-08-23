@@ -106,6 +106,10 @@
 				<configuration>MM32SPIN27</configuration>
 			</member>
 			<member>
+				<project>uart_it</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
 				<project>uart_baudrateRx</project>
 				<configuration>MM32SPIN27</configuration>
 			</member>

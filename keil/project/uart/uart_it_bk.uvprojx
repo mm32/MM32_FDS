@@ -420,6 +420,11 @@
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
 						</File>
 						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
+						</File>
+						<File>
 							<FileName>bsp_comp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_comp.c</FilePath>
@@ -523,6 +528,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>
@@ -1213,6 +1223,11 @@
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
 						</File>
 						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
+						</File>
+						<File>
 							<FileName>bsp_comp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_comp.c</FilePath>
@@ -1316,6 +1331,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>

@@ -2,7 +2,7 @@
 /// @file     DRV_DAC.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE DAC DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -32,6 +32,7 @@
 #include "common.h"
 #include "drv_dac.h"
 #include "drv_dma.h"
+#include "drv_tim.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @addtogroup MM32_Driver_Layer
@@ -79,15 +80,15 @@ void DRV_DAC_Init(tDRV_DAC_INSTANT* dcb)
     if (dcb->sPrefix.subIdx == 0) {
         DAC_Init(DAC_Channel_1, &DAC_InitStructure);
         DAC_Cmd(DAC_Channel_1, ENABLE);
-        if (dcb->type == emTYPE_DMA)
+        if (dcb->type == emTYPE_DMA);
             DAC_DMACmd(DAC_Channel_1, ENABLE);
     }
     else if (dcb->sPrefix.subIdx == 1) {
         DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_TriangleAmplitude_1023;
         DAC_Init(DAC_Channel_2, &DAC_InitStructure);
         DAC_Cmd(DAC_Channel_2, ENABLE);
-        if (dcb->type == emTYPE_DMA)
-            DAC_DMACmd(DAC_Channel_2, ENABLE);
+        if (dcb->type == emTYPE_DMA);
+//          DAC_DMACmd(DAC_Channel_2, ENABLE);
     }
 }
 
@@ -111,6 +112,73 @@ void DRV_DAC_TIMInit(u16 psc, u16 period)
     TIM_SelectOutputTrigger(TIM2, TIM_TRIGSource_Update);
 }
 
+
+void DRV_TIM3_DMA_ConfigChannel(u32 memadd)
+{
+    tDRV_TIM_DCB dcb = {
+        .type     = emTYPE_DMA,
+        .tim      = TIM3,
+        //.idx      = instance[idx].sPrefix.trueIdx,
+        //.remapEn  = instance[idx].remapEn,
+        //.remapIdx = instance[idx].remapIdx,
+        .mode     = emTIM_PWM,
+        .cntFreq  = 2000,
+        .arr      = 48,
+        .psc      = 1,
+        .pulse    = 499,
+        .ch       = emTIM_CH3,
+        //.trgo     = instance[idx].trgo
+    };
+
+    TIM_TimeBaseInitTypeDef pBase = {
+        .TIM_Prescaler         = dcb.psc,
+        .TIM_Period            = dcb.arr,
+        .TIM_ClockDivision     = TIM_CKD_DIV1,
+        .TIM_CounterMode       = TIM_CounterMode_Up,
+        .TIM_RepetitionCounter = 0
+    };
+
+    TIM_OCInitTypeDef pOC = {
+        .TIM_Pulse        = dcb.pulse,
+        .TIM_OCMode       = TIM_OCMode_PWM1,
+        .TIM_OutputState  = TIM_OutputState_Enable,
+        .TIM_OutputNState = TIM_OutputNState_Disable,
+        .TIM_OCPolarity   = TIM_OCPolarity_High,
+        .TIM_OCNPolarity  = TIM_OCNPolarity_High,
+        .TIM_OCIdleState  = TIM_OCIdleState_Reset,
+        .TIM_OCNIdleState = TIM_OCNIdleState_Reset
+    };
+
+    DRV_TIM_ClockEnable(TIM3);
+    TIM_TimeBaseInit(dcb.tim, &pBase);
+    TIM_OC3Init(dcb.tim, &pOC);
+    TIM_OC3PreloadConfig(dcb.tim, TIM_OCPreload_Enable);
+    //TIM_ITConfig(dcb->tim, TIM_IT_CC1, ENABLE);
+    TIM_CtrlPWMOutputs(dcb.tim, ENABLE);
+
+    tDRV_DMA_DCB dma = {
+        .MemoryBaseAddr     = memadd, //(u32)sineWave4,
+        .PeripheralBaseAddr = (u32)(DAC_BASE + DHR12R2_Offset + 0x00),
+        .BufferSize         = 32,
+        .PeripheralDataSize = DMA_PeripheralDataSize_Word,
+        .MemoryDataSize     = DMA_MemoryDataSize_HalfWord,
+        .Mode               = DMA_Mode_Circular,                            // DMA_Mode_Circular, DMA_Mode_Normal
+        .channel                = DMA1_ch2,
+        .dmaDir                 = emDMA_m2p,
+        .PeripheralInc      = DMA_PeripheralInc_Disable,
+        .MemoryInc          = DMA_MemoryInc_Enable,
+        .Priority           = DMA_Priority_VeryHigh
+    };
+
+    DRV_DMA_Init(&dma);
+    DMA_Cmd(dma.channel, ENABLE);
+    TIM_DMACmd(TIM3, TIM_DMA_CC3, ENABLE);
+
+    DRV_TIM_ON(TIM3);
+    TIM_SetCompare3(TIM3, 10);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief Initialize the DMA channel of DAC
 /// @param idx: DAC channel
@@ -124,23 +192,23 @@ void DRV_DAC_DMA_Init(u8 idx, u16* add, u16 buffsize)
     dma.base   = DAC;
 
     dma.BufferSize         = buffsize;
-    dma.PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+    dma.PeripheralDataSize = DMA_PeripheralDataSize_Word;
     dma.MemoryDataSize     = DMA_MemoryDataSize_HalfWord;
     dma.Mode               = DMA_Mode_Circular;
     dma.Priority           = DMA_Priority_High;
     dma.MemoryInc          = DMA_MemoryInc_Enable;
     dma.PeripheralInc      = DMA_PeripheralInc_Disable;
     dma.dmaDir                 = emDMA_m2p;
-    dma.MemoryBaseAddr     = (u32)add;
+    dma.MemoryBaseAddr     = (u32)add; //(u32)sineWave2;
 
     if (idx == 0) {
-        dma.PeripheralBaseAddr = (u32)&DAC->DHR12R1;
+        dma.PeripheralBaseAddr = (u32)(DAC_BASE + DHR12R1_Offset + 0x00);
         dma.channel = DMA1_ch6;
     }
-    else if (idx == 1) {
-        dma.PeripheralBaseAddr = (u32)&DAC->DHR12R2;
-        dma.channel = DMA1_ch7;
-    }
+//  else if (idx == 1) {
+//      dma.PeripheralBaseAddr = (u32)&DAC->DHR12R2;
+//      dma.channel = DMA1_ch7;
+//  }
     DRV_DMA_Init(&dma);
     DMA_Cmd(dma.channel, ENABLE);
 }
@@ -177,9 +245,9 @@ static void InstanceConfig(tAPP_DAC_DCB* pDcb, u8 idx)
     instance[idx].type  = pDcb->type;
     instance[idx].ext   = pDcb->trig;
 
-    u32 tbWave[] = {    DAC_WaveGeneration_Noise,
-                        DAC_WaveGeneration_Triangle,
-                        DAC_WaveGeneration_None
+    u32 tbWave[] = {    DAC_WaveGeneration_None,
+                        DAC_WaveGeneration_Noise,
+                        DAC_WaveGeneration_Triangle
                     };
     instance[idx].wave = (emDACWAVE_TypeDef)tbWave[pDcb->wave];
 }
@@ -195,7 +263,7 @@ static void HardwareConfig(tAPP_DAC_DCB* pDcb, u8 idx)
     DRV_DAC_GPIO_Configure(pDcb->hSub);
 
     if (pDcb->trig)
-        DRV_DAC_TIMInit(7, 2000);
+        DRV_DAC_TIMInit(1, 48);
 
     DRV_DAC_Init(&instance[idx]);
 }
@@ -271,12 +339,18 @@ static int DAC_WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
     if (idx == -1)  return 0;
 
     if (instance[idx].type == emTYPE_DMA) {
-        DRV_DAC_DMA_Init(instance[idx].sPrefix.trueIdx, (u16*)ptr, len);
-        if (instance[idx].ext == true)
-            DRV_DAC_StartHW();
+        if (instance[idx].sPrefix.trueIdx == 0) {
+            DRV_DAC_DMA_Init(instance[idx].sPrefix.trueIdx, (u16*)ptr, len);
+            if (instance[idx].ext == true) {
+                DRV_DAC_StartHW();
+            }
+            else {
+                for (u16 i = 0; i < len; i++)
+                    DRV_DAC_StartSW(instance[idx].sPrefix.trueIdx);
+            }
+        }
         else {
-            for (u16 i = 0; i < len; i++)
-                DRV_DAC_StartSW(instance[idx].sPrefix.trueIdx);
+            DRV_TIM3_DMA_ConfigChannel((u32)ptr);
         }
     }
     else {

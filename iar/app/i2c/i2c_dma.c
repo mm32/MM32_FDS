@@ -2,7 +2,7 @@
 /// @file     I2C_DMA.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE I2C_DMA EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -45,9 +45,6 @@
 #define RX_DATA_SIZE 128
 
 u8 newTxBuffer[TX_DATA_SIZE] = {
-//    0xa0,       // Slave Address
-//    0x00,       // SubAddress
-
     0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x00, 0x11,
     0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99
 };

@@ -2,7 +2,7 @@
 /// @file     DRV.C
 /// @author   AE Team
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -50,27 +50,28 @@ fpCreateFile createFileInterface[emIP_COUNT] = {
     ADC_CreateFile,                 // 2
     AES_CreateFile,                 // 3
     BKP_CreateFile,                 // 4
+    CAN_CreateFile,                 // 5
 //  COMP_CreateFile,                //
-    CRC_CreateFile,                 // 5
+    CRC_CreateFile,                 // 6
 //  CRS_CreateFile,                 //
-    DAC_CreateFile,                 // 6
+    DAC_CreateFile,                 // 7
 //  DIV_CreateFile,                 //
-    DMA_CreateFile,                 // 7
-    EXTI_CreateFile,                // 8
-    GPIO_CreateFile,                // 9
-    I2C_CreateFile,                 // 10
-    IWDG_CreateFile,                // 11
+    DMA_CreateFile,                 // 8
+    EXTI_CreateFile,                // 9
+    GPIO_CreateFile,                // 10
+    I2C_CreateFile,                 // 11
+    IWDG_CreateFile,                // 12
 //  OPAMP_CreateFile,               //
-    POWER_CreateFile,               // 12
-    RCC_CreateFile,                 // 13
-    RTC_CreateFile,                 // 14
-    SPI_CreateFile,                 // 15
+    POWER_CreateFile,               // 13
+    RCC_CreateFile,                 // 14
+    RTC_CreateFile,                 // 15
+    SPI_CreateFile,                 // 16
 //  SQRT_CreateFile,                //
-    TIM_CreateFile,                 // 16
-    UART_CreateFile,                // 17
-    WWDG_CreateFile,                // 18
-    EEPROM_CreateFile,              // 19
-    PROTECT_CreateFile              // 20
+    TIM_CreateFile,                 // 17
+    UART_CreateFile,                // 18
+    WWDG_CreateFile,                // 19
+    EEPROM_CreateFile,              // 20
+    PROTECT_CreateFile              // 21
 };
 
 HANDLE createFileList[emIP_COUNT];

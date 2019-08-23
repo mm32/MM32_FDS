@@ -2,7 +2,7 @@
 /// @file     AES_CBC.C
 /// @author   Z Yan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE AES_CBC EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention

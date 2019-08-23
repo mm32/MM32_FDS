@@ -2,7 +2,7 @@
 /// @file     CONTINUE_DMA_SYNC.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE CONTINUE_DMA_SYNC EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -56,7 +56,7 @@ void AppTaskTick(void)
         tickCnt  = 0;
         tickFlag = SET;
     }
-    samFlag = true;
+    samFlag1 = true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,9 +69,9 @@ void AppTaskTick(void)
 void Callback(void* ptr, u16 len)
 {
     /* Set Conversion flag: Conversion complete */
-    if (samFlag) {
-        samFlag = false;
-        ADC_Filter((u32*)ptr, 16);                                              // IIR filter
+    if (samFlag1) {
+        samFlag1 = false;
+        ADC1_Filter((u32*)ptr, 16);                                             // IIR filter
     }
 }
 
@@ -92,9 +92,9 @@ int main(void)
     /* When the parameter is NULL, AppTaskTick function not be used */
     //  MCUID = SetSystemClock(emSYSTICK_On, NULL);
 
-    memset((void*)&item, 0x00, sizeof(item));
-    samFlag = false;
-    samCnt = 0;
+    memset((void*)&item1, 0x00, sizeof(item1));
+    samFlag1 = false;
+    samCnt1 = 0;
 
 
 // Step 2:  Create File Device   ---------------------->>>>>
@@ -123,12 +123,12 @@ int main(void)
 // Step 6:  Read File Device    ---------------------->>>>>
     while (1) {
         if ((dcb.mode == emADC_Continue) && (dcb.sync == emTYPE_ASync)) {
-            if (samFlag) {
-                samFlag = false;
+            if (samFlag1) {
+                samFlag1 = false;
                 u32 temp[4];
                 u16 n = ReadFile(hADC, emFILE_ADC1, (u8*)&temp, 16);            // Getting ADC1 Conversion Data
                 if (n > 0) {
-                    ADC_Filter((u32*)&temp, n);                                 // IIR filter
+                    ADC1_Filter((u32*)&temp, n);                                    // IIR filter
                 }
             }
         }

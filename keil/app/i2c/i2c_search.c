@@ -2,7 +2,7 @@
 /// @file     I2C_SEARCH.C
 /// @author   S Yi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE I2C_SEARCH EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -116,13 +116,13 @@ int main(void)
     tAPP_I2C_DCB dcb = {
 // Base parameter
         .hSub       = emFILE_I2C1,
-        .type       = emTYPE_Polling,       // emTYPE_Polling, emTYPE_IT or emTYPE_DMA
+        .type       = emTYPE_IT,            // emTYPE_Polling, emTYPE_IT or emTYPE_DMA
 
 // Callback function
         .cbTx       = (u32)&SYNC_I2C_TxCallback,
         .cbRx       = (u32)&SYNC_I2C_RxCallback,
 
-        .block      = emTYPE_Block,         // emTYPE_Block or emTYPE_Non_Block
+        .block      = emTYPE_Non_Block,     // emTYPE_Block or emTYPE_Non_Block
         .sync       = emTYPE_Sync,          // emTYPE_Sync or emTYPE_ASync
         .remapEn    = true,                 // GPIO remap or not
         .remapIdx   = 0,                    // GPIO remap index
@@ -131,19 +131,21 @@ int main(void)
 // I2C parameter
         .fast       = false,                // fast or standard speed mode
         .master     = true,                 // master or slave mode
-        .ownaddr    = 0x20,                 // I2C Own Address
         .slave      = 0x10,                 // slave address
         .subAddr    = 0x00,                 // SubAddress
-        .subSize    = 1                     // SubAddress size
+        .subSize    = 1,                    // SubAddress size
+        .ownaddr    = 0x20                  // I2C Own Address
     };
 
 // Step 4:  Open File Device     ---------------------->>>>>
     if (!OpenFile(hI2C, (void*)&dcb))       while(1);
 
+    u8 i = 0;
     while(1){
         if (i2cReady) {
             if (dcb.slave < 0xf1) {         // search slave address untill 0xee
-                WriteFile(hI2C, emFILE_I2C1, 0, 0);
+                if (WriteFile(hI2C, emFILE_I2C1, newTxBuffer, 1) > 0)
+                    newRxBuffer[i++] = dcb.slave;
                 i2cReady = false;
                 dcb.slave += 2;
                 OpenFile(hI2C, (void*)&dcb);

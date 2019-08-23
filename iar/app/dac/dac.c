@@ -2,7 +2,7 @@
 /// @file     DAC.C
 /// @author   Y Shi
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE DAC EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -94,8 +94,8 @@ int main(void)
         if(tickFlag){
             tickFlag = false;
 
-            WriteFile(hDAC, emFILE_DAC_CH1, (u8*)&sineWave1[i], 2);             //Output a sine wave
-            WriteFile(hDAC, emFILE_DAC_CH2, (u8*)&sineWave2[i], 2);             //Output a sine wave
+            WriteFile(hDAC, emFILE_DAC_CH1, (u8*)&sineWave1[i], 1);             //Output a sine wave
+            WriteFile(hDAC, emFILE_DAC_CH2, (u8*)&sineWave2[i], 1);             //Output a sine wave
             if (++i == 32)
                 i = 0;
         }

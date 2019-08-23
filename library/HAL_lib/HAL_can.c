@@ -65,20 +65,6 @@ u8 CAN_Init(CAN_TypeDef* CANx, CAN_Basic_InitTypeDef* pInitStruct)
     CANx->BTR0 = ((u32)(pInitStruct->SJW) << 6) | ((u32)(pInitStruct->BRP));
     CANx->BTR1 = ((u32)(pInitStruct->SAM) << 7) | ((u32)(pInitStruct->TESG2) << 4) | ((u32)(pInitStruct->TESG1));
 
-    if (pInitStruct->GTS == ENABLE) {
-        CANx->CMR |= (uint32_t)CAN_SleepMode;
-        InitStatus = CANINITFAILED;
-    }
-    else {
-        CANx->CMR &= ~(uint32_t)CAN_SleepMode;
-        InitStatus = CANINITOK;
-    }
-
-    (pInitStruct->GTS == ENABLE) ? (CANx->CMR |= (u32)CAN_SleepMode) : (CANx->CMR &= ~(u32)CAN_SleepMode);
-
-    CANx->CDR |=
-        ((pInitStruct->CBP) << 6) | ((pInitStruct->RXINTEN) << 5) | ((pInitStruct->CLOSE_OPEN_CLK) << 3) | (pInitStruct->CDCLK);
-
     return InitStatus;
 }
 
@@ -115,17 +101,17 @@ void CAN_StructInit(CAN_Basic_InitTypeDef* pInitStruct)
     pInitStruct->TESG2 = 0x0;
     // Initialize the SAM member(where can be set (SET or RESET))
     pInitStruct->SAM = RESET;
-    // Initialize the GTS member to Sleep Mode(where can be set (ENABLE or
-    // DISABLE))
-    pInitStruct->GTS = DISABLE;
+
+    //  CDCLK, CLOSE_OPEN_CLK, RXINTEN and CBP bits are not exist in CDR register;
+
     // Initialize the external pin CLKOUT frequence
-    pInitStruct->CDCLK = 0x0;
+    // pInitStruct->CDCLK = 0x0;
     // Initialize the external clk is open or close
-    pInitStruct->CLOSE_OPEN_CLK = 0x0;
+    // pInitStruct->CLOSE_OPEN_CLK = 0x0;
     // Initialize the TX1 pin work as rx interrupt output
-    pInitStruct->RXINTEN = 0x0;
+    // pInitStruct->RXINTEN = 0x0;
     // Initialize the CBP of CDR register
-    pInitStruct->CBP = 0x0;
+    // pInitStruct->CBP = 0x0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,30 +207,6 @@ void CAN_Receive(CAN_TypeDef* CANx, CanBasicRxMsg* BasicRxMessage)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// @brief  Select the Sleep mode or not in Basic workmode
-/// @param  state to go into the Sleep mode or go out
-/// @retval None.
-////////////////////////////////////////////////////////////////////////////////
-u8 CAN_Sleep(CAN_TypeDef* CANx)
-{
-    CANx->CMR |= CAN_SleepMode;
-    // At this step, sleep mode status
-    return (u8)((CANx->CMR & 0x10) == CAN_SleepMode) ? CANSLEEPOK : CANSLEEPFAILED;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-/// @brief  Wakes the CAN up.
-/// @param  CANx: where x can be 1 to select the CAN peripheral.
-/// @retval CANWAKEUPOK if sleep mode left, CANWAKEUPFAILED in an other case.
-////////////////////////////////////////////////////////////////////////////////
-u8 CAN_WakeUp(CAN_TypeDef* CANx)
-{
-    // Wake up request
-    CANx->CMR &= ~CAN_SleepMode;
-    return (u8)((CANx->CMR & 0x01) == 0) ? CANWAKEUPOK : CANWAKEUPFAILED;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 /// @brief  Checks whether the specified CAN flag is set or not.
 /// @param  CANx: where x can be 1 or 2 to to select the CAN peripheral.
 /// @param  flag: specifies the flag to check.
@@ -327,13 +289,13 @@ void CAN_ClearITPendingBit(CAN_TypeDef* CANx)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/// @brief  Select the Sleep mode or not in Peli workmode
-/// @param  state to go into the Sleep mode or go out
+/// @brief  Clears the CAN's IT pending.
+/// @param  CANx: where x can be 1 or 2 to to select the CAN peripheral.
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-void CAN_Peli_SleepMode_Cmd(FunctionalState state)
+u32 exCAN_ClearITPendingBit(CAN_Peli_TypeDef* CANx)
 {
-    (state == ENABLE) ? (CAN1_PELI->MOD |= CAN_SleepMode) : (CAN1_PELI->MOD &= ~CAN_SleepMode);
+    return CAN1_PELI->IR;  // read this register clear all interrupt
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -377,10 +339,6 @@ void CAN_Peli_Init(CAN_Peli_InitTypeDef* pInitStruct)
         CAN1_PELI->MOD |= (u32)CAN_SeftTestMode;
     else
         CAN1_PELI->MOD &= ~(u32)CAN_SeftTestMode;
-    if (pInitStruct->SM == ENABLE)
-        CAN1_PELI->MOD |= (u32)CAN_SleepMode;
-    else
-        CAN1_PELI->MOD &= ~(u32)CAN_SleepMode;
     CAN1_PELI->EWLR = (u32)pInitStruct->EWLR;
 }
 
@@ -467,7 +425,7 @@ void CAN_Peli_Transmit(CanPeliTxMsg* PeliTxMessage)
         }
     }
 
-    (CAN1_PELI->MOD & CAN_MOD_STM) ? (CAN1->CMR = CAN_CMR_GTS | CAN_CMR_AT) : (CAN1->CMR = CAN_CMR_TR | CAN_CMR_AT);
+    (CAN1_PELI->MOD & CAN_MOD_STM) ? (CAN1->CMR = CAN_CMR_SRR | CAN_CMR_AT) : (CAN1->CMR = CAN_CMR_TR | CAN_CMR_AT);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -510,7 +468,7 @@ void CAN_Peli_TransmitRepeat(CanPeliTxMsg* PeliTxMessage)
         }
     }
 
-    (CAN1_PELI->MOD & CAN_MOD_STM) ? (CAN1->CMR = CAN_CMR_GTS | CAN_CMR_AT) : (CAN1->CMR = CAN_CMR_TR);
+    (CAN1_PELI->MOD & CAN_MOD_STM) ? (CAN1->CMR =  CAN_CMR_AT) : (CAN1->CMR = CAN_CMR_TR);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 /// @file     DRV_POWER.C
 /// @author   MY Zhang
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES THE POWER DRIVER LAYER FUNCTIONS.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -154,7 +154,7 @@ void DRV_PWR_WakeUp_Init(void)
 /// @arg    None
 /// @retval None.
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(__MM3N1)
+#if defined(__MM3N1) || defined(__MM3O1)
 void EXTI0_IRQHandler(void)
 #endif
 #if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1)

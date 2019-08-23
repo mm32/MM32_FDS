@@ -2,7 +2,7 @@
 /// @file     GPIO.C
 /// @author   C Yuan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE PROVIDES ALL THE GPIO EXAMPLE.
 ////////////////////////////////////////////////////////////////////////////////
 /// @attention
@@ -83,6 +83,7 @@ int main(void)
     dcb.mode    = 0x0001;                                       // when output mode,  0: pull-push,  1: od
                                                                 // input mode, if inSta 0: ipd, 1: ipu
     dcb.state   = 0xFFFF;                                       // 0: HiZ, 1: ipd or ipu
+    dcb.mask    = 0xFFFF;                                       // 1:the pin need to be initialized, 0:the pin do not need operate
 // Step 4:  Open File Device     ---------------------->>>>>
     if (!OpenFile(hGPIO, (void*)&dcb))  while(1);
 
@@ -91,6 +92,7 @@ int main(void)
     dcb.dir     = 0xFFC7;
     dcb.mode    = 0x0C07;
     dcb.state   = 0xFFFF;
+    dcb.mask    = 0xFFFF;
 // Step 6:  Open File Device     ---------------------->>>>>
     if (!OpenFile(hGPIO, (void*)&dcb))  while(1);
 

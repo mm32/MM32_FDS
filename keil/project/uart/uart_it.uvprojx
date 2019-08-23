@@ -430,6 +430,11 @@
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
 						</File>
 						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
+						</File>
+						<File>
 							<FileName>bsp_comp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_comp.c</FilePath>
@@ -513,6 +518,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>
@@ -1223,6 +1233,11 @@
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
 						</File>
 						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
+						</File>
+						<File>
 							<FileName>bsp_comp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_comp.c</FilePath>
@@ -1306,6 +1321,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>
@@ -1950,7 +1970,7 @@
 						<v6LangP>0</v6LangP>
 						<VariousControls>
 							<MiscControls></MiscControls>
-							<Define>__KEIL __MZ306 __EX_UART __MM32_MINIBOARD OVERTIME=0 _USER_RESOURCE _SYS_RESOURCE_IT __SYS_RESOURCE_POLLING</Define>
+							<Define>__KEIL __MM0P1 __EX_UART __MM32_MINIBOARD OVERTIME=0 _USER_RESOURCE _SYS_RESOURCE_IT __SYS_RESOURCE_POLLING</Define>
 							<Undefine></Undefine>
 							<IncludePath>..\..\bsp\inc;..\..\driver\inc;..\..\..\library\HAL_lib\inc;..\..\..\library\startup\inc;..\..\app\uart\inc</IncludePath>
 						</VariousControls>
@@ -2014,6 +2034,11 @@
 							<FileName>bsp_adc.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
+						</File>
+						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>bsp_comp.c</FileName>
@@ -2099,6 +2124,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>
@@ -2743,7 +2773,7 @@
 						<v6LangP>0</v6LangP>
 						<VariousControls>
 							<MiscControls></MiscControls>
-							<Define>__KEIL __MZ306 __EX_UART __MM32_MINIBOARD OVERTIME=0 _USER_RESOURCE _SYS_RESOURCE_IT __SYS_RESOURCE_POLLING</Define>
+							<Define>__KEIL __MM0Q1 __EX_UART __MM32_MINIBOARD OVERTIME=0 _USER_RESOURCE _SYS_RESOURCE_IT __SYS_RESOURCE_POLLING</Define>
 							<Undefine></Undefine>
 							<IncludePath>..\..\bsp\inc;..\..\driver\inc;..\..\..\library\HAL_lib\inc;..\..\..\library\startup\inc;..\..\app\uart\inc</IncludePath>
 						</VariousControls>
@@ -2807,6 +2837,11 @@
 							<FileName>bsp_adc.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\bsp\bsp_adc.c</FilePath>
+						</File>
+						<File>
+							<FileName>bsp_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\bsp\bsp_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>bsp_comp.c</FileName>
@@ -2892,6 +2927,11 @@
 							<FileName>drv_bkp.c</FileName>
 							<FileType>1</FileType>
 							<FilePath>..\..\driver\drv_bkp.c</FilePath>
+						</File>
+						<File>
+							<FileName>drv_can.c</FileName>
+							<FileType>1</FileType>
+							<FilePath>..\..\driver\drv_can.c</FilePath>
 						</File>
 						<File>
 							<FileName>drv_comp.c</FileName>

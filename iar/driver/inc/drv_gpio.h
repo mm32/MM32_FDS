@@ -2,7 +2,7 @@
 /// @file     DRV_GPIO.H
 /// @author   C Yuan
 /// @version  v2.0.0
-/// @date     2019-02-18
+/// @date     2019-03-13
 /// @brief    THIS FILE CONTAINS ALL THE FUNCTIONS PROTOTYPES FOR THE GPIO
 ///           DRIVER LAYER.
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +51,7 @@ typedef struct {
     u16                 dir;                ///< GPIO direction, input or output
     u16                 mode;               ///< mode, can be Push-pull output or Open drain output, can be pull up or pull down accroding to dir
     u16                 inSta;              ///< in input mode, floating or pull up/down
+    u16                 mask;               ///< 1:the pin need to be initialized, 0:the pin do not need operate
 } tDRV_GPIO_INSTANT;
 
 /// @}

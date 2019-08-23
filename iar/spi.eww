@@ -13,6 +13,9 @@
 		<path>$WS_DIR$\project\spi\spi_dma_slave_tx.ewp</path>
 	</project>
 	<project>
+		<path>$WS_DIR$\project\spi\spi_flash.ewp</path>
+	</project>
+	<project>
 		<path>$WS_DIR$\project\spi\spi_it_master_rx.ewp</path>
 	</project>
 	<project>
@@ -23,6 +26,15 @@
 	</project>
 	<project>
 		<path>$WS_DIR$\project\spi\spi_it_slave_tx.ewp</path>
+	</project>
+	<project>
+		<path>$WS_DIR$\project\spi\spi_lcd.ewp</path>
+	</project>
+	<project>
+		<path>$WS_DIR$\project\spi\spi_nrf24l01_tx.ewp</path>
+	</project>
+	<project>
+		<path>$WS_DIR$\project\spi\spi_nrf24l01_rx.ewp</path>
 	</project>
 	<project>
 		<path>$WS_DIR$\project\spi\spi_polling_master_rx.ewp</path>
@@ -56,6 +68,10 @@
 				<configuration>MM32L373</configuration>
 			</member>
 			<member>
+				<project>spi_flash</project>
+				<configuration>MM32L373</configuration>
+			</member>
+			<member>
 				<project>spi_it_master_rx</project>
 				<configuration>MM32L373</configuration>
 			</member>
@@ -69,6 +85,18 @@
 			</member>
 			<member>
 				<project>spi_it_slave_tx</project>
+				<configuration>MM32L373</configuration>
+			</member>
+			<member>
+				<project>spi_lcd</project>
+				<configuration>MM32L373</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_tx</project>
+				<configuration>MM32L373</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_rx</project>
 				<configuration>MM32L373</configuration>
 			</member>
 			<member>
@@ -107,6 +135,10 @@
 				<configuration>MM32L073</configuration>
 			</member>
 			<member>
+				<project>spi_flash</project>
+				<configuration>MM32L073</configuration>
+			</member>
+			<member>
 				<project>spi_it_master_rx</project>
 				<configuration>MM32L073</configuration>
 			</member>
@@ -120,6 +152,18 @@
 			</member>
 			<member>
 				<project>spi_it_slave_tx</project>
+				<configuration>MM32L073</configuration>
+			</member>
+			<member>
+				<project>spi_lcd</project>
+				<configuration>MM32L073</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_tx</project>
+				<configuration>MM32L073</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_rx</project>
 				<configuration>MM32L073</configuration>
 			</member>
 			<member>
@@ -158,6 +202,10 @@
 				<configuration>MM32SPIN27</configuration>
 			</member>
 			<member>
+				<project>spi_flash</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
 				<project>spi_it_master_rx</project>
 				<configuration>MM32SPIN27</configuration>
 			</member>
@@ -171,6 +219,18 @@
 			</member>
 			<member>
 				<project>spi_it_slave_tx</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
+				<project>spi_lcd</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_tx</project>
+				<configuration>MM32SPIN27</configuration>
+			</member>
+			<member>
+				<project>spi_nrf24l01_rx</project>
 				<configuration>MM32SPIN27</configuration>
 			</member>
 			<member>
