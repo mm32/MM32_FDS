@@ -318,6 +318,18 @@ typedef struct {
     u32                         SysTickPeriod;                                  ///< Systick period
 } RCCInitStruct_TypeDef;
 
+////////////////////////////////////////////////////////////////////////////////
+/// @brief RCC Current configuration
+////////////////////////////////////////////////////////////////////////////////
+#if defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+typedef enum {
+    RCC_CONFIG_OSC_ITRIM_2mA = (0x00000000U),
+    RCC_CONFIG_OSC_ITRIM_4mA = (0x00000800U),
+    RCC_CONFIG_OSC_ITRIM_6mA = (0x00001000U),
+    RCC_CONFIG_OSC_ITRIM_8mA = (0x00001800U)
+} RCC_CONFIGOSCITRIM_TypeDef;
+#endif
+
 /// @}
 
 /// @}
@@ -398,8 +410,9 @@ void exRCC_SystickEnable(u32 sysTickPeriod);
 void exRCC_APB1PeriphReset(u32 RCC_APB1Periph);
 void exRCC_APB2PeriphReset(u32 RCC_APB2Periph);
 void exRCC_BackupReset(void);
-
-
+#if defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+void exRCC_Set_OSC_ITRIM_Config(u32 val);
+#endif
 /// @}
 
 /// @}

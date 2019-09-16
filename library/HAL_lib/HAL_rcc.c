@@ -1037,6 +1037,22 @@ ErrorStatus exRCC_Init(RCCInitStruct_TypeDef* para)
     return SUCCESS;
 }
 
+#if defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+////////////////////////////////////////////////////////////////////////////////
+/// @brief  External crystal drive current calibration value.If the crystal oscillator is abnormal,
+///   the drive current can be adjusted to match the crystal oscillator.
+/// @param  RCC_Config: external crystal drive current calibration value.
+///   This parameter can be any combination of the following values:
+/// @arg RCC_CONFIG_OSC_ITRIM_2mA, RCC_CONFIG_OSC_ITRIM_4mA,
+///      RCC_CONFIG_OSC_ITRIM_6mA, RCC_CONFIG_OSC_ITRIM_8mA.
+////////////////////////////////////////////////////////////////////////////////
+void exRCC_Set_OSC_ITRIM_Config(u32 val)
+{
+
+  RCC->CONFIG &= ~RCC_CONFIG_OSC_ITRIM;
+  RCC->CONFIG |= val;
+}
+#endif
 /// @}
 
 /// @}

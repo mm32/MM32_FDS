@@ -90,6 +90,9 @@ void DRV_RCC_SysClkConfig(SYSCLK_TypeDef sysClkSrc)
         RCC_HSICmd(ENABLE);
         break;
     case RCC_HSE:
+#if defined (__MM3O1) || defined (__MM0P1)|| defined (__MM0Q1)
+        exRCC_Set_OSC_ITRIM_Config(RCC_CONFIG_OSC_ITRIM_2mA);
+#endif
         RCC_HSEConfig(RCC_HSE_ON);
         while(!RCC_WaitForFlagStartUp(RCC_FLAG_HSERDY));
         break;

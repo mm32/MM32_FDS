@@ -265,6 +265,10 @@
     #define BKP_BASE                    (APB1PERIPH_BASE + 0x280C)              ///< Base Address: 0x4000280C
 #endif
 
+#if defined(__MM3O1)
+    #define BKP_BASE                    (APB1PERIPH_BASE + 0x2824)              ///< Base Address: 0x40002824
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief CAN Base Address Definition
 ////////////////////////////////////////////////////////////////////////////////
@@ -595,6 +599,37 @@ typedef struct {
     __IO u32 DR18;                                                              ///< BKP data register 18,                          offset: 0x48
     __IO u32 DR19;                                                              ///< BKP data register 19,                          offset: 0x4C
     __IO u32 DR20;                                                              ///< BKP data register 20,                          offset: 0x50
+} BKP_TypeDef;
+#endif
+
+#if defined(__MM3O1)
+#define BKP_NUMBER  20
+
+typedef struct {
+    __IO u32 RESERVED0;                                                         ///< Reserved,                                      offset: 0x00
+    __IO u32 DR1;                                                               ///< BKP data register 1,                           offset: 0x04
+    __IO u32 DR2;                                                               ///< BKP data register 2,                           offset: 0x08
+    __IO u32 DR3;                                                               ///< BKP data register 3,                           offset: 0x0C
+    __IO u32 DR4;                                                               ///< BKP data register 4,                           offset: 0x10
+    __IO u32 DR5;                                                               ///< BKP data register 5,                           offset: 0x14
+    __IO u32 DR6;                                                               ///< BKP data register 6,                           offset: 0x18
+    __IO u32 DR7;                                                               ///< BKP data register 7,                           offset: 0x1C
+    __IO u32 DR8;                                                               ///< BKP data register 8,                           offset: 0x20
+    __IO u32 DR9;                                                               ///< BKP data register 9,                           offset: 0x24
+    __IO u32 DR10;                                                              ///< BKP data register 10                           offset: 0x28
+    __IO u32 RTCCR;                                                             ///< RTC clock calibration register,                offset: 0x2C
+    __IO u32 CR;                                                                ///< BKP control register,                          offset: 0x30
+    __IO u32 CSR;                                                               ///< BKP control/status register,                   offset: 0x34
+    __IO u32 DR11;                                                              ///< BKP data register 11,                          offset: 0x38
+    __IO u32 DR12;                                                              ///< BKP data register 12,                          offset: 0x3C
+    __IO u32 DR13;                                                              ///< BKP data register 13,                          offset: 0x40
+    __IO u32 DR14;                                                              ///< BKP data register 14,                          offset: 0x44
+    __IO u32 DR15;                                                              ///< BKP data register 15,                          offset: 0x48
+    __IO u32 DR16;                                                              ///< BKP data register 16,                          offset: 0x4C
+    __IO u32 DR17;                                                              ///< BKP data register 17,                          offset: 0x50
+    __IO u32 DR18;                                                              ///< BKP data register 18,                          offset: 0x54
+    __IO u32 DR19;                                                              ///< BKP data register 19,                          offset: 0x58
+    __IO u32 DR20;                                                              ///< BKP data register 20,                          offset: 0x5C
 } BKP_TypeDef;
 #endif
 
@@ -5784,6 +5819,12 @@ typedef struct {
 #define TIM_SMCR_SMS_GATED              (0x05U << TIM_SMCR_SMS_Pos)             ///< Slave Mode select: Gated
 #define TIM_SMCR_SMS_TRIGGER            (0x06U << TIM_SMCR_SMS_Pos)             ///< Slave Mode select: Trigger
 #define TIM_SMCR_SMS_EXTERNAL1          (0x07U << TIM_SMCR_SMS_Pos)             ///< Slave Mode select: External1
+
+#if defined(__MM3O1) || defined(__MM0P1) || defined(__MM0Q1)
+    #define TIM_SMCR_OCCS_Pos           (3)
+    #define TIM_SMCR_OCCS               (0x01U << TIM_SMCR_OCCS_Pos)            ///< Output compare clear selection
+#endif
+
 #define TIM_SMCR_TS_Pos                 (4)
 #define TIM_SMCR_TS                     (0x07U << TIM_SMCR_TS_Pos)              ///< TS[2:0] bits (Trigger selection)
 #define TIM_SMCR_TS_ITR0                (0x00U << TIM_SMCR_TS_Pos)              ///< Internal Trigger 0 (ITR0)
