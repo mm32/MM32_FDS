@@ -75,11 +75,11 @@ GLOBAL u32 g_Count;                 // 定义全局变量
 - 应用程序 Systick 函数 `void AppTaskTick()`，用于应用程序的系统调度。
 - 应用程序回调函数 `void TxCallback(void* fPtr)`，在同步方式下中断的快速处理。
 - 主程序 `int main(void)`
-  - step 1: 设置系统时钟 `MCUID = SetSystemClock(emSYSTICK_On, (u32*)&AppTaskTick); `
-    - 形参 1： `emSYSTICK_On / emSYSTICK_Off ` 表示系统是否使用 SysTick (在 32 位 Cortex-Mx 下编程，建议打开)。
+  - step 1: 设置系统时钟 `MCUID = SetSystemClock(emSYSTICK_On, (u32*)&AppTaskTick);`
+    - 形参 1： `emSYSTICK_On / emSYSTICK_Off` 表示系统是否使用 SysTick (在 32 位 Cortex-Mx 下编程，建议打开)。
     - 形参 2： 应用程序是否使用系统 SysTick 的回调 (在 32 位 Cortex-Mx 下编程，建议打开)，不使用时选择 NULL。
     - 返回值：为当前MCU类别。
-  - step 2: 定义句柄变量、创建文件，`HANDLE hUART = CreateFile(emIP_UART) `
+  - step 2: 定义句柄变量、创建文件，`HANDLE hUART = CreateFile(emIP_UART)`
     - 形参为使用套件资源的枚举，在 drv.h 中定义，返回值如果不为空表示创建成功。
     - 当需要删除句柄时，可以使用 `DeleteFile(emIP_UART)` 命令删除句柄。
   - step 3: 定义设备控制块 `tAPP_UART_DCB dcb`，并为其初始化。
@@ -172,10 +172,10 @@ MM32-FDS 系统资源包含以下文件
 
 |  No.  |       Definition type       |                         Description                         |                  Example                  |                           Notes                           |
 | :---: | :-------------------------- | :---------------------------------------------------------- | :---------------------------------------- | :-------------------------------------------------------- |
-|   1   | IDE selection               | Define the development environment                          | __KEIL, __IAR, __GCC                      |                                                           |
-|   2   | Chip selection              | Define the selected chip                                    | __MM3N1, __MM0N1, __MM0P1, __MM0Q1        |                                                           |
-|   3   | Module selection            | Select modules to protect duplicate definition content      | __EX_UART                                 |                                                           |
-|   4   | Development board selection | Select development board                                    | __MM32_MINIBOARD, __MM32_EVB              |                                                           |
-|   5   | System resource enable      | Select interrupt mode or query mode to use system resources | __SYS_RESOURCE_IT, __SYS_RESOURCE_POLLING | Double underline is enabled, single underline is disabled |
-|   7   | Timeout return time         | Set the timeout return time, 0 means no timeout setting     | OVERTIME=0                                |                                                           |
-|   8   | External clock setting      | Set the external clock, the unit is Hz                      | CLOCK=8000000                             | Only for IAR EWARM                                        |
+|   1   | IDE selection               | Define the development environment                          | `__KEIL`, `__IAR`, `__GCC`                      |                                                           |
+|   2   | Chip selection              | Define the selected chip                                    | `__MM3N1`, `__MM0N1`, `__MM0P1`, `__MM0Q1`        |                                                           |
+|   3   | Module selection            | Select modules to protect duplicate definition content      | `__EX_UART`                                 |                                                           |
+|   4   | Development board selection | Select development board                                    | `__MM32_MINIBOARD`, `__MM32_EVB`              |                                                           |
+|   5   | System resource enable      | Select interrupt mode or query mode to use system resources | `__SYS_RESOURCE_IT`, `__SYS_RESOURCE_POLLING` | Double underline is enabled, single underline is disabled |
+|   7   | Timeout return time         | Set the timeout return time, 0 means no timeout setting     | `OVERTIME=0`                                |                                                           |
+|   8   | External clock setting      | Set the external clock, the unit is Hz                      | `CLOCK=8000000`                             | Only for IAR EWARM                                        |
