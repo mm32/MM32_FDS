@@ -1,7 +1,6 @@
 # mm32 utility
 *.log
 
-
 # Prerequisites
 *.d
 
@@ -75,9 +74,6 @@ dkms.conf
 JLinkLog.txt
 *.iex
 *.htm
-#*.sct
-#*.uvoptx
-#*.uvguix
 *.pbi
 *.pbi.cout
 *.cout
@@ -104,8 +100,7 @@ JLinkLog.txt
 *.dnx
 *.ps1
 *.pbw
-
-
 *.xml
 *.xcl
 *.bat
+*.ninja*
