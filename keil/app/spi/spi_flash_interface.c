@@ -259,7 +259,7 @@ void SPIM_DMAPageRead(SPI_TypeDef* SPIx, u32 address, u8* p, u16 number)
 
         SPIM_checkStatus(SPIx);
     }
-#if defined(__MM3N1) || defined(MZ206)
+#if defined(__MM3N1) || defined(__MM0N1)
     if (SPIx == SPI1) {
         DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) & (SPIx->TXREG);
         DMA_InitStructure.DMA_MemoryBaseAddr     = (uint32_t)(&fake_Data);
@@ -375,7 +375,7 @@ void SPIM_DMAPageProgram(SPI_TypeDef* SPIx, u32 address, u8* p, u16 number)
 
         SPIM_checkStatus(SPIx);
     }
-#if defined(__MM3N1) || defined(MZ206)
+#if defined(__MM3N1) || defined(__MM0N1)
     if (SPIx == SPI1) {
         DMA_DeInit(DMA1_Channel3);
         DMA_Init(DMA1_Channel3, &DMA_InitStructure);

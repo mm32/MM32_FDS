@@ -433,7 +433,7 @@ static bool SPI_PollingSendPacket(u8 idx)
 {
     SPI_TypeDef* SPIx = (SPI_TypeDef*)instance[idx].sPrefix.pBase;
 
-#if defined(__MT309)
+#if defined(__MM0Q1)
     SET_BIT(SPIx->CCR, 1 << 7);
 #endif
 
