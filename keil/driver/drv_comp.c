@@ -46,8 +46,7 @@
 /// @addtogroup COMP_Exported_Functions
 /// @{
 
-#if !defined(__MM3N1)
-
+#if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1) || defined(__MM0S1)
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief  Return the output level (high or low) of the selected comparator.
@@ -320,7 +319,7 @@ static int COMP_ReadFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 ////////////////////////////////////////////////////////////////////////////////
 void COMP_CreateFile(HANDLE handle)
 {
-#if !defined(__MM3N1)
+#if defined(__MM0N1) || defined(__MM0P1) || defined(__MM0Q1) || defined(__MM0S1)
     static bool first = true;
     if (first) {
         first = false;

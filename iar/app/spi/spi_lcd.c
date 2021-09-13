@@ -23,6 +23,7 @@
 #include "types.h"
 #include "system_mm32.h"
 
+#include "common.h"
 #include "hal_exti.h"
 #include "drv.h"
 #include "hal_spi.h"
@@ -57,7 +58,8 @@ static void lcd_gpioInit()
 
 static void lcd_spiInit()
 {
-    Set_SPI_Clock(SPI2);
+    COMMON_EnableIpClock(emCLOCK_SPI2);
+//    Set_SPI_Clock(SPI2);
 //    SET_BIT(SPI2->GCR, SPI_GCR_DWSEL);
 
     SPI_InitTypeDef InitStructure;
@@ -69,7 +71,7 @@ static void lcd_spiInit()
     InitStructure.SPI_NSS               = SPI_NSS_Soft;
     InitStructure.SPI_Mode              = SPI_Mode_Master;
     InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-    InitStructure.SPI_BaudRatePrescaler = 2;
+    InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;
 
     SPI_Init(SPI2, &InitStructure);
 
@@ -147,7 +149,7 @@ void lcd_addressSet(u16 x1, u16 y1, u16 x2, u16 y2)
 #if (1)
 void lcd_clear(u16 color)
 {
-    u16 i, j;
+    u16 i;
 //    u8 data[2] = {0};
 //
 //    data[0] = color >> 8;
@@ -348,7 +350,6 @@ void lcd_drawLine(u16 x1, u16 y1, u16 x2, u16 y2)
     u16 t;
     int xerr = 0, yerr = 0, delta_x, delta_y, distance;
     int incx, incy, row, col;
-    u32 i = 0;
 
     if(y1 == y2){
         lcd_addressSet(x1, y1, x2, y2);

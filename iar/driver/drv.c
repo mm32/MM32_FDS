@@ -38,50 +38,6 @@
 /// @brief DRV driver modules
 /// @{
 
-
-////////////////////////////////////////////////////////////////////////////////
-/// @defgroup Function_Point
-/// @brief MM32 FDP Function list
-/// @{
-
-fpCreateFile createFileInterface[emIP_COUNT] = {
-    KEYBOARD_CreateFile,            // 0
-    DISPLAY_CreateFile,             // 1
-    ADC_CreateFile,                 // 2
-    AES_CreateFile,                 // 3
-    BKP_CreateFile,                 // 4
-    CAN_CreateFile,                 // 5
-//  COMP_CreateFile,                //
-    CRC_CreateFile,                 // 6
-//  CRS_CreateFile,                 //
-    DAC_CreateFile,                 // 7
-//  DIV_CreateFile,                 //
-    DMA_CreateFile,                 // 8
-    EXTI_CreateFile,                // 9
-    GPIO_CreateFile,                // 10
-    I2C_CreateFile,                 // 11
-    IWDG_CreateFile,                // 12
-//  OPAMP_CreateFile,               //
-    POWER_CreateFile,               // 13
-    RCC_CreateFile,                 // 14
-    RTC_CreateFile,                 // 15
-    SPI_CreateFile,                 // 16
-//  SQRT_CreateFile,                //
-    TIM_CreateFile,                 // 17
-    UART_CreateFile,                // 18
-    WWDG_CreateFile,                // 19
-    EEPROM_CreateFile,              // 20
-    PROTECT_CreateFile              // 21
-};
-
-HANDLE createFileList[emIP_COUNT];
-
-/// @}
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 /// @addtogroup DRV_Exported_Library_Function
 /// @{
@@ -263,14 +219,15 @@ bool DRV_OpenFileExit(HANDLE handle, int* ptr, s8 idx)
 /// @param  ip : The enum of the IP.
 /// @retval The status of the function.
 ////////////////////////////////////////////////////////////////////////////////
-bool DeleteFile(EM_IP ip)
+bool DeleteFile(HANDLE ip)
 {
-    if (createFileList[ip]) {
-        free(createFileList[ip]);
-        memset((u8*)createFileList[ip] , 0xFF, sizeof(tHandle));
-        createFileList[ip] = NULL;
+    if (ip != NULL) {
+        free(ip);
+        if (ip != NULL) 
+            return false;
         return true;
     }
+    
     return false;
 }
 
@@ -329,21 +286,17 @@ int WriteFile(HANDLE handle, s8 hSub, u8* ptr, u16 len)
 /// @param  ip : The enum of the IP.
 /// @retval  The pointer point to struct handle.
 ////////////////////////////////////////////////////////////////////////////////
-HANDLE CreateFile(EM_IP ip)
+HANDLE CreateFile(fpCreateFile ip)
 {
-    static bool first = true;
-    if (first) {
-        first = false;
-        memset(createFileList, 0, sizeof(createFileList));
-    }
-
-    if (createFileList[ip] == NULL) {
-        HANDLE handle = (HANDLE)malloc(sizeof(tHandle));
+    HANDLE handle = (HANDLE)malloc(sizeof(tHandle));
+    
+    if (handle != NULL) {
         memset(handle, 0xFF, sizeof(tHandle));
-        ((fpCreateFile)createFileInterface[ip])(handle);
-        createFileList[ip] = handle;
+        ip(handle);
+        return handle;
     }
-    return createFileList[ip];
+    
+    return NULL;
 }
 
 /// @}

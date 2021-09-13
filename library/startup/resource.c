@@ -115,7 +115,7 @@ void SysResource(EM_SYSTICK tickEn, u32* pCallback)
         AppTickPtr = pCallback;
 
         /*  System Display */
-        hDisplay = CreateFile((EM_IP)emIP_DISPLAY);
+        hDisplay = CreateFile(emIP_DISPLAY);
         if (hDisplay == NULL)       while(1);
 
         tAPP_DISPLAY_DCB dcbDisp = {
@@ -125,7 +125,7 @@ void SysResource(EM_SYSTICK tickEn, u32* pCallback)
         if (!OpenFile(hDisplay, (void*)&dcbDisp)) while(1);
 
         /*  System Keyboard */
-        hKeyboard = CreateFile((EM_IP)emIP_KEYBOARD);
+        hKeyboard = CreateFile(emIP_KEYBOARD);
         if (hKeyboard == NULL)      while(1);
 
         tAPP_KEYBOARD_DCB dcbKey = {
