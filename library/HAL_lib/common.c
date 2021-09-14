@@ -135,7 +135,7 @@ void COMMON_ExitItRisingFallingEnable(u32 line)
 ////////////////////////////////////////////////////////////////////////////////
 void COMMON_NVIC_Configure(u8 ch, u8 pri, u8 sub)
 {
-#if defined(__MT304) || defined(__MT307)
+#if defined(__MM3N1) || defined(__MM3O1)
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 #endif
 
@@ -171,7 +171,7 @@ void COMMON_EnableIpClock(EM_CLOCK val)
 	if 		(br >  4)	return;
 	else if (br == 0)	RCC_APB1PeriphClockCmd(1 << pos, ENABLE);
 	else if	(br == 1){
-#if !defined(__MZ311)
+#if !defined(__MM0S1)
             RCC_APB2PeriphClockCmd(1 << pos, ENABLE);
 #endif
     }	
@@ -201,7 +201,7 @@ void COMMON_DisableIpClock(EM_CLOCK val)
 	if 		(br >  4)	return;
 	else if (br == 0)	RCC_APB1PeriphClockCmd(1 << pos, DISABLE);
 	else if	(br == 1){
-#if !defined(__MZ311)
+#if !defined(__MM0S1)
             RCC_APB2PeriphClockCmd(1 << pos, DISABLE);
 #endif
     }	    
